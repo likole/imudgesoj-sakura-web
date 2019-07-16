@@ -78,8 +78,8 @@ export const constantRoutes = [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        name: '首页',
+        meta: { title: '首页', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -92,6 +92,16 @@ export const constantRoutes = [
         component: () => import('@/views/problems/index'),
         name: 'problems',
         meta: { title: '题目列表', icon: 'documentation', affix: true }
+      }
+    ]
+  },
+  {
+    path: 'website',
+    component: Layout,
+    children: [
+      {
+        path: 'https://acm.likole.com',
+        meta: { title: '访问网页版', icon: 'link' }
       }
     ]
   },
