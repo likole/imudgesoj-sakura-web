@@ -48,6 +48,9 @@
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
       <div style="position:relative">
+        <div class="tips">
+          <span>如在公共电脑上登录，请在使用完毕后及时退出</span>
+        </div>
 <!--        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">-->
 <!--          Or connect with-->
 <!--        </el-button>-->
