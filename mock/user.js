@@ -26,11 +26,11 @@ const users = {
 export default [
   // user login
   {
-    url: '/user/login',
+    url: '/login.php',
     type: 'post',
     response: config => {
-      const { username } = config.body
-      const token = tokens[username]
+      const { user_id } = config.body
+      const token = tokens[user_id]
 
       // mock error
       if (!token) {
@@ -41,7 +41,7 @@ export default [
       }
 
       return {
-        code: 20000,
+        code: 0,
         data: token
       }
     }
@@ -49,7 +49,7 @@ export default [
 
   // get user info
   {
-    url: '/user/info\.*',
+    url: '/me\.*',
     type: 'get',
     response: config => {
       const { token } = config.query
@@ -64,7 +64,7 @@ export default [
       }
 
       return {
-        code: 20000,
+        code: 0,
         data: info
       }
     }

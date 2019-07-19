@@ -28,7 +28,9 @@
       </el-table-column>
       <el-table-column label="标题" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.title }}</span>
+          <router-link :to="'/problems/submit/'+scope.row.id" class="link-type">
+            <span>{{ scope.row.title }}</span>
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column v-if="showCategory" label="分类" width="110px" align="center">
@@ -53,9 +55,10 @@
 import { fetchList } from '@/api/problems'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import Cookies from 'js-cookie'
 
 export default {
-  name: 'ComplexTable',
+  name: 'ProblemsList',
   components: { Pagination },
   directives: { waves },
   filters: {
@@ -83,6 +86,7 @@ export default {
     }
   },
   created() {
+    if (Cookies.get('page') !== undefined) this.listQuery.page = parseInt(Cookies.get('page'))
     this.getList()
   },
   methods: {
@@ -95,15 +99,12 @@ export default {
       return ''
     },
     getList() {
+      Cookies.set('page', this.listQuery.page)
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.listLoading = false
       })
     },
     handleFilter() {
