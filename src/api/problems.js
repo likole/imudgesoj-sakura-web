@@ -16,6 +16,22 @@ export function fetchProblem(id) {
   })
 }
 
+export function submitProblem(data) {
+  return request({
+    url: '/submit.php',
+    method: 'post',
+    data
+  })
+}
+
+export function ajaxStatus(data) {
+  return request({
+    url: '/status-ajax.php',
+    method: 'post',
+    params: data
+  })
+}
+
 export function fetchPv(pv) {
   return request({
     url: '/article/pv',

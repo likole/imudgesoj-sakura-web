@@ -14,15 +14,18 @@
             <pre v-html="problem.sample_input" />
             <h3 style="color: royalblue">样例输出 <el-button type="text" @click="handleCopy(problem.sample_output,$event)">复制</el-button></h3>
             <pre v-html="problem.sample_output" />
+            <h3 v-show="problem.hint!=''" style="color: royalblue">提示</h3>
+            <div v-show="problem.hint!=''" v-html="problem.hint" />
           </div>
         </el-card>
         <el-card>
           <el-form ref="form" :model="form" label-width="80px">
-            <el-select v-model="language" style="width: 90px;margin-bottom: 12px" class="filter-item">
-              <el-option v-for="item in languages" :key="item" :label="item" :value="item" />
+            <el-select v-model="submitData.language" style="width: 90px;margin-bottom: 12px" class="filter-item">
+              <el-option v-for="item in languages" :key="item.k" :label="item.k" :value="item.v" />
             </el-select>
-            <textarea ref="mycode" v-model="code" class="codesql" style="height:300px;width:600px;" />
-            <el-button style="margin-top: 12px" type="primary" @click="submit">提交</el-button>
+            <textarea ref="mycode" v-model="submitData.source" class="codesql" style="height:300px;width:600px;" />
+            <el-button style="margin-top: 12px" type="primary" @click="submit">{{ submitBtnText }}</el-button>
+            <el-button v-show="solution_id!=0" style="margin-top: 12px" type="success" @click="dialogVisible=true">查看上次运行结果</el-button>
           </el-form>
         </el-card>
       </el-col>
@@ -35,23 +38,30 @@
           <p>时间限制：{{ problem.time_limit }}S</p>
           <p>空间限制：{{ problem.memory_limit }}MB</p>
           <p>AC/提交：{{ problem.accepted }}/{{ problem.submit }}</p>
-          <el-progress :text-inside="true" :stroke-width="26" :percentage=" problem.accepted/problem.submit*100 |numFilter" />
+          <el-progress :text-inside="true" :stroke-width="26" :percentage="problem.accepted/problem.submit*100 |numFilter" />
         </el-card>
       </el-col>
     </el-row>
     <el-dialog
-      title="正在判题中。。。"
+      title="运行状态"
       :visible.sync="dialogVisible"
-      :show-close="false"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
+      :show-close.sync="closeDlg"
+      :close-on-click-modal.sync="closeDlg"
+      :close-on-press-escape.sync="closeDlg"
       width="30%"
     >
-      <span>这是一段信息</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span>
+      <span v-show="solution_id==0">{{ statusHint }}</span>
+      <div v-show="solution_id!=0">
+        <p>运行编号：{{ solution_id }}</p>
+        <span v-show="status.result==0">正在获取运行结果。。。</span>
+        <div v-show="status.result!=0">
+          <p>运行结果：{{ status.result_name }}</p>
+          <p>时间：{{ status.time }}</p>
+          <p>内存：{{ status.memory }}</p>
+          <p>判题机：{{ status.judger }}</p>
+        </div>
+      </div>
+
     </el-dialog>
   </div>
 </template>
@@ -62,7 +72,7 @@ import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
 import 'codemirror/addon/hint/show-hint.css'
 const CodeMirror = require('codemirror/lib/codemirror')
-import { fetchProblem } from '@/api/problems'
+import { fetchProblem, submitProblem, ajaxStatus } from '@/api/problems'
 require('codemirror/addon/edit/matchbrackets')
 require('codemirror/addon/selection/active-line')
 require('codemirror/addon/hint/show-hint')
@@ -89,25 +99,35 @@ export default {
   },
   data() {
     return {
-      id: 0,
       tempRoute: {},
-      code: '',
-      languages: ['C', 'C++', 'Java', 'Python'],
-      language: 'C++',
+      languages: [{ 'k': 'C', 'v': 0 }, { 'k': 'C++', 'v': 1 }, { 'k': 'Java', 'v': 3 }, { 'k': 'Python', 'v': 6 }],
       problem: {},
-      dialogVisible: false
+      dialogVisible: false,
+      editor: undefined,
+      submitData: {
+        id: 0,
+        source: '',
+        language: 1
+      },
+      solution_id: 0,
+      closeDlg: false,
+      status: {
+        result: 0
+      },
+      submitBtnText: '提交',
+      statusHint: '正在获取运行编号。。。'
     }
   },
   created() {
-    this.id = this.$route.params && this.$route.params.id
+    this.submitData.id = this.$route.params && this.$route.params.id
     this.tempRoute = Object.assign({}, this.$route)
-    this.fetchData(this.id)
+    this.fetchData(this.submitData.id)
   },
   mounted() {
     const mime = 'text/x-c++src'
     const theme = 'monokai'
-    const editor = CodeMirror.fromTextArea(this.$refs.mycode, {
-      placeholder: this.code,
+    this.editor = CodeMirror.fromTextArea(this.$refs.mycode, {
+      placeholder: this.submitData.source,
       indentUnit: 4,
       styleActiveLine: true,
       lineWrapping: true,
@@ -131,18 +151,39 @@ export default {
     },
     setTagsViewTitle() {
       const title = '提交'
-      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.id}-${this.problem.title}` })
+      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.submitData.id}-${this.problem.title}` })
       this.$store.dispatch('tagsView/updateVisitedView', route)
     },
     setPageTitle() {
       const title = '提交'
-      document.title = `${title} - ${this.id} - ${this.problem.title}`
+      document.title = `${title} - ${this.submitData.id} - ${this.problem.title}`
     },
     handleCopy(text, event) {
       clip(text, event)
     },
     submit() {
+      this.closeDlg = false
       this.dialogVisible = true
+      this.submitData.source = this.editor.getValue()
+      submitProblem(this.submitData).then(response => {
+        this.solution_id = parseInt(response.data)
+        this.getStatus()
+      }).catch(err => {
+        this.statusHint = err
+        this.closeDlg = true
+      })
+    },
+    getStatus() {
+      ajaxStatus({ 'solution_id': this.solution_id }).then(response => {
+        this.status = response.data
+        if (parseInt(this.status.result) < 4)setTimeout(this.getStatus, 2000)
+        else {
+          this.submitBtnText = '再次提交'
+          this.closeDlg = true
+          this.fetchData(this.submitData.id)
+        }
+      }
+      )
     }
   }
 }
