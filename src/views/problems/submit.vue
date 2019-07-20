@@ -63,11 +63,15 @@
       </div>
 
     </el-dialog>
+    <el-tooltip placement="top" content="返回顶部">
+      <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="50" transition-name="fade" />
+    </el-tooltip>
   </div>
 </template>
 
 <script>
 import clip from '@/utils/clipboard' // use clipboard directly
+import BackToTop from '@/components/BackToTop'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
 import 'codemirror/addon/hint/show-hint.css'
@@ -90,6 +94,7 @@ require('codemirror/mode/go/go')
 
 export default {
   name: 'ProblemsSubmit',
+  components: { BackToTop },
   filters: {
     numFilter(value) {
       // 截取当前数据到小数点后两位
@@ -115,7 +120,17 @@ export default {
         result: 0
       },
       submitBtnText: '提交',
-      statusHint: '正在获取运行编号。。。'
+      statusHint: '正在获取运行编号。。。',
+      // customizable button style, show/hide critical point, return position
+      myBackToTopStyle: {
+        right: '50px',
+        bottom: '50px',
+        width: '40px',
+        height: '40px',
+        'border-radius': '4px',
+        'line-height': '45px', // 请保持与高度一致以垂直居中 Please keep consistent with height to center vertically
+        background: '#e7eaf1'// 按钮的背景颜色 The background color of the button
+      }
     }
   },
   created() {

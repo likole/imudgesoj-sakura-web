@@ -1,7 +1,9 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.search" placeholder="标题，来源，描述" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-tooltip placement="bottom" content="多关键字以空格分隔">
+        <el-input v-model="listQuery.search" placeholder="标题，来源，描述" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      </el-tooltip>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
@@ -21,6 +23,13 @@
       :row-class-name="tableRowClassName"
       style="width: 100%;"
     >
+
+      <el-table-column label="" align="center" width="80px">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.result=='Y'" type="success">Y</el-tag>
+          <el-tag v-show="scope.row.result=='N'" type="danger">N</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="题目编号" sortable prop="id" align="center" width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
@@ -46,7 +55,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :page-sizes="[10,20,30,50,100]" :limit.sync="listQuery.limit" @pagination="getList" />
 
   </div>
 </template>
@@ -79,7 +88,7 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 100,
+        limit: 20,
         search: undefined
       },
       showCategory: false
@@ -99,7 +108,7 @@ export default {
       return ''
     },
     getList() {
-      Cookies.set('page', this.listQuery.page)
+      Cookies.set('page', this.listQuery.page, { expires: 30 })
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
         this.list = response.data.items
@@ -122,12 +131,14 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .el-table .fail-row {
+<style>
+  .fail-row {
+    color: darkred;
     background: oldlace;
   }
 
-  .el-table .success-row {
-    background: #f0f9eb;
+  .success-row {
+    color: darkgreen;
+    background: greenyellow;
   }
 </style>
