@@ -18,7 +18,6 @@
       :data="list"
       border
       fit
-      height
       highlight-current-row
       :row-class-name="tableRowClassName"
       style="width: 100%;"
@@ -37,7 +36,7 @@
       </el-table-column>
       <el-table-column label="标题" align="center">
         <template slot-scope="scope">
-          <router-link :to="'/problems/submit/'+scope.row.id" class="link-type">
+          <router-link :to="'/problem/submit/'+scope.row.id" class="link-type">
             <span>{{ scope.row.title }}</span>
           </router-link>
         </template>
@@ -61,13 +60,13 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/problems'
+import { fetchList } from '@/api/problem'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Cookies from 'js-cookie'
 
 export default {
-  name: 'ProblemsList',
+  name: 'ProblemList',
   components: { Pagination },
   directives: { waves },
   filters: {

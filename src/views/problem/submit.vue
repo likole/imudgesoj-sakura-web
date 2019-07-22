@@ -19,13 +19,23 @@
           </div>
         </el-card>
         <el-card>
-          <el-form ref="form" :model="form" label-width="80px">
+          <el-form ref="form" :model="form" label-width="80px" label-position="top">
             <el-select v-model="submitData.language" style="width: 90px;margin-bottom: 12px" class="filter-item">
               <el-option v-for="item in languages" :key="item.k" :label="item.k" :value="item.v" />
             </el-select>
+            <el-checkbox v-model="testrun" class="filter-item" style="margin-left:15px;">
+              测试运行
+            </el-checkbox>
             <textarea ref="mycode" v-model="submitData.source" class="codesql" style="height:300px;width:600px;" />
+            <el-form-item v-show="testrun" label="输入" style="margin-top: 12px ">
+              <el-input v-model="input_text" type="textarea" :autosize="true" />
+            </el-form-item>
+            <el-form-item v-show="testrun" label="输出" style="margin-top: 12px ">
+              <el-input :value="output_text" type="textarea" :autosize="true" />
+            </el-form-item>
             <el-button style="margin-top: 12px" type="primary" @click="submit">{{ submitBtnText }}</el-button>
-            <el-button v-show="solution_id!=0" style="margin-top: 12px" type="success" @click="dialogVisible=true">查看上次运行结果</el-button>
+            <el-button v-show="testrun" style="margin-top: 12px" type="primary" @click="submit1">测试运行</el-button>
+            <el-button v-show="submitBtnText=='再次提交'" style="margin-top: 12px" type="success" @click="dialogVisible=true">查看上次运行结果</el-button>
           </el-form>
         </el-card>
       </el-col>
@@ -63,6 +73,16 @@
       </div>
 
     </el-dialog>
+    <el-dialog
+      title="测试运行"
+      :visible.sync="dialogVisible1"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      width="30%"
+    >
+      正在获取运行结果，请耐心等待
+    </el-dialog>
     <el-tooltip placement="top" content="返回顶部">
       <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="50" transition-name="fade" />
     </el-tooltip>
@@ -76,7 +96,7 @@ import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
 import 'codemirror/addon/hint/show-hint.css'
 const CodeMirror = require('codemirror/lib/codemirror')
-import { fetchProblem, submitProblem, ajaxStatus } from '@/api/problems'
+import { fetchProblem, submitProblem, ajaxStatus } from '@/api/problem'
 require('codemirror/addon/edit/matchbrackets')
 require('codemirror/addon/selection/active-line')
 require('codemirror/addon/hint/show-hint')
@@ -93,7 +113,7 @@ require('codemirror/mode/lua/lua')
 require('codemirror/mode/go/go')
 
 export default {
-  name: 'ProblemsSubmit',
+  name: 'ProblemSubmit',
   components: { BackToTop },
   filters: {
     numFilter(value) {
@@ -108,6 +128,7 @@ export default {
       languages: [{ 'k': 'C', 'v': 0 }, { 'k': 'C++', 'v': 1 }, { 'k': 'Java', 'v': 3 }, { 'k': 'Python', 'v': 6 }],
       problem: {},
       dialogVisible: false,
+      dialogVisible1: false,
       editor: undefined,
       submitData: {
         id: 0,
@@ -115,6 +136,7 @@ export default {
         language: 1
       },
       solution_id: 0,
+      solution_id1: 0,
       closeDlg: false,
       status: {
         result: 0
@@ -130,7 +152,10 @@ export default {
         'border-radius': '4px',
         'line-height': '45px', // 请保持与高度一致以垂直居中 Please keep consistent with height to center vertically
         background: '#e7eaf1'// 按钮的背景颜色 The background color of the button
-      }
+      },
+      testrun: false,
+      input_text: '',
+      output_text: ''
     }
   },
   created() {
@@ -158,6 +183,7 @@ export default {
     fetchData(id) {
       fetchProblem(id).then(response => {
         this.problem = response.data
+        this.input_text = this.problem.sample_input
         this.setTagsViewTitle()
         this.setPageTitle()
       }).catch(err => {
@@ -178,6 +204,8 @@ export default {
     },
     submit() {
       this.closeDlg = false
+      this.solution_id = 0
+      this.status = { 'result': 0 }
       this.dialogVisible = true
       this.submitData.source = this.editor.getValue()
       submitProblem(this.submitData).then(response => {
@@ -188,6 +216,17 @@ export default {
         this.closeDlg = true
       })
     },
+    submit1() {
+      this.dialogVisible1 = true
+      submitProblem({ 'id': -this.submitData.id, 'source': this.editor.getValue(), 'input_text': this.input_text, 'language': this.submitData.language }).then(
+        response => {
+          this.solution_id1 = parseInt(response.data)
+          this.getStatus1()
+        }
+      ).catch(() => {
+        this.dialogVisible1 = false
+      })
+    },
     getStatus() {
       ajaxStatus({ 'solution_id': this.solution_id }).then(response => {
         this.status = response.data
@@ -196,6 +235,16 @@ export default {
           this.submitBtnText = '再次提交'
           this.closeDlg = true
           this.fetchData(this.submitData.id)
+        }
+      }
+      )
+    },
+    getStatus1() {
+      ajaxStatus({ 'solution_id': this.solution_id1, 'tr': 1 }).then(response => {
+        if (response.data.result === 0)setTimeout(this.getStatus1, 2000)
+        else {
+          this.output_text = response.data.error
+          this.dialogVisible1 = false
         }
       }
       )

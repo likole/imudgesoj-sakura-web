@@ -92,27 +92,33 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
-    path: '/problems',
+    path: '/problem',
     component: Layout,
-    redirect: '/problems/list',
-    name: 'Problems',
+    redirect: '/problem/list',
+    name: 'Problem',
     meta: {
       title: '问题',
-      icon: 'list'
+      icon: 'documentation'
     },
     children: [
       {
         path: 'submit/:id(\\d+)',
-        component: () => import('@/views/problems/submit'),
-        name: 'ProblemsSubmit',
+        component: () => import('@/views/problem/submit'),
+        name: 'ProblemSubmit',
         meta: { title: '提交', activeMenu: '/problems/list' },
         hidden: true
       },
       {
         path: 'list',
-        component: () => import('@/views/problems/list'),
-        name: 'ProblemsList',
-        meta: { title: '问题列表', icon: 'list' }
+        component: () => import('@/views/problem/list'),
+        name: 'ProblemList',
+        meta: { title: '列表', icon: 'list' }
+      },
+      {
+        path: 'status',
+        component: () => import('@/views/problem/status'),
+        name: 'ProblemStatus',
+        meta: { title: '状态', icon: 'skill' }
       }
     ]
   },
