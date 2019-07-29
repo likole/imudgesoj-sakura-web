@@ -1,6 +1,6 @@
 <template>
   <div class="upload-container">
-    <el-button :style="{background:color,borderColor:color}" icon="el-icon-upload" size="mini" type="primary" @click=" dialogVisible=true">
+    <el-button :style="{background:color,borderColor:color}" icon="el-icon-upload" size="mini" type="primary" @click=" sourceDialogVisible=true">
       upload
     </el-button>
     <el-dialog :visible.sync="dialogVisible">
@@ -19,7 +19,7 @@
           Click upload
         </el-button>
       </el-upload>
-      <el-button @click="dialogVisible = false">
+      <el-button @click="sourceDialogVisible = false">
         Cancel
       </el-button>
       <el-button type="primary" @click="handleSubmit">
@@ -42,7 +42,7 @@ export default {
   },
   data() {
     return {
-      dialogVisible: false,
+      sourceDialogVisible: false,
       listObj: {},
       fileList: []
     }

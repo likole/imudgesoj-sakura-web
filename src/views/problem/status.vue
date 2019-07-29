@@ -25,9 +25,8 @@
       <!--        reviewer-->
       <!--      </el-checkbox>-->
     </div>
-
     <el-button-group style="margin: 20px 0">
-      <el-button type="primary" icon="el-icon-d-arrow-left" @click="firstPage">首页</el-button>
+      <el-button type="primary" icon="el-icon-d-arrow-left" @click="firstPage">刷新/首页</el-button>
       <el-button type="primary" icon="el-icon-arrow-left" @click="prevPage">上一页</el-button>
       <el-button type="primary" @click="nextPage">下一页<i class="el-icon-arrow-right el-icon--right" /></el-button>
     </el-button-group>
@@ -61,7 +60,7 @@
       <el-table-column label="结果" width="200px" align="center">
         <template slot-scope="scope">
           <el-tag :type="scope.row.result.code|statusFilter">{{ scope.row.result.msg }}</el-tag>
-          <el-tag v-show="scope.row.result.sim_s_id!=undefined" >{{ scope.row.result.sim_s_id }}</el-tag>
+          <el-tag v-show="scope.row.result.sim_s_id!=undefined">{{ scope.row.result.sim_s_id }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="内存" align="center">
@@ -76,7 +75,8 @@
       </el-table-column>
       <el-table-column label="语言" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.language }}</span>
+          <span v-show="scope.row.language.sc==undefined">{{ scope.row.language.language }}</span>
+          <el-button v-show="scope.row.language.sc==true" type="text" @click="showSource(scope.row.solution_id)">{{ scope.row.language.language }}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="代码长度" align="center">
@@ -96,35 +96,29 @@
       </el-table-column>
     </el-table>
     <el-button-group style="margin: 20px 0">
-      <el-button type="primary" icon="el-icon-d-arrow-left" @click="firstPage">首页</el-button>
+      <el-button type="primary" icon="el-icon-d-arrow-left" @click="firstPage">刷新/首页</el-button>
       <el-button type="primary" icon="el-icon-arrow-left" @click="prevPage">上一页</el-button>
       <el-button type="primary" @click="nextPage">下一页<i class="el-icon-arrow-right el-icon--right" /></el-button>
     </el-button-group>
+    <el-dialog
+      title="查看源码"
+      :visible.sync="sourceDialogVisible"
+      width="70%"
+    >
+      <pre>{{source}}</pre>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchStatus } from '@/api/problem'
+import { fetchStatus, fetchSource } from '@/api/problem'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 
 export default {
   name: 'ProblemStatus',
   directives: { waves },
-  data() {
-    return {
-      tableKey: 0,
-      list: null,
-      listLoading: true,
-      listQuery: {
-        top: -1,
-        bottom: 0
-      },
-      dialogFormVisible: false,
-      downloadLoading: false
-    }
-  },
-  filters:{
+  filters: {
     statusFilter(status) {
       const statusMap = {
         '0': 'info',
@@ -143,6 +137,20 @@ export default {
         '13': ''
       }
       return statusMap[status]
+    }
+  },
+  data() {
+    return {
+      tableKey: 0,
+      list: null,
+      listLoading: true,
+      listQuery: {
+        top: -1,
+        bottom: 0
+      },
+      sourceDialogVisible: false,
+      source: '',
+      downloadLoading: false
     }
   },
   created() {
@@ -173,6 +181,13 @@ export default {
     nextPage() {
       this.listQuery.top = this.listQuery.bottom
       this.getList()
+    },
+    showSource(id) {
+      this.source = ''
+      fetchSource(id).then(response => {
+        this.source = response.data
+        this.sourceDialogVisible = true
+      })
     },
     handleDownload() {
       this.downloadLoading = true

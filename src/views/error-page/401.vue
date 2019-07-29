@@ -21,7 +21,7 @@
           <li class="link-type">
             <a href="https://www.taobao.com/">随便看看</a>
           </li>
-          <li><a href="#" @click.prevent="dialogVisible=true">点我看图</a></li>
+          <li><a href="#" @click.prevent="sourceDialogVisible=true">点我看图</a></li>
         </ul>
       </el-col>
       <el-col :span="12">
@@ -43,7 +43,7 @@ export default {
     return {
       errGif: errGif + '?' + +new Date(),
       ewizardClap: 'https://wpimg.wallstcn.com/007ef517-bafd-4066-aae4-6883632d9646',
-      dialogVisible: false
+      sourceDialogVisible: false
     }
   },
   methods: {

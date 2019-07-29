@@ -39,3 +39,11 @@ export function fetchStatus(query) {
     params: query
   })
 }
+
+export function fetchSource(id) {
+  return request({
+    url: '/source.php',
+    method: 'get',
+    params: { id }
+  })
+}

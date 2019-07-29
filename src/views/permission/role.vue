@@ -52,7 +52,7 @@
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
-        <el-button type="danger" @click="dialogVisible=false">Cancel</el-button>
+        <el-button type="danger" @click="sourceDialogVisible=false">Cancel</el-button>
         <el-button type="primary" @click="confirmRole">Confirm</el-button>
       </div>
     </el-dialog>
@@ -77,7 +77,7 @@ export default {
       role: Object.assign({}, defaultRole),
       routes: [],
       rolesList: [],
-      dialogVisible: false,
+      sourceDialogVisible: false,
       dialogType: 'new',
       checkStrictly: false,
       defaultProps: {
