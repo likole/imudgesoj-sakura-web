@@ -1,29 +1,49 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <!--      <el-input v-model="listQuery.problem_id" placeholder="题目编号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />-->
-      <!--      <el-input v-model="listQuery.user_id" placeholder="用户编号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />-->
-      <!--      <el-select v-model="listQuery.importance" placeholder="Imp" clearable style="width: 90px" class="filter-item">-->
-      <!--        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />-->
-      <!--      </el-select>-->
-      <!--      <el-select v-model="listQuery.type" placeholder="Type" clearable class="filter-item" style="width: 130px">-->
-      <!--        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />-->
-      <!--      </el-select>-->
-      <!--      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">-->
-      <!--        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />-->
-      <!--      </el-select>-->
-      <!--      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">-->
-      <!--        Search-->
-      <!--      </el-button>-->
-      <!--      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">-->
-      <!--        Add-->
-      <!--      </el-button>-->
-      <!--      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">-->
-      <!--        Export-->
-      <!--      </el-button>-->
-      <!--      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">-->
-      <!--        reviewer-->
-      <!--      </el-checkbox>-->
+      <el-input
+        v-model="listQuery.problem_id"
+        type="number"
+        placeholder="题目编号"
+        style="width: 200px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />
+      <el-input
+        v-model="listQuery.user_id"
+        placeholder="用户"
+        style="width: 200px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />
+      <el-select
+        v-model="listQuery.language"
+        placeholder="语言"
+        style="width: 200px"
+        class="filter-item"
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="item in languageOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+      <el-select
+        v-model="listQuery.jresult"
+        placeholder="结果"
+        style="width: 200px"
+        class="filter-item"
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="item in resultOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
     </div>
     <el-button-group style="margin: 20px 0">
       <el-button type="primary" icon="el-icon-d-arrow-left" @click="firstPage">刷新/首页</el-button>
@@ -51,7 +71,11 @@
       </el-table-column>
       <el-table-column label="问题" align="center">
         <template slot-scope="scope">
-          <router-link v-show="scope.row.problem_id!='0'" :to="'/problem/submit/'+scope.row.problem_id" class="link-type">
+          <router-link
+            v-show="scope.row.problem_id!='0'"
+            :to="'/problem/submit/'+scope.row.problem_id"
+            class="link-type"
+          >
             <span>{{ scope.row.problem_id }}</span>
           </router-link>
           <span v-show="scope.row.problem_id=='0'">{{ scope.row.problem_id }}</span>
@@ -59,7 +83,19 @@
       </el-table-column>
       <el-table-column label="结果" width="200px" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.result.code|statusFilter">{{ scope.row.result.msg }}</el-tag>
+          <el-tag
+            v-if="scope.row.result.ce===true"
+            :type="scope.row.result.code|statusFilter"
+            @click="handleCE(scope.row.solution_id)"
+          >{{ scope.row.result.msg }}
+          </el-tag>
+          <el-tag
+            v-else-if="scope.row.result.re===true"
+            :type="scope.row.result.code|statusFilter"
+            @click="handleRE(scope.row.solution_id)"
+          >{{ scope.row.result.msg }}
+          </el-tag>
+          <el-tag v-else :type="scope.row.result.code|statusFilter">{{ scope.row.result.msg }}</el-tag>
           <el-tag v-show="scope.row.result.sim_s_id!=undefined">{{ scope.row.result.sim_s_id }}</el-tag>
         </template>
       </el-table-column>
@@ -76,7 +112,9 @@
       <el-table-column label="语言" align="center">
         <template slot-scope="scope">
           <span v-show="scope.row.language.sc==undefined">{{ scope.row.language.language }}</span>
-          <el-button v-show="scope.row.language.sc==true" type="text" @click="showSource(scope.row.solution_id)">{{ scope.row.language.language }}</el-button>
+          <el-button v-show="scope.row.language.sc==true" type="text" @click="showSource(scope.row.solution_id)">{{
+            scope.row.language.language }}
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column label="代码长度" align="center">
@@ -105,13 +143,23 @@
       :visible.sync="sourceDialogVisible"
       width="70%"
     >
-      <pre>{{source}}</pre>
+      <pre>{{ source }}</pre>
+      <el-button type="primary" @click="handleCopy(source,$event)">复制</el-button>
     </el-dialog>
+    <el-dialog
+      title="详情"
+      :visible.sync="detailDialogVisible"
+      width="70%"
+    >
+      <pre>{{ detail }}</pre>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-import { fetchStatus, fetchSource } from '@/api/problem'
+import { fetchStatus, fetchSource, fetchCE, fetchRE } from '@/api/problem'
+import clip from '@/utils/clipboard'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 
@@ -146,11 +194,58 @@ export default {
       listLoading: true,
       listQuery: {
         top: -1,
-        bottom: 0
+        bottom: 0,
+        problem_id: undefined,
+        user_id: undefined,
+        language: '-1',
+        jresult: '-1',
+        showsim: 0
       },
       sourceDialogVisible: false,
       source: '',
-      downloadLoading: false
+      detailDialogVisible: false,
+      detail: '',
+      downloadLoading: false,
+      languageOptions: [{
+        value: '-1', label: '所有语言'
+      }, {
+        value: '0', label: 'C'
+      }, {
+        value: '1', label: 'C++'
+      }, {
+        value: '3', label: 'Java'
+      }, {
+        value: '6', label: 'Python'
+      }],
+      resultOptions: [{
+        value: '-1', label: '所有结果'
+      }, {
+        value: '4', label: '正确'
+      }, {
+        value: '5', label: '格式错误'
+      }, {
+        value: '6', label: '答案错误'
+      }, {
+        value: '7', label: '时间超限'
+      }, {
+        value: '8', label: '内存超限'
+      }, {
+        value: '9', label: '输出超限'
+      }, {
+        value: '10', label: '运行错误'
+      }, {
+        value: '11', label: '编译错误'
+      }, {
+        value: '0', label: '等待'
+      }, {
+        value: '1', label: '等待重判'
+      }, {
+        value: '2', label: '编译中'
+      }, {
+        value: '3', label: '运行并评判'
+      }
+
+      ]
     }
   },
   created() {
@@ -188,6 +283,23 @@ export default {
         this.source = response.data
         this.sourceDialogVisible = true
       })
+    },
+    handleCE(id) {
+      this.detail = ''
+      fetchCE(id).then(response => {
+        this.detail = response.data.detail
+        this.detailDialogVisible = true
+      })
+    },
+    handleRE(id) {
+      this.detail = ''
+      fetchRE(id).then(response => {
+        this.detail = response.data.detail
+        this.detailDialogVisible = true
+      })
+    },
+    handleCopy(text, event) {
+      clip(text, event)
     },
     handleDownload() {
       this.downloadLoading = true

@@ -47,3 +47,20 @@ export function fetchSource(id) {
     params: { id }
   })
 }
+
+export function fetchCE(sid) {
+  return request({
+    url: '/ce.php',
+    method: 'get',
+    params: { sid }
+  })
+}
+
+export function fetchRE(sid) {
+  return request({
+    url: '/re.php',
+    method: 'get',
+    params: { sid }
+  })
+}
+
