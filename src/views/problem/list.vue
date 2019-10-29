@@ -1,13 +1,13 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-tooltip placement="bottom" content="多关键字以空格分隔">
+      <el-tooltip placement="bottom" content="多关键词以空格分隔">
         <el-input v-model="listQuery.search" placeholder="标题，来源，描述" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       </el-tooltip>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         搜索
       </el-button>
-      <el-checkbox v-model="showCategory" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
+      <el-checkbox v-model="showCategory" class="filter-item" style="margin-left:15px;" @change="handleCategory">
         显示分类
       </el-checkbox>
     </div>
@@ -41,9 +41,9 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column v-if="showCategory" label="分类" width="110px" align="center">
+      <el-table-column v-if="showCategory" width="200px" label="分类" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.category }}</span>
+          <el-tag v-for="(item,index) in scope.row.category" :key="index">{{ item }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="正确率" :sortable="true" :sort-method="sortMethod" width="200px" align="center">
@@ -95,6 +95,8 @@ export default {
   },
   created() {
     if (Cookies.get('page') !== undefined) this.listQuery.page = parseInt(Cookies.get('page'))
+    if (Cookies.get('limit') !== undefined) this.listQuery.limit = parseInt(Cookies.get('limit'))
+    if (Cookies.get('showCategory') !== undefined) this.showCategory = Cookies.get('showCategory') === 'true'
     this.getList()
   },
   methods: {
@@ -108,6 +110,7 @@ export default {
     },
     getList() {
       Cookies.set('page', this.listQuery.page, { expires: 30 })
+      Cookies.set('limit', this.listQuery.limit, { expires: 30 })
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
         this.list = response.data.items
@@ -126,6 +129,11 @@ export default {
       const tmp2 = obj2.submit == 0 ? 0 : (obj2.ac / obj2.submit)
       if (tmp1 < tmp2) return -1
       return 1
+    },
+    handleCategory() {
+      console.log(11111)
+      this.tableKey = this.tableKey + 1
+      Cookies.set('showCategory', this.showCategory)
     }
   }
 }
