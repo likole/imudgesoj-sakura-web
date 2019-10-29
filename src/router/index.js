@@ -123,6 +123,24 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/score',
+    component: Layout,
+    redirect: '/score/index',
+    name: 'Score',
+    meta: {
+      title: '积分',
+      icon: 'documentation'
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/score/index'),
+        name: 'ScoreIndex',
+        meta: { title: '积分中心', icon: 'list' }
+      }
+    ]
+  },
+  {
     path: 'website',
     component: Layout,
     children: [

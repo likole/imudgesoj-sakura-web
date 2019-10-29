@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-input v-model="pid" type="number" placeholder="输入题号按回车直接跳转" style="width: 200px;" class="filter-item" @keyup.enter.native="handleDirect" />
       <el-tooltip placement="bottom" content="多关键词以空格分隔">
         <el-input v-model="listQuery.search" placeholder="标题，来源，描述" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       </el-tooltip>
@@ -90,7 +91,8 @@ export default {
         limit: 20,
         search: undefined
       },
-      showCategory: false
+      showCategory: false,
+      pid: undefined
     }
   },
   created() {
@@ -131,9 +133,11 @@ export default {
       return 1
     },
     handleCategory() {
-      console.log(11111)
       this.tableKey = this.tableKey + 1
       Cookies.set('showCategory', this.showCategory)
+    },
+    handleDirect() {
+      if (this.pid !== undefined) { this.$router.push('/problem/submit/' + this.pid) }
     }
   }
 }

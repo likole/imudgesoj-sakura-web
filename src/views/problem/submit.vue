@@ -48,7 +48,7 @@
           <p>时间限制：{{ problem.time_limit }}S</p>
           <p>空间限制：{{ problem.memory_limit }}MB</p>
           <p>AC/提交：{{ problem.accepted }}/{{ problem.submit }}</p>
-          <el-progress :text-inside="true" :stroke-width="26" :percentage="problem.accepted/problem.submit*100 |numFilter" />
+          <el-progress :text-inside="true" :stroke-width="26" :percentage="problem.submit==0?0:problem.accepted/problem.submit*100 |numFilter" />
         </el-card>
       </el-col>
     </el-row>
@@ -161,9 +161,9 @@ export default {
   created() {
     this.submitData.id = this.$route.params && this.$route.params.id
     this.tempRoute = Object.assign({}, this.$route)
-    this.fetchData(this.submitData.id)
   },
   mounted() {
+    this.fetchData(this.submitData.id)
     const mime = 'text/x-c++src'
     const theme = 'monokai'
     this.editor = CodeMirror.fromTextArea(this.$refs.mycode, {
