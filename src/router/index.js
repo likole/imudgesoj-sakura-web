@@ -82,24 +82,11 @@ export const constantRoutes = [
         meta: { title: '首页', icon: 'dashboard', affix: true }
       }
     ]
-  }
-
-]
-
-/**
- * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
- */
-export const asyncRoutes = [
+  },
   {
     path: '/problem',
     component: Layout,
     redirect: '/problem/list',
-    name: 'Problem',
-    meta: {
-      title: '问题',
-      icon: 'documentation'
-    },
     children: [
       {
         path: 'submit/:id(\\d+)',
@@ -112,16 +99,32 @@ export const asyncRoutes = [
         path: 'list',
         component: () => import('@/views/problem/list'),
         name: 'ProblemList',
-        meta: { title: '列表', icon: 'list' }
-      },
-      {
-        path: 'status',
-        component: () => import('@/views/problem/status'),
-        name: 'ProblemStatus',
-        meta: { title: '状态', icon: 'skill' }
+        meta: { title: '问题', icon: 'documentation' }
       }
     ]
   },
+  {
+    path: '/status',
+    component: Layout,
+    redirect: '/status/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/status/index'),
+        name: 'Status',
+        meta: { title: '状态', icon: 'skill' }
+      }
+    ]
+  }
+
+]
+
+/**
+ * asyncRoutes
+ * the routes that need to be dynamically loaded based on user roles
+ */
+export const asyncRoutes = [
+
   {
     path: '/score',
     component: Layout,

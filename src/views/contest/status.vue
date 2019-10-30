@@ -164,7 +164,7 @@ import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 
 export default {
-  name: 'ProblemStatus',
+  name: 'ContestStatus',
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -304,8 +304,8 @@ export default {
     handleDownload() {
       this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-          const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
+          const tHeader = ['timestamp', 'title', 'type', 'importance', 'index.vue']
+          const filterVal = ['timestamp', 'title', 'type', 'importance', 'index.vue']
           const data = this.formatJson(filterVal, this.list)
           excel.export_json_to_excel({
             header: tHeader,
