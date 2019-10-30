@@ -64,3 +64,10 @@ export function fetchRE(sid) {
   })
 }
 
+export function fetchRanklist(query) {
+  return request({
+    url: '/ranklist.php',
+    method: 'get',
+    params: query
+  })
+}

@@ -115,6 +115,19 @@ export const constantRoutes = [
         meta: { title: '状态', icon: 'skill' }
       }
     ]
+  },
+  {
+    path: '/ranklist',
+    component: Layout,
+    redirect: '/ranklist/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/ranklist/index'),
+        name: 'Ranklist',
+        meta: { title: '排名', icon: 'list' }
+      }
+    ]
   }
 
 ]
