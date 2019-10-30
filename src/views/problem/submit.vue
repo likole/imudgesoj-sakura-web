@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <el-col :span="18">
+      <el-col :lg="18" :sm="24">
         <el-card style="margin-bottom: 20px">
           <div>
             <h3 style="color: royalblue">问题描述</h3>
@@ -18,7 +18,7 @@
             <div v-show="problem.hint!=''" v-html="problem.hint" />
           </div>
         </el-card>
-        <el-card>
+        <el-card style="margin-bottom: 20px">
           <el-form ref="form" :model="form" label-width="80px" label-position="top">
             <el-select v-model="submitData.language" style="width: 90px;margin-bottom: 12px" class="filter-item">
               <el-option v-for="item in languages" :key="item.k" :label="item.k" :value="item.v" />
@@ -39,7 +39,7 @@
           </el-form>
         </el-card>
       </el-col>
-      <el-col :span="6">
+      <el-col :lg="6" :sm="24">
         <el-card>
           <p>题目编号：{{ problem.problem_id }}</p>
           <p>标题：{{ problem.title }}</p>

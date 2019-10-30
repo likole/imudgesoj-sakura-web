@@ -1,15 +1,18 @@
 <template>
   <div class="app-container">
-    <el-row>
-      <el-col :span="4">
-        <el-card class="box-card">
+    <h3>目前积分：{{ score }}</h3>
+    <el-row :gutter="20">
+      <el-col v-for="(item,index) in list" :key="index" :lg="6" :sm="12">
+        <el-card class="box-card" style="margin-bottom: 20px">
           <div slot="header" class="clearfix">
-            <span>每日礼包一</span>
+            <span>{{ item.name }} （积分：{{ item.score }}）</span>
           </div>
           <p>
-            刷题满3题即可领取。
+            {{ item.description }}
           </p>
-          <el-button type="success">领取</el-button>
+          <el-button v-if="item.status===0" disabled="disabled">未达成条件</el-button>
+          <el-button v-else-if="item.status===1" type="success" @click="updateStatus(index)">领取</el-button>
+          <el-button v-else-if="item.status===2" type="success" disabled="disabled">已领取</el-button>
         </el-card>
       </el-col>
     </el-row>
@@ -17,14 +20,15 @@
   </div>
 </template>
 <script>
-import { fetchList } from '@/api/score'
+import { fetchAchieveList, achieveOper } from '@/api/score'
 import waves from '@/directive/waves' // waves directive
 export default {
   name: 'ScoreAchieve',
   directives: { waves },
   data() {
     return {
-      score: 0
+      score: 0,
+      list: null
     }
   },
   created() {
@@ -32,8 +36,14 @@ export default {
   },
   methods: {
     getStatus() {
-      fetchList().then(response => {
-        this.score_log = response.data.score_log
+      fetchAchieveList().then(response => {
+        this.list = response.data.score_list
+        this.score = response.data.score
+      })
+    },
+    updateStatus(id) {
+      achieveOper(id).then(response => {
+        this.list = response.data.score_list
         this.score = response.data.score
       })
     }

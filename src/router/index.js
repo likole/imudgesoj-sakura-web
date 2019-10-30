@@ -143,13 +143,13 @@ export const constantRoutes = [
         path: 'achieve',
         component: () => import('@/views/score/achieve'),
         name: 'ScoreAchieve',
-        meta: { title: '领取积分', icon: 'edit' }
+        meta: { title: '领取积分', icon: 'edit', noCache: true }
       },
       {
         path: 'log',
         component: () => import('@/views/score/log'),
         name: 'ScoreLog',
-        meta: { title: '积分记录', icon: 'list' }
+        meta: { title: '积分记录', icon: 'list', noCache: true }
       }
     ]
   }
