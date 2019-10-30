@@ -99,7 +99,7 @@ export const constantRoutes = [
         path: 'list',
         component: () => import('@/views/problem/list'),
         name: 'ProblemList',
-        meta: { title: '问题', icon: 'documentation' }
+        meta: { title: '问题', icon: 'message' }
       }
     ]
   },
@@ -125,7 +125,31 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/ranklist/index'),
         name: 'Ranklist',
-        meta: { title: '排名', icon: 'list' }
+        meta: { title: '排名', icon: 'chart' }
+      }
+    ]
+  },
+  {
+    path: '/score',
+    component: Layout,
+    redirect: '/score/achieve',
+    name: 'Score',
+    meta: {
+      title: '积分中心',
+      icon: 'money'
+    },
+    children: [
+      {
+        path: 'achieve',
+        component: () => import('@/views/score/achieve'),
+        name: 'ScoreAchieve',
+        meta: { title: '领取积分', icon: 'edit' }
+      },
+      {
+        path: 'log',
+        component: () => import('@/views/score/log'),
+        name: 'ScoreLog',
+        meta: { title: '积分记录', icon: 'list' }
       }
     ]
   }
@@ -138,24 +162,6 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
 
-  {
-    path: '/score',
-    component: Layout,
-    redirect: '/score/index',
-    name: 'Score',
-    meta: {
-      title: '积分',
-      icon: 'documentation'
-    },
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/score/index'),
-        name: 'ScoreIndex',
-        meta: { title: '积分中心', icon: 'list' }
-      }
-    ]
-  },
   {
     path: 'website',
     component: Layout,

@@ -44,6 +44,20 @@
           :value="item.value"
         />
       </el-select>
+      <el-select
+        v-model="listQuery.showsim"
+        placeholder="相似度"
+        style="width: 200px"
+        class="filter-item"
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="item in simOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
     </div>
     <el-button-group style="margin: 20px 0">
       <el-button type="primary" icon="el-icon-d-arrow-left" @click="firstPage">刷新/首页</el-button>
@@ -199,7 +213,7 @@ export default {
         user_id: undefined,
         language: '-1',
         jresult: '-1',
-        showsim: 0
+        showsim: '0'
       },
       sourceDialogVisible: false,
       source: '',
@@ -243,9 +257,22 @@ export default {
         value: '2', label: '编译中'
       }, {
         value: '3', label: '运行并评判'
-      }
-
-      ]
+      }],
+      simOptions: [{
+        value: '0', label: '所有相似度'
+      }, {
+        value: '50', label: '50%'
+      }, {
+        value: '60', label: '60%'
+      }, {
+        value: '70', label: '70%'
+      }, {
+        value: '80', label: '80%'
+      }, {
+        value: '90', label: '90%'
+      }, {
+        value: '100', label: '100%'
+      }]
     }
   },
   created() {
@@ -270,7 +297,7 @@ export default {
       this.getList()
     },
     prevPage() {
-      this.listQuery.top = parseInt(this.listQuery.top) + 20
+      this.listQuery.top = this.listQuery.top + 20
       this.getList()
     },
     nextPage() {
