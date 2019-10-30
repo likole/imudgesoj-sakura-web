@@ -44,7 +44,7 @@
       </el-table-column>
       <el-table-column v-if="showCategory" width="200px" label="分类" align="center">
         <template slot-scope="scope">
-          <el-tag v-for="(item,index) in scope.row.category" :key="index">{{ item }}</el-tag>
+          <el-tag v-for="(item,index) in scope.row.category" :key="index" @click="searchCategory(item)">{{ item }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="正确率" :sortable="true" :sort-method="sortMethod" width="200px" align="center">
@@ -121,6 +121,11 @@ export default {
       })
     },
     handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
+    },
+    searchCategory(category) {
+      this.listQuery.search = category
       this.listQuery.page = 1
       this.getList()
     },
