@@ -58,7 +58,7 @@
       :show-close.sync="closeDlg"
       :close-on-click-modal.sync="closeDlg"
       :close-on-press-escape.sync="closeDlg"
-      width="30%"
+      width="70%"
     >
       <span v-show="solution_id==0">{{ statusHint }}</span>
       <div v-show="solution_id!=0">
