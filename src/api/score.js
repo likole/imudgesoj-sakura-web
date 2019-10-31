@@ -14,6 +14,21 @@ export function fetchAchieveList() {
   })
 }
 
+export function fetchVip() {
+  return request({
+    url: '/score_vip.php',
+    method: 'get'
+  })
+}
+
+export function openVip(open) {
+  return request({
+    url: '/score_vip.php',
+    method: 'get',
+    params: { open }
+  })
+}
+
 export function achieveOper(oper) {
   return request({
     url: '/score_achieve.php',

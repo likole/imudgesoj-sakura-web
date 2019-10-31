@@ -146,6 +146,12 @@ export const constantRoutes = [
         meta: { title: '领取积分', icon: 'edit', noCache: true }
       },
       {
+        path: 'vip',
+        component: () => import('@/views/score/vip'),
+        name: 'ScoreVIP',
+        meta: { title: '会员中心', icon: 'peoples', noCache: true }
+      },
+      {
         path: 'log',
         component: () => import('@/views/score/log'),
         name: 'ScoreLog',
