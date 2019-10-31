@@ -4,7 +4,14 @@
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData" />
     </el-row>
-
+    <el-card v-for="(item,index) in news" :key="index" class="box-card" style="margin-bottom: 20px">
+      <div slot="header" class="clearfix">
+        <span>{{item.title}} - {{item.user_id}}</span>
+        <span style="float: right">{{item.time}}</span>
+      </div>
+      <div v-html="item.content">
+      </div>
+    </el-card>
   </div>
 </template>
 
@@ -19,7 +26,8 @@ export default {
   },
   data() {
     return {
-      lineChartData: null
+      lineChartData: null,
+      news: null
     }
   },
   created() {
@@ -28,7 +36,8 @@ export default {
   methods: {
     loadChart() {
       fetchChart().then(response => {
-        this.lineChartData = response.data
+        this.lineChartData = response.data.chart
+        this.news = response.data.news
       })
     }
   }

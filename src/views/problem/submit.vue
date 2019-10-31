@@ -69,6 +69,8 @@
           <p>时间：{{ status.time }}</p>
           <p>内存：{{ status.memory }}</p>
           <p>判题机：{{ status.judger }}</p>
+          <pre v-show="status.ce==true" v-html="ce"></pre>
+          <pre v-show="status.re==true" v-html="re"></pre>
         </div>
       </div>
 
@@ -96,7 +98,7 @@ import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
 import 'codemirror/addon/hint/show-hint.css'
 const CodeMirror = require('codemirror/lib/codemirror')
-import { fetchProblem, submitProblem, ajaxStatus } from '@/api/problem'
+import { fetchProblem, submitProblem, ajaxStatus, fetchRE, fetchCE } from '@/api/problem'
 require('codemirror/addon/edit/matchbrackets')
 require('codemirror/addon/selection/active-line')
 require('codemirror/addon/hint/show-hint')
@@ -141,6 +143,8 @@ export default {
       status: {
         result: 0
       },
+      re: null,
+      ce: null,
       submitBtnText: '提交',
       statusHint: '正在获取运行编号。。。',
       // customizable button style, show/hide critical point, return position
@@ -205,6 +209,8 @@ export default {
     submit() {
       this.closeDlg = false
       this.solution_id = 0
+      this.ce = null
+      this.re = null
       this.status = { 'result': 0 }
       this.dialogVisible = true
       this.submitData.source = this.editor.getValue()
@@ -232,6 +238,16 @@ export default {
         this.status = response.data
         if (parseInt(this.status.result) < 4)setTimeout(this.getStatus, 2000)
         else {
+          if (this.status.ce === true) {
+            fetchCE(this.solution_id).then(response => {
+              this.ce = response.data.detail
+            })
+          }
+          if (this.status.re === true) {
+            fetchRE(this.solution_id).then(response => {
+              this.re = response.data.detail
+            })
+          }
           this.submitBtnText = '再次提交'
           this.closeDlg = true
           this.fetchData(this.submitData.id)
