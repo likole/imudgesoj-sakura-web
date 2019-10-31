@@ -130,6 +130,19 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/contest',
+    component: Layout,
+    redirect: '/contest/list',
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/contest/list'),
+        name: 'ContestList',
+        meta: { title: '竞赛', icon: 'example' }
+      }
+    ]
+  },
+  {
     path: '/score',
     component: Layout,
     redirect: '/score/achieve',
