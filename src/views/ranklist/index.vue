@@ -24,7 +24,6 @@
       border
       fit
       highlight-current-row
-      :row-class-name="tableRowClassName"
       style="width: 100%;"
     >
 
