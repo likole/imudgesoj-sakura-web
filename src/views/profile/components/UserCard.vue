@@ -1,8 +1,8 @@
 <template>
   <el-card style="margin-bottom:20px;">
-    <div slot="header" class="clearfix">
-      <span>About me</span>
-    </div>
+    <!--    <div slot="header" class="clearfix">-->
+    <!--      <span>About me</span>-->
+    <!--    </div>-->
 
     <div class="user-profile">
       <div class="box-center">
@@ -19,41 +19,36 @@
 
     <div class="user-bio">
       <div class="user-education user-bio-section">
-        <div class="user-bio-section-header"><svg-icon icon-class="education" /><span>Education</span></div>
+        <div class="user-bio-section-header"><svg-icon icon-class="education" /><span>基本信息</span></div>
         <div class="user-bio-section-body">
           <div class="text-muted">
-            JS in Computer Science from the University of Technology
+            <p>昵称：{{ profileBasic.nick }}</p>
+            <p>学校：{{ profileBasic.school }}</p>
+            <p>邮箱：{{ profileBasic.email }}</p>
           </div>
         </div>
       </div>
 
-      <div class="user-skills user-bio-section">
-        <div class="user-bio-section-header"><svg-icon icon-class="skill" /><span>Skills</span></div>
-        <div class="user-bio-section-body">
-          <div class="progress-item">
-            <span>Vue</span>
-            <el-progress :percentage="70" />
-          </div>
-          <div class="progress-item">
-            <span>JavaScript</span>
-            <el-progress :percentage="18" />
-          </div>
-          <div class="progress-item">
-            <span>Css</span>
-            <el-progress :percentage="12" />
-          </div>
-          <div class="progress-item">
-            <span>ESLint</span>
-            <el-progress :percentage="100" status="success" />
+      <div class="user-bio">
+        <div class="user-education user-bio-section">
+          <div class="user-bio-section-header"><svg-icon icon-class="skill" /><span>刷题概况</span></div>
+          <div class="user-bio-section-body">
+            <div class="text-muted">
+              <p>排名： {{ profileBasic.rank }}</p>
+              <p>提交： {{ profileBasic.submit }}</p>
+              <p>解决： {{ profileBasic.ac }}</p>
+              <p v-for="(item,index) in profileBasic.status" :key="index">{{item.result}}： {{item.count}}</p>
+            </div>
           </div>
         </div>
+
       </div>
-    </div>
-  </el-card>
+    </div></el-card>
 </template>
 
 <script>
 import PanThumb from '@/components/PanThumb'
+import { fetchProfileBasic } from '@/api/user'
 
 export default {
   components: { PanThumb },
@@ -69,6 +64,16 @@ export default {
         }
       }
     }
+  },
+  data() {
+    return {
+      profileBasic: {}
+    }
+  },
+  created() {
+    fetchProfileBasic(this.user.name).then(response => {
+      this.profileBasic = response.data
+    })
   }
 }
 </script>

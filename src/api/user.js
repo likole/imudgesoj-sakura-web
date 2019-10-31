@@ -21,3 +21,11 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function fetchProfileBasic(user) {
+  return request({
+    url: '/profile_basic.php',
+    method: 'get',
+    params: { user }
+  })
+}

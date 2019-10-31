@@ -182,7 +182,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'https://acm.likole.com',
-        meta: { title: '访问网页版', icon: 'link' }
+        meta: { title: '访问旧版', icon: 'link' }
       }
     ]
   },
