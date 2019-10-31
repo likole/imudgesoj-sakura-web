@@ -115,15 +115,8 @@ require('codemirror/mode/lua/lua')
 require('codemirror/mode/go/go')
 
 export default {
-  name: 'ProblemSubmit',
+  name: 'ContestSubmit',
   components: { BackToTop },
-  filters: {
-    numFilter(value) {
-      // 截取当前数据到小数点后两位
-      const realVal = parseFloat(value).toFixed(2)
-      return realVal
-    }
-  },
   data() {
     return {
       tempRoute: {},
