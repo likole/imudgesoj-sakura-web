@@ -49,6 +49,7 @@
           <p>空间限制：{{ problem.memory_limit }}MB</p>
           <p>AC/提交：{{ problem.accepted }}/{{ problem.submit }}</p>
           <el-progress :text-inside="true" :stroke-width="26" :percentage="progress" />
+          <!--          todo:问题状态-->
         </el-card>
       </el-col>
     </el-row>

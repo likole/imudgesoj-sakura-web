@@ -10,9 +10,10 @@
           <p>
             {{ item.description }}
           </p>
-          <el-button v-if="item.status===0" disabled="disabled">未达成条件</el-button>
+          <el-button v-if="item.status===0" type="danger" disabled="disabled">未达成条件</el-button>
           <el-button v-else-if="item.status===1" type="success" @click="updateStatus(index)">领取</el-button>
           <el-button v-else-if="item.status===2" type="success" disabled="disabled">已领取</el-button>
+          <el-button v-else-if="item.status===3" disabled="disabled">已失效</el-button>
         </el-card>
       </el-col>
     </el-row>
