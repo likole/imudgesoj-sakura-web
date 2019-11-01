@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-tooltip placement="bottom" content="提示: 搜索用户时会显示总榜">
+        <el-input v-model="listQuery.prefix" placeholder="搜索用户" style="width: 200px;" class="filter-item" @keyup.enter.native="getList" />
+      </el-tooltip>
       <el-select
         v-model="listQuery.scope"
         placeholder="范围"
@@ -89,7 +92,8 @@ export default {
       list: null,
       listQuery: {
         scope: '',
-        start: 1
+        start: 1,
+        prefix: undefined
       },
       total: 0,
       listLoading: true,
@@ -107,6 +111,7 @@ export default {
   },
   methods: {
     getList() {
+      if (this.listQuery.prefix !== undefined && this.listQuery.prefix.length > 0) this.listQuery.scope = ''
       this.listLoading = true
       fetchRanklist(this.listQuery).then(response => {
         this.list = response.data.list
