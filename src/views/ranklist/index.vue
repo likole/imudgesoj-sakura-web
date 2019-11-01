@@ -37,12 +37,16 @@
       </el-table-column>
       <el-table-column label="用户" align="center" width="200px">
         <template slot-scope="scope">
-          {{ scope.row.user_id }}
+          <router-link :to="'/profile/user/'+scope.row.user_id" class="link-type">
+            {{ scope.row.user_id }}
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column label="昵称" align="center">
         <template slot-scope="scope">
-          {{ scope.row.nick }}
+          <router-link :to="'/profile/user/'+scope.row.user_id" class="link-type">
+            {{ scope.row.nick }}
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column label="正确" align="center" width="80px">

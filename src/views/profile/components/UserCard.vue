@@ -4,7 +4,7 @@
     <!--      <span>About me</span>-->
     <!--    </div>-->
 
-    <div class="user-profile">
+    <div v-if="user.role!==''" class="user-profile">
       <div class="box-center">
         <pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">
           <div>Hello</div>
@@ -37,21 +37,22 @@
               <p>排名： {{ profileBasic.rank }}</p>
               <p>提交： {{ profileBasic.submit }}</p>
               <p>解决： {{ profileBasic.ac }}</p>
-              <p v-for="(item,index) in profileBasic.status" :key="index">{{item.result}}： {{item.count}}</p>
+              <p v-for="(item,index) in profileBasic.status" :key="index">{{ item.name }}： {{ item.value }}</p>
             </div>
           </div>
         </div>
-
       </div>
+      <pie-chart v-if="profileBasic.status!==undefined" :chart-data="profileBasic.status" />
     </div></el-card>
 </template>
 
 <script>
 import PanThumb from '@/components/PanThumb'
 import { fetchProfileBasic } from '@/api/user'
+import PieChart from './PieChart'
 
 export default {
-  components: { PanThumb },
+  components: { PanThumb, PieChart },
   props: {
     user: {
       type: Object,

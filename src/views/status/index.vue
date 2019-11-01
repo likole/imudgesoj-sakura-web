@@ -80,7 +80,9 @@
       </el-table-column>
       <el-table-column label="用户名" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.user_id }}</span>
+          <router-link :to="'/profile/user/'+scope.row.user_id" class="link-type">
+            {{ scope.row.user_id }}
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column label="问题" align="center">
