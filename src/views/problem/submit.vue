@@ -188,6 +188,7 @@ export default {
     fetchData(id) {
       fetchProblem(id).then(response => {
         this.problem = response.data
+        // eslint-disable-next-line eqeqeq
         if (this.problem.submit == 0) this.progress = 0
         else this.progress = parseInt(this.problem.accepted * 100 / this.problem.submit)
         this.input_text = this.problem.sample_input

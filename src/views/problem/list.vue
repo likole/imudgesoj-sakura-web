@@ -65,7 +65,7 @@
       :visible.sync="categoryDialogVisible"
       width="70%"
     >
-      <el-tag v-for="(item,index) in categories" :key="index" :type="item.color" style="margin:5px 10px" @click="searchCategory(item.category)">{{item.category}}</el-tag>
+      <el-tag v-for="(item,index) in categories" :key="index" :type="item.color" style="margin:5px 10px" @click="searchCategory(item.category)">{{ item.category }}</el-tag>
     </el-dialog>
   </div>
 </template>
