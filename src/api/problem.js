@@ -71,3 +71,10 @@ export function fetchRanklist(query) {
     params: query
   })
 }
+
+export function fetchCategories() {
+  return request({
+    url: '/category.php',
+    method: 'get'
+  })
+}

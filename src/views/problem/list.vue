@@ -11,6 +11,9 @@
       <el-checkbox v-model="showCategory" class="filter-item" style="margin-left:15px;" @change="handleCategory">
         显示分类
       </el-checkbox>
+      <el-button v-waves class="filter-item" type="primary" @click="showAllCategory">
+        查看所有分类
+      </el-button>
     </div>
 
     <el-table
@@ -57,11 +60,18 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :page-sizes="[10,20,30,50,100]" :limit.sync="listQuery.limit" @pagination="getList" />
 
+    <el-dialog
+      title="所有分类"
+      :visible.sync="categoryDialogVisible"
+      width="70%"
+    >
+      <el-tag v-for="(item,index) in categories" :key="index" :type="item.color" style="margin:5px 10px" @click="searchCategory(item.category)">{{item.category}}</el-tag>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchList } from '@/api/problem'
+import { fetchList, fetchCategories } from '@/api/problem'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Cookies from 'js-cookie'
@@ -92,7 +102,9 @@ export default {
         search: undefined
       },
       showCategory: false,
-      pid: undefined
+      pid: undefined,
+      categoryDialogVisible: false,
+      categories: null
     }
   },
   created() {
@@ -143,6 +155,14 @@ export default {
     },
     handleDirect() {
       if (this.pid !== undefined) { this.$router.push('/problem/submit/' + this.pid) }
+    },
+    showAllCategory() {
+      if (this.categories == null) {
+        fetchCategories().then(response => {
+          this.categories = response.data
+        })
+      }
+      this.categoryDialogVisible = true
     }
   }
 }
