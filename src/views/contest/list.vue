@@ -78,7 +78,7 @@
             </el-table-column>
             <el-table-column label="编号" align="center" width="150px">
               <template slot-scope="scope">
-                {{ scope.row.id }}
+                {{ scope.row.pid }} Problem{{ scope.row.id }}
               </template>
             </el-table-column>
             <el-table-column label="标题" align="center" width="">

@@ -23,15 +23,15 @@ export function fetchRanklist(cid) {
   })
 }
 
-// 以下没有用
-
-export function fetchProblem(id) {
+export function fetchProblem(cid, pid) {
   return request({
     url: '/problem.php',
     method: 'get',
-    params: { id }
+    params: { cid, pid }
   })
 }
+
+// 以下没有用
 
 export function submitProblem(data) {
   return request({
