@@ -43,9 +43,6 @@
         <el-button v-waves class="filter-item" type="primary" icon="el-icon-back" @click="getContests">
           返回竞赛列表
         </el-button>
-        <el-button v-waves class="filter-item" type="primary" icon="el-icon-refresh" @click="getProblems(cid)">
-          刷新
-        </el-button>
       </div>
 
       <h2 align="center">{{ cid }} - <span v-html="contest.title" /></h2>
@@ -58,6 +55,11 @@
 
       <el-tabs v-model="activeTab">
         <el-tab-pane label="问 题" name="problems">
+          <div class="filter-container">
+            <el-button v-waves class="filter-item" type="primary" icon="el-icon-refresh" @click="getProblems(cid)">
+              刷新
+            </el-button>
+          </div>
           <el-table
             :key="tableKey"
             v-loading="listLoading"
@@ -105,7 +107,7 @@
           <status :cid="cid" />
         </el-tab-pane>
         <el-tab-pane label="排 名" name="ranklist">
-          还没写呢
+          <contest-rank :cid="cid" />
         </el-tab-pane>
       </el-tabs>
 
@@ -117,13 +119,14 @@
 <script>
 import { fetchContests, fetchProblems } from '@/api/contest'
 import Status from '../status/index'
+import ContestRank from './components/contestrank'
 import waves from '@/directive/waves' // waves directive
 import Cookies from 'js-cookie'
 
 export default {
   name: 'ContestList',
   directives: { waves },
-  components: { Status },
+  components: { Status, ContestRank },
   data() {
     return {
       tableKey: 0,

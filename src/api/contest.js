@@ -15,6 +15,16 @@ export function fetchProblems(cid) {
   })
 }
 
+export function fetchRanklist(cid) {
+  return request({
+    url: '/contestrank.php',
+    method: 'get',
+    params: { cid }
+  })
+}
+
+// 以下没有用
+
 export function fetchProblem(id) {
   return request({
     url: '/problem.php',
@@ -68,13 +78,5 @@ export function fetchRE(sid) {
     url: '/re.php',
     method: 'get',
     params: { sid }
-  })
-}
-
-export function fetchRanklist(query) {
-  return request({
-    url: '/ranklist.php',
-    method: 'get',
-    params: query
   })
 }
