@@ -3,7 +3,6 @@
     <div class="filter-container">
       <el-input
         v-model="listQuery.problem_id"
-        type="number"
         placeholder="题目编号"
         style="width: 200px;"
         class="filter-item"
