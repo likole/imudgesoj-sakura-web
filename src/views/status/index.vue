@@ -181,6 +181,12 @@ import { parseTime } from '@/utils'
 
 export default {
   name: 'Status',
+  props: {
+    cid: {
+      type: Number,
+      default: 0
+    }
+  },
   directives: { waves },
   filters: {
     statusFilter(status) {
