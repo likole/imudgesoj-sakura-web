@@ -104,7 +104,7 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="状 态" name="status">
-          <status :cid="cid" />
+          <status-component :cid="cid" />
         </el-tab-pane>
         <el-tab-pane label="排 名" name="ranklist">
           <contest-rank :cid="cid" />
@@ -118,7 +118,7 @@
 
 <script>
 import { fetchContests, fetchProblems } from '@/api/contest'
-import Status from '../status/index'
+import StatusComponent from '@/components/status/index'
 import ContestRank from './components/contestrank'
 import waves from '@/directive/waves' // waves directive
 import Cookies from 'js-cookie'
@@ -126,7 +126,7 @@ import Cookies from 'js-cookie'
 export default {
   name: 'ContestList',
   directives: { waves },
-  components: { Status, ContestRank },
+  components: { StatusComponent, ContestRank },
   data() {
     return {
       tableKey: 0,
