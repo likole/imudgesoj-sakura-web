@@ -213,7 +213,7 @@ export const asyncRoutes = [
     component: Layout,
     children: [
       {
-        path: 'https://acm.likole.com',
+        path: 'https://acm.likole.com/index.php',
         meta: { title: '访问旧版', icon: 'link' }
       }
     ]

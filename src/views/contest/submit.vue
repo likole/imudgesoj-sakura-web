@@ -54,7 +54,7 @@
           <span v-for="(item,index) in problems" :key="index">
             <el-tag :type="item.status=='Y'?'success':item.status=='N'?'danger':'info'" style="margin: 5px" @click="changeProblem(item.id_num)">
               <span v-if="item.id_num==submitData.pid" style="color: royalblue"><b>Now</b></span>
-              <span v-else >{{ item.id }}</span>
+              <span v-else>{{ item.id }}</span>
             </el-tag>
           </span>
         </el-card>

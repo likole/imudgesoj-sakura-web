@@ -51,9 +51,13 @@
         <div class="tips">
           <span>如在公共电脑上登录，请在使用完毕后及时退出</span>
         </div>
-<!--        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">-->
-<!--          Or connect with-->
-<!--        </el-button>-->
+        <div class="tips">
+          <span style="margin-right:18px;color: #3b91b6">&copy;2019 Likole</span>
+        </div>
+
+        <el-button class="thirdparty-button" @click="openOld">
+          访问旧版
+        </el-button>
       </div>
     </el-form>
 
@@ -171,6 +175,9 @@ export default {
         }
         return acc
       }, {})
+    },
+    openOld() {
+      window.location.href = '/index.php'
     }
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
