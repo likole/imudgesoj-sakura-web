@@ -147,8 +147,8 @@ export default {
       this.listLoading = true
       fetchProblems(cid).then(response => {
         this.contest = response.data
-        Cookies.set('cid', this.cid, { expires: 1 })
         this.cid = cid
+        Cookies.set('cid', this.cid, { expires: 1 })
         this.listLoading = false
       }).catch(() => {
         this.getContests()
@@ -161,7 +161,7 @@ export default {
         const now = new Date()
         if (now <= t1) this.progress = 0
         else if (now >= t2) this.progress = 100
-        else this.progress = (t2 - now) / (now - t1)
+        else this.progress = (now - t1) / (t2 - t1) * 100
       }
       setTimeout(this.computeProgress, 1000)
     }
