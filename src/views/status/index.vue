@@ -80,21 +80,31 @@
       </el-table-column>
       <el-table-column label="用户名" align="center">
         <template slot-scope="scope">
-          <router-link :to="'/profile/user/'+scope.row.user_id" class="link-type">
+          <router-link v-if="cid===0" :to="'/profile/user/'+scope.row.user_id" class="link-type">
             {{ scope.row.user_id }}
           </router-link>
+          <span v-if="cid!==0">{{scope.row.user_id}}</span>
         </template>
       </el-table-column>
       <el-table-column label="问题" align="center">
         <template slot-scope="scope">
+          <div v-if="cid===0">
+            <router-link
+              v-show="scope.row.problem_id!='0'"
+              :to="'/problem/submit/'+scope.row.problem_id"
+              class="link-type"
+            >
+              <span>{{ scope.row.problem_id }}</span>
+            </router-link>
+            <span v-show="scope.row.problem_id=='0'">{{ scope.row.problem_id }}</span>
+          </div>
           <router-link
-            v-show="scope.row.problem_id!='0'"
-            :to="'/problem/submit/'+scope.row.problem_id"
+            v-if="cid!==0"
+            :to="'/problem/submit/'+cid+'/'+scope.row.problem_id_num"
             class="link-type"
           >
             <span>{{ scope.row.problem_id }}</span>
           </router-link>
-          <span v-show="scope.row.problem_id=='0'">{{ scope.row.problem_id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="结果" width="200px" align="center">
@@ -181,12 +191,6 @@ import { parseTime } from '@/utils'
 
 export default {
   name: 'Status',
-  props: {
-    cid: {
-      type: Number,
-      default: 0
-    }
-  },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -209,6 +213,12 @@ export default {
       return statusMap[status]
     }
   },
+  props: {
+    cid: {
+      type: Number,
+      default: 0
+    }
+  },
   data() {
     return {
       tableKey: 0,
@@ -221,7 +231,8 @@ export default {
         user_id: undefined,
         language: '-1',
         jresult: '-1',
-        showsim: '0'
+        showsim: '0',
+        cid: 0
       },
       sourceDialogVisible: false,
       source: '',
@@ -283,11 +294,12 @@ export default {
       }]
     }
   },
-  created() {
+  mounted() {
     this.getList()
   },
   methods: {
     getList() {
+      if (this.cid !== 0) this.listQuery.cid = this.cid
       this.listLoading = true
       fetchStatus(this.listQuery).then(response => {
         this.list = response.data.item

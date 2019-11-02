@@ -47,56 +47,68 @@
           刷新
         </el-button>
       </div>
+
       <h2 align="center">{{ cid }} - <span v-html="contest.title" /></h2>
       <div align="center" v-html="contest.description" />
-      <div style="margin-top: 20px">
+      <div style="margin-top: 20px;padding-bottom: 55px">
         <el-progress :percentage="progress" :show-text="false" />
         <p style="float: left">开始时间: {{ contest.start }}</p>
         <p style="float: right">结束时间: {{ contest.end }}</p>
       </div>
-      <el-table
-        :key="tableKey"
-        v-loading="listLoading"
-        :data="contest.problemset"
-        border
-        fit
-        highlight-current-row
-        :row-class-name="tableRowClassName"
-        style="width: 100%;"
-      >
-        <el-table-column label="" align="center" width="80px">
-          <template slot-scope="scope">
-            <el-tag v-show="scope.row.status=='Y'" type="success">Y</el-tag>
-            <el-tag v-show="scope.row.status=='N'" type="danger">N</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="编号" align="center" width="150px">
-          <template slot-scope="scope">
-            {{ scope.row.id }}
-          </template>
-        </el-table-column>
-        <el-table-column label="标题" align="center" width="">
-          <template slot-scope="scope">
-            {{ scope.row.title }}
-          </template>
-        </el-table-column>
-        <el-table-column label="来源" align="center" width="200px">
-          <template slot-scope="scope">
-            {{ scope.row.source }}
-          </template>
-        </el-table-column>
-        <el-table-column label="解决" align="center" width="80px">
-          <template slot-scope="scope">
-            {{ scope.row.ac }}
-          </template>
-        </el-table-column>
-        <el-table-column label="提交" align="center" width="80px">
-          <template slot-scope="scope">
-            {{ scope.row.submit }}
-          </template>
-        </el-table-column>
-      </el-table>
-      <h2>提交还没写</h2>
+
+      <el-tabs v-model="activeTab">
+        <el-tab-pane label="问 题" name="problems">
+          <el-table
+            :key="tableKey"
+            v-loading="listLoading"
+            :data="contest.problemset"
+            border
+            fit
+            highlight-current-row
+            :row-class-name="tableRowClassName"
+            style="width: 100%;"
+          >
+            <el-table-column label="" align="center" width="80px">
+              <template slot-scope="scope">
+                <el-tag v-show="scope.row.status=='Y'" type="success">Y</el-tag>
+                <el-tag v-show="scope.row.status=='N'" type="danger">N</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="编号" align="center" width="150px">
+              <template slot-scope="scope">
+                {{ scope.row.id }}
+              </template>
+            </el-table-column>
+            <el-table-column label="标题" align="center" width="">
+              <template slot-scope="scope">
+                {{ scope.row.title }}
+              </template>
+            </el-table-column>
+            <el-table-column label="来源" align="center" width="200px">
+              <template slot-scope="scope">
+                {{ scope.row.source }}
+              </template>
+            </el-table-column>
+            <el-table-column label="解决" align="center" width="80px">
+              <template slot-scope="scope">
+                {{ scope.row.ac }}
+              </template>
+            </el-table-column>
+            <el-table-column label="提交" align="center" width="80px">
+              <template slot-scope="scope">
+                {{ scope.row.submit }}
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="状 态" name="status">
+          <status :cid="cid" />
+        </el-tab-pane>
+        <el-tab-pane label="排 名" name="ranklist">
+          还没写呢
+        </el-tab-pane>
+      </el-tabs>
+
     </div>
 
   </div>
@@ -104,12 +116,14 @@
 
 <script>
 import { fetchContests, fetchProblems } from '@/api/contest'
+import Status from '../status/index'
 import waves from '@/directive/waves' // waves directive
 import Cookies from 'js-cookie'
 
 export default {
   name: 'ContestList',
   directives: { waves },
+  components: { Status },
   data() {
     return {
       tableKey: 0,
@@ -117,7 +131,8 @@ export default {
       contest: null,
       listLoading: true,
       cid: 0,
-      progress: 0
+      progress: 0,
+      activeTab: 'problems'
     }
   },
   created() {
@@ -147,7 +162,7 @@ export default {
       this.listLoading = true
       fetchProblems(cid).then(response => {
         this.contest = response.data
-        this.cid = cid
+        this.cid = parseInt(cid)
         Cookies.set('cid', this.cid, { expires: 1 })
         this.listLoading = false
       }).catch(() => {
