@@ -82,7 +82,7 @@
           <router-link v-if="cid===0" :to="'/profile/user/'+scope.row.user_id" class="link-type">
             {{ scope.row.user_id }}
           </router-link>
-          <span v-if="cid!==0">{{scope.row.user_id}}</span>
+          <span v-if="cid!==0">{{ scope.row.user_id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="问题" align="center">
@@ -99,7 +99,7 @@
           </div>
           <router-link
             v-if="cid!==0"
-            :to="'/problem/submit/'+cid+'/'+scope.row.problem_id_num"
+            :to="'/contest/submit/'+cid+'/'+scope.row.problem_id_num"
             class="link-type"
           >
             <span>{{ scope.row.problem_id }}</span>

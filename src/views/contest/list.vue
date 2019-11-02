@@ -83,7 +83,12 @@
             </el-table-column>
             <el-table-column label="标题" align="center" width="">
               <template slot-scope="scope">
-                {{ scope.row.title }}
+                <router-link
+                  :to="'/contest/submit/'+cid+'/'+scope.row.id_num"
+                  class="link-type"
+                >
+                  <span>{{ scope.row.title }}</span>
+                </router-link>
               </template>
             </el-table-column>
             <el-table-column label="来源" align="center" width="200px">

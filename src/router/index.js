@@ -139,6 +139,13 @@ export const constantRoutes = [
         component: () => import('@/views/contest/list'),
         name: 'ContestList',
         meta: { title: '竞赛', icon: 'example' }
+      },
+      {
+        path: 'submit/:cid(\\d+)/:pid(\\d+)',
+        component: () => import('@/views/contest/submit'),
+        name: 'ContestSubmit',
+        meta: { title: '提交 - 竞赛', activeMenu: '/contest/list' },
+        hidden: true
       }
     ]
   },
