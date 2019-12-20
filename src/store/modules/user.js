@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -43,7 +43,13 @@ const actions = {
       })
     })
   },
-
+  oauthLogin({ commit }, token) {
+    return new Promise((resolve, reject) => {
+      commit('SET_TOKEN', token)
+      setToken(token)
+      resolve()
+    })
+  },
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {

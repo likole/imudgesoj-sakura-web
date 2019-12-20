@@ -2,10 +2,12 @@
 export default {
   name: 'AuthRedirect',
   created() {
-    const hash = window.location.search.slice(1)
-    if (window.localStorage) {
-      window.localStorage.setItem('x-admin-oauth-code', hash)
-      window.close()
+    const query = this.$route.query
+    if (query) {
+      this.$store.dispatch('user/oauthLogin', query.token)
+        .then(() => {
+          this.$router.push({ path: '/' })
+        })
     }
   },
   render: function(h) {
