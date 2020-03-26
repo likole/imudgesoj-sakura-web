@@ -208,7 +208,20 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/faq/index'),
         name: 'FaqIndex',
-        meta: { title: '常见问答', icon: 'user' }
+        meta: { title: '常见问答', icon: 'guide' }
+      }
+    ]
+  },
+  {
+    path: '/mail',
+    component: Layout,
+    redirect: '/mail/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/mail/index'),
+        name: 'MailIndex',
+        meta: { title: '站内信', icon: 'email' }
       }
     ]
   }
