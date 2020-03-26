@@ -29,3 +29,10 @@ export function fetchProfileBasic(user) {
     params: { user }
   })
 }
+
+export function fetchProfileOauth() {
+  return request({
+    url: '/profile_oauth.php',
+    method: 'get'
+  })
+}

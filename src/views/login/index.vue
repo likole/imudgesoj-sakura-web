@@ -48,18 +48,18 @@
 <!--      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>-->
       <el-button type="primary" style="width:100%;margin-bottom:30px;" onclick="window.location.href='/sakura/login_oauth2.php'">使用IMUDGES账号登录</el-button>
 
-      <div style="position:relative">
-        <div class="tips">
-          <span>如在公共电脑上登录，请在使用完毕后及时退出</span>
-        </div>
-        <div class="tips">
-          <a style="margin-right:18px;color: #3b91b6" href="https://www.likole.com" target="_blank">&copy;2019 Likole</a>
-        </div>
-        <el-button class="thirdparty-button" @click="openOld">
-          访问旧版
-        </el-button>
+      <div class="tips">
+        <span>如在公共电脑上登录，请在使用完毕后及时退出！</span>
+        <a href="https://acm.likole.com/old/" style="float: right;color: aliceblue">访问旧版>> </a>
       </div>
     </el-form>
+
+    <div style="position: fixed;bottom: 20px;width: 100%">
+      <div style="margin: 0 auto;width: 520px;max-width: 100%;text-align: center;color: white;font-size: 12px">
+        <p>COPYRIGHT © 2020 <a href="https://www.likole.com" target="_blank">Likole</a>. ALL RIGHTS RESERVED.</p>
+        <a href="http://www.beian.miit.gov.cn/" target="_blank" rel="nofollow" style="">浙ICP备18040075号-3</a>
+      </div>
+    </div>
 
     <el-dialog title="Or connect with" :visible.sync="showDialog">
       Can not be simulated on local, so please combine you own business simulation! ! !

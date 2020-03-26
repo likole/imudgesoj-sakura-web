@@ -64,6 +64,10 @@ export default {
           roles: ''
         }
       }
+    },
+    me: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
