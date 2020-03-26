@@ -2,6 +2,16 @@
   <div class="app-container">
     <el-card class="box-card" style="margin-bottom: 20px">
       <div slot="header" class="clearfix">
+        <font color="green">Q</font>:如何查看答案错误、编译错误等详情
+      </div>
+      <div class="text item">
+        <p><font color="red">A</font>:在状态列表点击对应的标签（答案错误、编译错误等）即可查看.</p>
+        <p>查看答案错误，需要开通会员，请在会员中心开通（开通会员需要积分，每日刷够一定题数即可在积分中心领取）</p>
+      </div>
+    </el-card>
+
+    <el-card class="box-card" style="margin-bottom: 20px">
+      <div slot="header" class="clearfix">
         <font color="green">Q</font>:程序怎样取得输入、进行输出?
       </div>
       <div class="text item">
