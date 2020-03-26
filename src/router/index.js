@@ -233,7 +233,20 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-
+  {
+    path: '/news',
+    component: Layout,
+    redirect: '/news/index',
+    meta: { roles: ['管理员'] },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/news/index'),
+        name: 'NewsIndex',
+        meta: { title: '新闻管理', icon: 'form', roles: ['管理员'] }
+      }
+    ]
+  },
   {
     path: 'website',
     component: Layout,
