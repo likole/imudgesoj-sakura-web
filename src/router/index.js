@@ -198,6 +198,19 @@ export const constantRoutes = [
         meta: { title: '用户信息', icon: 'user', noCache: true }
       }
     ]
+  },
+  {
+    path: '/faq',
+    component: Layout,
+    redirect: '/faq/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/faq/index'),
+        name: 'FaqIndex',
+        meta: { title: '常见问答', icon: 'user' }
+      }
+    ]
   }
 
 ]
