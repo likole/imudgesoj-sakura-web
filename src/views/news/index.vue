@@ -51,7 +51,7 @@
       </el-table-column>
     </el-table>
     <el-dialog
-      title="消息"
+      title="新闻详情"
       :visible.sync="dialogVisible"
       width="70%"
     >
@@ -62,7 +62,7 @@
       </span>
     </el-dialog>
     <el-dialog
-      title="发送消息"
+      title="编辑新闻"
       :visible.sync="dialogSendVisible"
       width="70%"
       :close-on-press-escape="false"
@@ -72,11 +72,11 @@
         <el-form-item label="标题">
           <el-input v-model="postForm.title" />
         </el-form-item>
-        <tinymce v-model="postForm.content" height="400" />
+        <tinymce v-if="dialogSendVisible" v-model="postForm.content" height="400" />
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogSendVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleCreate">发送</el-button>
+        <el-button type="primary" @click="handleCreate"><span v-if="create">创建</span><span v-else>更新</span></el-button>
       </span>
     </el-dialog>
   </div>
