@@ -82,11 +82,19 @@ export const constantRoutes = [
         meta: { title: '首页', icon: 'dashboard', affix: true }
       }
     ]
-  },
+  }
+]
+
+/**
+ * asyncRoutes
+ * the routes that need to be dynamically loaded based on user roles
+ */
+export const asyncRoutes = [
   {
     path: '/problem',
     component: Layout,
     redirect: '/problem/list',
+    meta: { title: '问题中心', icon: 'message' },
     children: [
       {
         path: 'submit/:id(\\d+)',
@@ -100,6 +108,12 @@ export const constantRoutes = [
         component: () => import('@/views/problem/list'),
         name: 'ProblemList',
         meta: { title: '问题', icon: 'message' }
+      },
+      {
+        path: 'admin',
+        component: () => import('@/views/problem/admin'),
+        name: 'ProblemAdmin',
+        meta: { title: '管理', icon: 'table', roles: ['管理员', '问题编辑员'] }
       }
     ]
   },
@@ -224,20 +238,11 @@ export const constantRoutes = [
         meta: { title: '站内信', icon: 'email' }
       }
     ]
-  }
-
-]
-
-/**
- * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
- */
-export const asyncRoutes = [
+  },
   {
     path: '/news',
     component: Layout,
     redirect: '/news/index',
-    meta: { roles: ['管理员'] },
     children: [
       {
         path: 'index',
