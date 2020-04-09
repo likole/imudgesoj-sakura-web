@@ -78,3 +78,31 @@ export function fetchCategories() {
     method: 'get'
   })
 }
+
+export function adminGetList(page) {
+  if (page === undefined) {
+    return request({
+      url: '/admin/problem.php',
+      method: 'get'
+    })
+  }
+  return request({
+    url: '/admin/problem.php?page=' + page,
+    method: 'get'
+  })
+}
+
+export function adminGetProblem(id) {
+  return request({
+    url: '/admin/problem.php?id=' + id,
+    method: 'get'
+  })
+}
+
+
+export function adminChangeStatus(id) {
+  return request({
+    url: '/admin/problem.php?changeStatus=1&id=' + id,
+    method: 'get'
+  })
+}
