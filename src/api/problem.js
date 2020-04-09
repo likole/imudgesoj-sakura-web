@@ -79,7 +79,13 @@ export function fetchCategories() {
   })
 }
 
-export function adminGetList(page) {
+export function adminGetList(page, keywords) {
+  if (keywords !== undefined && keywords.length > 0) {
+    return request({
+      url: '/admin/problem.php?keyword=' + keywords,
+      method: 'get'
+    })
+  }
   if (page === undefined) {
     return request({
       url: '/admin/problem.php',
@@ -99,6 +105,13 @@ export function adminGetProblem(id) {
   })
 }
 
+export function adminUpdate(data) {
+  return request({
+    url: '/admin/problem.php?update=1',
+    method: 'post',
+    data
+  })
+}
 
 export function adminChangeStatus(id) {
   return request({
