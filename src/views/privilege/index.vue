@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button type="primary" icon="el-icon-plus" @click="createNews">添加新闻</el-button>
+      <el-button type="primary" icon="el-icon-plus" @click="createPrivilege">添加</el-button>
     </div>
     <el-table
       :key="tableKey"
@@ -12,95 +12,74 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="新闻编号" align="center" width="80px">
+      <el-table-column label="用户" align="center">
         <template slot-scope="scope">
-          <p>{{ scope.row.news_id }}</p>
+          <p>{{ scope.row.user_id }}</p>
         </template>
       </el-table-column>
-      <el-table-column label="标题" align="center">
+      <el-table-column label="权限" align="center">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          {{ scope.row.rightstr }}
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" width="200px">
+      <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.defunct ==='N'" type="success">启用</el-tag>
-          <el-tag v-else type="danger">禁用</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="时间" align="center" width="180px">
-        <template slot-scope="scope">
-          {{ scope.row.time }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="操作" width="320">
-        <template slot-scope="scope">
-          <el-button type="info" size="small" @click="editNews(scope.row.news_id)">
-            编辑
-          </el-button>
-          <el-button type="primary" size="small" icon="el-icon-tickets" @click="getDetail(scope.row.news_id)">
-            查看详情
-          </el-button>
-          <el-button v-if="scope.row.defunct ==='N'" type="danger" size="small" icon="el-icon-delete" @click="handleChange(scope.row.news_id)">
-            禁用
-          </el-button>
-          <el-button v-else type="success" size="small" icon="el-icon-delete" @click="handleChange(scope.row.news_id)">
-            启用
+          <el-button type="danger" size="small" @click="handleDelete(scope.row.user_id,scope.row.rightstr)">
+            删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-dialog
-      title="新闻详情"
-      :visible.sync="dialogVisible"
-      width="70%"
-    >
-      <h2>{{ detail.title }}</h2>
-      <div v-html="detail.content" />
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog
-      title="编辑新闻"
+      title="添加权限"
       :visible.sync="dialogSendVisible"
       width="70%"
       :close-on-press-escape="false"
       :close-on-click-modal="false"
     >
       <el-form :model="postForm">
-        <el-form-item label="标题">
-          <el-input v-model="postForm.title" />
+        <el-form-item label="用户">
+          <el-input v-model="postForm.user_id" />
         </el-form-item>
-        <tinymce v-if="dialogSendVisible" v-model="postForm.content" height="400" />
+        <el-form-item>
+          <el-radio v-model="postForm.type" label="0">系统角色</el-radio>
+          <el-radio v-model="postForm.type" label="1">竞赛</el-radio>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-if="postForm.type==='0'" v-model="postForm.rightstr" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+          <el-input v-else v-model="postForm.rightstr_tmp" placeholder="竞赛编号" type="number" />
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogSendVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleCreate"><span v-if="create">创建</span><span v-else>更新</span></el-button>
+        <el-button type="primary" @click="handleCreate">添加</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getNewsList, getNews, changeNewsStatus, addNews, editNews } from '../../api/news'
+import { getPrivilegeList, deletePrivilege, addPrivilege } from '../../api/privilege'
 import waves from '@/directive/waves' // waves directive
-import Tinymce from '../../components/Tinymce/index'
 
 export default {
   name: 'PrivilegeIndex',
   directives: { waves },
-  components: { Tinymce },
   data() {
     return {
       tableKey: 0,
       list: null,
       listLoading: true,
-      dialogVisible: false,
       dialogSendVisible: false,
-      detail: {},
-      postForm: { title: '', content: '' },
-      create: true
+      options: [],
+      postForm: { user_id: '', rightstr: '', type: '0' }
     }
   },
   created() {
@@ -109,53 +88,32 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getNewsList().then(response => {
-        this.list = response.data
+      getPrivilegeList().then(response => {
+        this.list = response.data.items
+        this.options = response.data.options
         this.listLoading = false
       }).catch(() => {
         this.listLoading = false
       })
     },
-    getDetail(id) {
-      getNews(id).then(response => {
-        this.detail = response.data
-        this.dialogVisible = true
-      })
-    },
-    createNews() {
-      this.postForm = { }
-      this.create = true
+    createPrivilege() {
+      this.postForm = { user_id: '', rightstr: '', type: '0', rightstr_tmp: '' }
       this.dialogSendVisible = true
     },
-    handleChange(id) {
-      this.listLoading = true
-      changeNewsStatus(id).then(() => {
+    handleCreate() {
+      if (this.postForm.type === '1') {
+        this.postForm.rightstr = 'c' + this.postForm.rightstr_tmp
+      }
+      addPrivilege(this.postForm).then(() => {
+        this.$message({ 'type': 'success', 'message': '添加成功' })
         this.getList()
-      }).catch(() => {
-        this.listLoading = false
+        this.dialogSendVisible = false
       })
     },
-    handleCreate() {
-      if (this.create) {
-        addNews(this.postForm).then(() => {
-          this.$message({ 'type': 'success', 'message': '添加成功' })
-          this.getList()
-          this.dialogSendVisible = false
-        })
-      } else {
-        editNews(this.postForm).then(() => {
-          this.$message({ 'type': 'success', 'message': '编辑成功' })
-          this.getList()
-          this.dialogSendVisible = false
-        })
-      }
-    },
-    editNews(id) {
-      getNews(id).then(response => {
-        this.postForm = response.data
-        this.postForm.news_id = id
-        this.create = false
-        this.dialogSendVisible = true
+    handleDelete(user_id, rightstr) {
+      deletePrivilege(user_id, rightstr).then(() => {
+        this.$message({ 'type': 'success', 'message': '删除成功' })
+        this.getList()
       })
     }
   }
