@@ -94,7 +94,7 @@ export const asyncRoutes = [
     path: '/problem',
     component: Layout,
     redirect: '/problem/list',
-    meta: { title: '问题中心', icon: 'message' },
+    meta: { title: '问题中心', icon: 'problem' },
     children: [
       {
         path: 'submit/:id(\\d+)',
@@ -107,7 +107,7 @@ export const asyncRoutes = [
         path: 'list',
         component: () => import('@/views/problem/list'),
         name: 'ProblemList',
-        meta: { title: '问题', icon: 'message' }
+        meta: { title: '问题', icon: 'problem' }
       },
       {
         path: 'admin',
@@ -222,7 +222,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/faq/index'),
         name: 'FaqIndex',
-        meta: { title: '常见问答', icon: 'guide' }
+        meta: { title: '常见问答', icon: 'FAQ' }
       }
     ]
   },
@@ -248,7 +248,20 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/news/index'),
         name: 'NewsIndex',
-        meta: { title: '新闻管理', icon: 'form', roles: ['管理员'] }
+        meta: { title: '新闻管理', icon: 'news', roles: ['管理员'] }
+      }
+    ]
+  },
+  {
+    path: '/privilege',
+    component: Layout,
+    redirect: '/privilege/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/privilege/index'),
+        name: 'PrivilegeIndex',
+        meta: { title: '权限管理', icon: 'role', roles: ['管理员'] }
       }
     ]
   },
@@ -259,6 +272,20 @@ export const asyncRoutes = [
       {
         path: 'https://acm.likole.com/old',
         meta: { title: '访问旧版', icon: 'link' }
+      }
+    ]
+  },
+  {
+    path: '/develop',
+    component: Layout,
+    alwaysShow: true,
+    meta: { title: '开发&调试工具', roles: ['管理员'] },
+    children: [
+      {
+        path: 'request',
+        component: () => import('@/views/develop/request'),
+        name: 'DevelopRequest',
+        meta: { title: '发送请求' }
       }
     ]
   },
