@@ -22,7 +22,7 @@
           {{ scope.row.title }}
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" width="200px">
+      <el-table-column label="状态" align="center" width="80">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.defunct ==='N'" type="success">启用</el-tag>
           <el-tag v-else type="danger">禁用</el-tag>
