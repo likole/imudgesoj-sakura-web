@@ -16,7 +16,8 @@
         title="提示"
         width="200"
         trigger="hover"
-        content="指定关键词时，分页将失效">
+        content="指定关键词时，分页将失效"
+      >
         <el-input slot="reference" v-model="keywords" placeholder="关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="getList" />
       </el-popover>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="getList">
@@ -111,7 +112,7 @@
       </span>
     </el-dialog>
     <el-dialog
-      title="编辑问题"
+      title="创建/编辑问题"
       :visible.sync="dialogSendVisible"
       width="70%"
       :close-on-press-escape="false"
@@ -171,6 +172,16 @@
             <el-input v-model="postForm.sample_output" type="textarea" :rows="10" />
           </el-col>
         </el-row>
+        <el-row v-if="create" :gutter="20">
+          <el-col :span="12">
+            <h3>测试输入</h3>
+            <el-input v-model="postForm.test_input" type="textarea" :rows="10" />
+          </el-col>
+          <el-col :span="12">
+            <h3>测试输出</h3>
+            <el-input v-model="postForm.test_output" type="textarea" :rows="10" />
+          </el-col>
+        </el-row>
         <h3>提示</h3>
         <tinymce v-if="dialogSendVisible" v-model="postForm.hint" height="200" />
       </el-form>
@@ -183,8 +194,7 @@
 </template>
 
 <script>
-import { getNewsList, getNews, changeNewsStatus, addNews, editNews } from '../../api/news'
-import { adminGetList, adminChangeStatus, adminGetProblem, adminUpdate } from '../../api/problem'
+import { adminGetList, adminChangeStatus, adminGetProblem, adminUpdate, adminAdd } from '../../api/problem'
 import waves from '@/directive/waves' // waves directive
 import Tinymce from '../../components/Tinymce/index'
 
@@ -213,7 +223,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      adminGetList(this.currentPage,this.keywords).then(response => {
+      adminGetList(this.currentPage, this.keywords).then(response => {
         this.list = response.data.items
         this.options = response.data.options
         this.currentPage = response.data.page
@@ -229,7 +239,19 @@ export default {
       })
     },
     createProblem() {
-      this.postForm = { }
+      this.postForm = {
+        description: '',
+        hint: '',
+        input: '',
+        memory_limit: 128,
+        output: '',
+        sample_input: '',
+        sample_output: '',
+        source: '',
+        spj: false,
+        time_limit: 1,
+        title: ''
+      }
       this.create = true
       this.dialogSendVisible = true
     },
@@ -243,7 +265,7 @@ export default {
     },
     handleCreate() {
       if (this.create) {
-        addNews(this.postForm).then(() => {
+        adminAdd(this.postForm).then(() => {
           this.$message({ 'type': 'success', 'message': '添加成功' })
           this.getList()
           this.dialogSendVisible = false

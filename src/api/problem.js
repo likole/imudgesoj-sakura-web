@@ -113,6 +113,15 @@ export function adminUpdate(data) {
   })
 }
 
+
+export function adminAdd(data) {
+  return request({
+    url: '/admin/problem.php?add=1',
+    method: 'post',
+    data
+  })
+}
+
 export function adminChangeStatus(id) {
   return request({
     url: '/admin/problem.php?changeStatus=1&id=' + id,
