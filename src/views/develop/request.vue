@@ -29,11 +29,8 @@ export default {
   data() {
     return {
       requestDetail: { baseUrl: 'https://acm.likole.com/sakura/', url: '', method: 'GET', data: {}},
-      response: undefined
+      response: {}
     }
-  },
-  created() {
-    this.getList()
   },
   methods: {
     sendRequest() {

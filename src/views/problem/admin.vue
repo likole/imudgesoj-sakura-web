@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-alert style="margin-bottom: 20px">暂不支持测试数据的管理，即将上线</el-alert>
+    <el-alert style="margin-bottom: 20px">暂不支持测试数据的管理，即将上线；非管理员添加问题后需要重新登录才能编辑</el-alert>
     <div class="filter-container">
       <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="createProblem">添加问题</el-button>
       <el-select v-model="currentPage" class="filter-item" placeholder="页码" @change="getList">
