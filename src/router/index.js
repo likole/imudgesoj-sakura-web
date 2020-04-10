@@ -133,7 +133,7 @@ export const asyncRoutes = [
         path: 'rejudge',
         component: () => import('@/views/status/rejudge'),
         name: 'StatusRejudge',
-        meta: { title: '重判', icon: 'refresh' }
+        meta: { title: '重判', icon: 'refresh', roles: ['管理员'] }
       }
     ]
   },
