@@ -49,8 +49,8 @@
           <p>空间限制：{{ problem.memory_limit }}MB</p>
           <p>AC/提交：{{ problem.accepted }}/{{ problem.submit }}</p>
           <el-progress :text-inside="true" :stroke-width="26" :percentage="progress" />
-          <!--          todo:问题状态-->
         </el-card>
+        <problem-status :pid="submitData.id" style="margin-top: 20px"/>
       </el-col>
     </el-row>
     <el-dialog
@@ -94,6 +94,7 @@
 
 <script>
 import clip from '@/utils/clipboard' // use clipboard directly
+import ProblemStatus from './components/ProblemStatus'
 import BackToTop from '@/components/BackToTop'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
@@ -117,7 +118,7 @@ require('codemirror/mode/go/go')
 
 export default {
   name: 'ProblemSubmit',
-  components: { BackToTop },
+  components: { BackToTop, ProblemStatus },
   filters: {
     numFilter(value) {
       // 截取当前数据到小数点后两位

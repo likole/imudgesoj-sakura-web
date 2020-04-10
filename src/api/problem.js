@@ -16,6 +16,14 @@ export function fetchProblem(id) {
   })
 }
 
+export function fetchProblemStatus(id) {
+  return request({
+    url: '/problemstatus.php',
+    method: 'get',
+    params: { id }
+  })
+}
+
 export function submitProblem(data) {
   return request({
     url: '/submit.php',
