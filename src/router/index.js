@@ -121,12 +121,19 @@ export const asyncRoutes = [
     path: '/status',
     component: Layout,
     redirect: '/status/index',
+    meta: { title: '判题中心', icon: 'skill' },
     children: [
       {
         path: 'index',
         component: () => import('@/views/status/index'),
         name: 'Status',
         meta: { title: '状态', icon: 'skill' }
+      },
+      {
+        path: 'rejudge',
+        component: () => import('@/views/status/rejudge'),
+        name: 'StatusRejudge',
+        meta: { title: '重判', icon: 'refresh' }
       }
     ]
   },
