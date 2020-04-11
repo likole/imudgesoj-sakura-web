@@ -140,13 +140,20 @@ export const asyncRoutes = [
   {
     path: '/ranklist',
     component: Layout,
+    meta: { title: '排行榜', icon: 'chart' },
     redirect: '/ranklist/index',
     children: [
       {
         path: 'index',
         component: () => import('@/views/ranklist/index'),
         name: 'Ranklist',
-        meta: { title: '排名', icon: 'chart' }
+        meta: { title: '刷题榜', icon: 'problem' }
+      },
+      {
+        path: 'score',
+        component: () => import('@/views/ranklist/score'),
+        name: 'RanklistScore',
+        meta: { title: '积分榜', icon: 'score' }
       }
     ]
   },

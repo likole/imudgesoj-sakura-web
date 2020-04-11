@@ -37,3 +37,10 @@ export function achieveOper(oper) {
   })
 }
 
+export function scoreRanklist(page) {
+  return request({
+    url: '/score_ranklist.php',
+    method: 'get',
+    params: { page }
+  })
+}
