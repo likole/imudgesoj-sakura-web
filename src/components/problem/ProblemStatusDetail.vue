@@ -22,7 +22,7 @@
         </el-table-column>
         <el-table-column label="运行编号" align="center" width="80px">
           <template slot-scope="scope">
-            <span>{{ scope.row.solution_id }}</span>
+            <span>{{ scope.row.solution_id_text }}</span>
           </template>
         </el-table-column>
         <el-table-column label="用户" align="center">
@@ -42,7 +42,8 @@
         </el-table-column>
         <el-table-column label="语言" align="center" width="80px">
           <template slot-scope="scope">
-            <span>{{ scope.row.language }}</span>
+            <div v-if="scope.row.show"><a style="color: blue" @click="showSource(scope.row.solution_id)">{{ scope.row.language }}</a></div>
+            <span v-else>{{ scope.row.language }}</span>
           </template>
         </el-table-column>
         <el-table-column label="代码长度" align="center" width="80px">
@@ -55,35 +56,27 @@
             <span>{{ scope.row.in_date }}</span>
           </template>
         </el-table-column>
-<!--        <el-table-column label="标题" align="center">-->
-<!--          <template slot-scope="scope">-->
-<!--            <router-link :to="'/problem/submit/'+scope.row.id" class="link-type">-->
-<!--              <span>{{ scope.row.title }}</span>-->
-<!--            </router-link>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column v-if="showCategory" width="200px" label="分类" align="center">-->
-<!--          <template slot-scope="scope">-->
-<!--            <el-tag v-for="(item,index) in scope.row.category" :key="index" @click="searchCategory(item)">{{ item }}</el-tag>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column label="正确率" :sortable="true" :sort-method="sortMethod" width="200px" align="center">-->
-<!--          <template slot-scope="scope">-->
-<!--            <el-progress :show-text="false" :percentage="scope.row.submit==0?0:(scope.row.ac /scope.row.submit*100)" />-->
-<!--            <span>{{ scope.row.ac }}/{{ scope.row.submit }}</span>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
       </el-table>
 
       <pagination v-show="total>0" :total="total" :page.sync="page" :page-sizes="[20]" :limit="20" :auto-scroll="false" @pagination="getList" />
 
     </el-card>
+
+    <el-dialog
+      title="查看源码"
+      :visible.sync="sourceDialogVisible"
+      width="70%"
+    >
+      <pre>{{ source }}</pre>
+      <el-button type="primary" @click="handleCopy(source,$event)">复制</el-button>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchProblemStatusDetail } from '@/api/problem'
+import { fetchProblemStatusDetail, fetchSource } from '@/api/problem'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import clip from '@/utils/clipboard'
 
 export default {
   name: 'ProblemStatusDetailComponent',
@@ -103,7 +96,9 @@ export default {
       solution: {},
       listLoading: false,
       page: 1,
-      total: 0
+      total: 0,
+      sourceDialogVisible: false,
+      source: ''
     }
   },
   watch: {
@@ -126,6 +121,16 @@ export default {
         this.listLoading = false
       }).catch(() => {
         this.listLoading = false
+      })
+    },
+    handleCopy(text, event) {
+      clip(text, event)
+    },
+    showSource(id) {
+      this.source = ''
+      fetchSource(id).then(response => {
+        this.source = response.data
+        this.sourceDialogVisible = true
       })
     }
   }

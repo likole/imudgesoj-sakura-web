@@ -58,7 +58,7 @@
             </el-tag>
           </span>
         </el-card>
-        <el-card>
+        <el-card style="margin-bottom: 20px">
           <p>题目编号：{{ problem.problem_id }}</p>
           <p>标题：{{ problem.title }}</p>
           <p>来源分类：{{ problem.source }}</p>
@@ -67,8 +67,8 @@
           <p>空间限制：{{ problem.memory_limit }}MB</p>
           <p>AC/提交：{{ problem.accepted }}/{{ problem.submit }}</p>
           <el-progress :text-inside="true" :stroke-width="26" :percentage="progress" />
-          <!--          todo:问题状态-->
         </el-card>
+        <problem-status-component v-if="problem.problem_id" :id-for-update="idForUpdate" :in-contest="true" :pid="problem.problem_id" />
       </el-col>
     </el-row>
     <el-dialog
@@ -117,6 +117,8 @@
 
 <script>
 import clip from '@/utils/clipboard' // use clipboard directly
+import ProblemStatusComponent from '@/components/problem/ProblemStatus'
+import ProblemStatusDetailComponent from '@/components/problem/ProblemStatusDetail'
 import BackToTop from '@/components/BackToTop'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
@@ -149,7 +151,7 @@ require('codemirror/mode/go/go')
    */
 export default {
   name: 'ContestSubmit',
-  components: { BackToTop },
+  components: { BackToTop, ProblemStatusComponent, ProblemStatusDetailComponent },
   filters: {
     numFilter(value) {
       // 截取当前数据到小数点后两位
@@ -195,7 +197,8 @@ export default {
       testrun: false,
       input_text: '',
       output_text: '',
-      problems: null
+      problems: null,
+      idForUpdate: 1
     }
   },
   created() {
