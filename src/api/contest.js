@@ -31,6 +31,37 @@ export function fetchProblem(cid, pid) {
   })
 }
 
+// admin
+export function adminGetList(page) {
+  return request({
+    url: '/admin/contest.php',
+    method: 'get',
+    params: { page }
+  })
+}
+
+export function adminGetContest(cid) {
+  return request({
+    url: '/admin/contest.php',
+    method: 'get',
+    params: { cid }
+  })
+}
+
+export function adminChangeStatus(cid) {
+  return request({
+    url: '/admin/contest.php?changeStatus=1&cid=' + cid,
+    method: 'get'
+  })
+}
+
+export function adminChangePrivate(cid) {
+  return request({
+    url: '/admin/contest.php?changePrivate=1&cid=' + cid,
+    method: 'get'
+  })
+}
+
 // 以下没有用
 
 export function submitProblem(data) {

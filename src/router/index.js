@@ -160,6 +160,7 @@ export const asyncRoutes = [
   {
     path: '/contest',
     component: Layout,
+    meta: { title: '竞赛中心', icon: 'example' },
     redirect: '/contest/list',
     children: [
       {
@@ -174,6 +175,12 @@ export const asyncRoutes = [
         name: 'ContestSubmit',
         meta: { title: '提交 - 竞赛', activeMenu: '/contest/list' },
         hidden: true
+      },
+      {
+        path: 'admin',
+        component: () => import('@/views/contest/admin'),
+        name: 'ContestAdmin',
+        meta: { title: '竞赛管理', icon: 'set', roles: ['管理员', '问题编辑员'] }
       }
     ]
   },
