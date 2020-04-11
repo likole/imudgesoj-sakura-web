@@ -5,7 +5,7 @@
         <span>详细答题情况</span>
       </div>
       <p v-for="(item,index) in problem" :key="index">{{ item[0] }}:{{ item[1] }}</p>
-      <pie-chart :chart-data="status"/>
+      <pie-chart :chart-data="status" />
     </el-card>
     <el-card>
       <div slot="header" class="clearfix">
@@ -21,39 +21,47 @@
 </template>
 
 <script>
-import { fetchProblemStatus } from '../../../api/problem'
-import PieChart from '../../profile/components/PieChart'
+import { fetchProblemStatus } from '@/api/problem'
+import PieChart from './PieChart'
 
 export default {
+  name: 'ProblemStatusComponent',
   components: { PieChart },
   props: {
     pid: {
       required: true,
       type: String
+    },
+    idForUpdate: {
+      type: Number,
+      default: 1
     }
   },
   data() {
     return {
       problem: {},
       status: {},
-      solution: {},
       recommend: {}
     }
   },
+  watch: {
+    idForUpdate: {
+      deep: true,
+      handler(val) {
+        this.getList()
+      }
+    }
+  },
   created() {
-    fetchProblemStatus(this.pid).then(response => {
-      this.problem = response.data.problem
-      this.status = response.data.status
-      this.solution = response.data.solution
-      this.recommend = response.data.recommend
-    })
+    this.getList()
   },
   methods: {
-    submit() {
-      this.$message({
-        message: 'User information has been updated successfully',
-        type: 'success',
-        duration: 5 * 1000
+    getList() {
+      fetchProblemStatus(this.pid).then(response => {
+        this.problem = response.data.problem
+        this.status = response.data.status
+        this.solution = response.data.solution
+        this.recommend = response.data.recommend
       })
     }
   }

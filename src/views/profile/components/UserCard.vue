@@ -49,7 +49,7 @@
 <script>
 import PanThumb from '@/components/PanThumb'
 import { fetchProfileBasic } from '@/api/user'
-import PieChart from './PieChart'
+import PieChart from '@/components/problem/PieChart'
 
 export default {
   components: { PanThumb, PieChart },

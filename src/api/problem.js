@@ -16,11 +16,25 @@ export function fetchProblem(id) {
   })
 }
 
+/*
+问题状态
+ */
 export function fetchProblemStatus(id) {
   return request({
     url: '/problemstatus.php',
     method: 'get',
     params: { id }
+  })
+}
+
+/*
+问题状态用户详细AC情况
+ */
+export function fetchProblemStatusDetail(id, page) {
+  return request({
+    url: '/problemstatus.php',
+    method: 'get',
+    params: { id, page }
   })
 }
 
@@ -120,7 +134,6 @@ export function adminUpdate(data) {
     data
   })
 }
-
 
 export function adminAdd(data) {
   return request({

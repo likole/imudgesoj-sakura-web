@@ -5,7 +5,7 @@
 <script>
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
-import resize from '../../dashboard/user/components/mixins/resize'
+import resize from '../../views/dashboard/user/components/mixins/resize'
 
 export default {
   mixins: [resize],

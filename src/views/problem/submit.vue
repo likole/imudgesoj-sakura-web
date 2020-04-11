@@ -38,6 +38,7 @@
             <el-button v-show="submitBtnText=='再次提交'" style="margin-top: 12px" type="success" @click="dialogVisible=true">查看上次运行结果</el-button>
           </el-form>
         </el-card>
+        <problem-status-detail-component :id-for-update="idForUpdate" :pid="submitData.id" />
       </el-col>
       <el-col :lg="6" :sm="24">
         <el-card>
@@ -50,7 +51,7 @@
           <p>AC/提交：{{ problem.accepted }}/{{ problem.submit }}</p>
           <el-progress :text-inside="true" :stroke-width="26" :percentage="progress" />
         </el-card>
-        <problem-status :pid="submitData.id" style="margin-top: 20px"/>
+        <problem-status-component :id-for-update="idForUpdate" :pid="submitData.id" style="margin-top: 20px" />
       </el-col>
     </el-row>
     <el-dialog
@@ -94,7 +95,8 @@
 
 <script>
 import clip from '@/utils/clipboard' // use clipboard directly
-import ProblemStatus from './components/ProblemStatus'
+import ProblemStatusComponent from '@/components/problem/ProblemStatus'
+import ProblemStatusDetailComponent from '@/components/problem/ProblemStatusDetail'
 import BackToTop from '@/components/BackToTop'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
@@ -118,7 +120,7 @@ require('codemirror/mode/go/go')
 
 export default {
   name: 'ProblemSubmit',
-  components: { BackToTop, ProblemStatus },
+  components: { BackToTop, ProblemStatusComponent, ProblemStatusDetailComponent },
   filters: {
     numFilter(value) {
       // 截取当前数据到小数点后两位
@@ -162,7 +164,8 @@ export default {
       },
       testrun: false,
       input_text: '',
-      output_text: ''
+      output_text: '',
+      idForUpdate: 1
     }
   },
   created() {
@@ -257,6 +260,7 @@ export default {
           this.submitBtnText = '再次提交'
           this.closeDlg = true
           this.fetchData(this.submitData.id)
+          this.idForUpdate++
         }
       }
       )
