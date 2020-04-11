@@ -62,6 +62,22 @@ export function adminChangePrivate(cid) {
   })
 }
 
+export function adminAddContest(data) {
+  return request({
+    url: '/admin/contest.php?add=1',
+    method: 'post',
+    data
+  })
+}
+
+export function adminUpdateContest(data) {
+  return request({
+    url: '/admin/contest.php?update=1',
+    method: 'post',
+    data
+  })
+}
+
 // 以下没有用
 
 export function submitProblem(data) {

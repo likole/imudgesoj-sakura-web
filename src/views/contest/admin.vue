@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="createContest">添加竞赛</el-button>
       <el-select v-model="page" class="filter-item" placeholder="页码" @change="getList">
         <el-option
           v-for="item in total"
@@ -9,19 +10,6 @@
           :value="item"
         />
       </el-select>
-      <!--          <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="createProblem">添加问题</el-button>-->
-      <!--          <el-popover-->
-      <!--            placement="bottom"-->
-      <!--            title="提示"-->
-      <!--            width="200"-->
-      <!--            trigger="hover"-->
-      <!--            content="指定关键词时，分页将失效"-->
-      <!--          >-->
-      <!--            <el-input slot="reference" v-model="keywords" placeholder="关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="getList" />-->
-      <!--          </el-popover>-->
-      <!--          <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="getList">-->
-      <!--            搜索-->
-      <!--          </el-button>-->
     </div>
     <el-table
       :key="tableKey"
@@ -109,7 +97,7 @@
     <el-dialog
       title="创建/编辑竞赛"
       :visible.sync="dialogSendVisible"
-      width="70%"
+      width="90%"
       :close-on-press-escape="false"
       :close-on-click-modal="false"
     >
@@ -118,7 +106,7 @@
           <el-input v-model="postForm.title" />
         </el-form-item>
         <el-row :gutter="20">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="开始时间">
               <el-date-picker
                 v-model="postForm.startTime"
@@ -129,7 +117,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="结束时间">
               <el-date-picker
                 v-model="postForm.endTime"
@@ -140,7 +128,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="私有">
               <el-switch
                 v-model="postForm.private"
@@ -149,17 +137,24 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="密码">
+          <el-col :span="16">
+            <el-form-item v-if="postForm.private" label="允许用户">
+              <el-input type="textarea" v-model="postForm.ulist" placeholder="一行一个" autosize />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item v-if="postForm.private" label="密码">
               <el-input v-model="postForm.password" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="16">
             <el-form-item label="题号">
               <el-input v-model="postForm.plist" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="语言">
               <el-select v-model="postForm.language_selected" multiple placeholder="可用语言" width="100%">
                 <el-option
@@ -174,9 +169,6 @@
         </el-row>
         <h4>描述</h4>
         <tinymce v-if="dialogSendVisible" v-model="postForm.description" height="200" style="margin-bottom: 20px" />
-        <el-form-item v-if="postForm.private" label="允许用户">
-          <el-input type="textarea" :rows="10" />
-        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogSendVisible = false">取消</el-button>
@@ -187,8 +179,7 @@
 </template>
 
 <script>
-import { adminUpdate, adminAdd } from '../../api/problem'
-import { adminGetList, adminChangeStatus, adminChangePrivate, adminGetContest } from '../../api/contest'
+import { adminGetList, adminChangeStatus, adminChangePrivate, adminGetContest, adminAddContest, adminUpdateContest } from '../../api/contest'
 import waves from '@/directive/waves' // waves directive
 import Tinymce from '../../components/Tinymce/index'
 
@@ -227,19 +218,38 @@ export default {
         this.listLoading = false
       })
     },
-    createProblem() {
+    createContest() {
       this.postForm = {
         description: '',
-        hint: '',
-        input: '',
-        memory_limit: 128,
-        output: '',
-        sample_input: '',
-        sample_output: '',
-        source: '',
-        spj: false,
-        time_limit: 1,
-        title: ''
+        endTime: '',
+        language: [
+          { value: 0, language: 'C' },
+          { value: 1, language: 'C++' },
+          { value: 2, language: 'Pascal' },
+          { value: 3, language: 'Java' },
+          { value: 4, language: 'Ruby' },
+          { value: 5, language: 'Bash' },
+          { value: 6, language: 'Python' },
+          { value: 7, language: 'PHP' },
+          { value: 8, language: 'Perl' },
+          { value: 9, language: 'C#' },
+          { value: 10, language: 'Obj-C' },
+          { value: 11, language: 'FreeBasic' },
+          { value: 12, language: 'Scheme' },
+          { value: 13, language: 'Clang' },
+          { value: 14, language: 'Clang++' },
+          { value: 15, language: 'Lua' },
+          { value: 16, language: 'JavaScript' },
+          { value: 17, language: 'Go' },
+          { value: 18, language: 'SQL(sqlite3)' }
+        ],
+        language_selected: [0, 1],
+        password: '',
+        plist: '',
+        private: false,
+        startTime: '',
+        title: '',
+        ulist: ''
       }
       this.create = true
       this.dialogSendVisible = true
@@ -262,13 +272,13 @@ export default {
     },
     handleCreate() {
       if (this.create) {
-        adminAdd(this.postForm).then(() => {
+        adminAddContest(this.postForm).then(() => {
           this.$message({ 'type': 'success', 'message': '添加成功' })
           this.getList()
           this.dialogSendVisible = false
         })
       } else {
-        adminUpdate(this.postForm).then(() => {
+        adminUpdateContest(this.postForm).then(() => {
           this.$message({ 'type': 'success', 'message': '编辑成功' })
           this.getList()
           this.dialogSendVisible = false
@@ -278,7 +288,6 @@ export default {
     editContest(id) {
       adminGetContest(id).then(response => {
         this.postForm = response.data
-        this.postForm.contest_id = id
         this.create = false
         this.dialogSendVisible = true
       })
