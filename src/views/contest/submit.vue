@@ -118,7 +118,6 @@
 <script>
 import clip from '@/utils/clipboard' // use clipboard directly
 import ProblemStatusComponent from '@/components/problem/ProblemStatus'
-import ProblemStatusDetailComponent from '@/components/problem/ProblemStatusDetail'
 import BackToTop from '@/components/BackToTop'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/monokai.css'
@@ -151,7 +150,7 @@ require('codemirror/mode/go/go')
    */
 export default {
   name: 'ContestSubmit',
-  components: { BackToTop, ProblemStatusComponent, ProblemStatusDetailComponent },
+  components: { BackToTop, ProblemStatusComponent },
   filters: {
     numFilter(value) {
       // 截取当前数据到小数点后两位
