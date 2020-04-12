@@ -5,6 +5,7 @@
         <el-button v-waves class="filter-item" type="primary" icon="el-icon-refresh" @click="getContests">
           刷新
         </el-button>
+        <el-input v-model="password" class="filter-item" style="width: 300px;margin-left: 10px" placeholder="如果访问的竞赛需要密码，请在此处输入" />
       </div>
       <el-table
         :key="tableKey"
@@ -140,7 +141,8 @@ export default {
       listLoading: true,
       cid: 0,
       progress: 0,
-      activeTab: 'problems'
+      activeTab: 'problems',
+      password: ''
     }
   },
   created() {
@@ -168,7 +170,7 @@ export default {
     },
     getProblems(cid) {
       this.listLoading = true
-      fetchProblems(cid).then(response => {
+      fetchProblems(cid, { password: this.password }).then(response => {
         this.contest = response.data
         this.cid = parseInt(cid)
         Cookies.set('cid', this.cid, { expires: 1 })

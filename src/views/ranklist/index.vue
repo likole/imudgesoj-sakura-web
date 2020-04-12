@@ -30,7 +30,7 @@
       style="width: 100%;"
     >
 
-      <el-table-column label="排名" align="center" width="50px">
+      <el-table-column label="排名" align="center" width="70px">
         <template slot-scope="scope">
           {{ scope.row.rank }}
         </template>

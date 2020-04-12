@@ -7,11 +7,12 @@ export function fetchContests() {
   })
 }
 
-export function fetchProblems(cid) {
+export function fetchProblems(cid, data) {
   return request({
     url: '/contest.php',
-    method: 'get',
-    params: { cid }
+    method: 'post',
+    params: { cid },
+    data
   })
 }
 
