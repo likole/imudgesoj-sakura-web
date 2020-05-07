@@ -66,7 +66,7 @@
           <el-tag v-for="(item,index) in scope.row.category" :key="index" @click="searchCategory(item)">{{ item }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="正确率" :sortable="true" :sort-method="sortMethod" width="device==='desktop'?'200px':'100px'" align="center">
+      <el-table-column label="正确率" :sortable="true" :sort-method="sortMethod" :width="device==='desktop'?'200px':'100px'" align="center">
         <template slot-scope="scope">
           <el-progress :show-text="false" :percentage="scope.row.submit==0?0:(scope.row.ac /scope.row.submit*100)" />
           <span>{{ scope.row.ac }}/{{ scope.row.submit }}</span>

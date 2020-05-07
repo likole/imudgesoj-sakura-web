@@ -1,6 +1,8 @@
 <template>
   <div class="">
-    <div class="filter-container">
+
+    <!--start desktop view-->
+    <div v-if="device==='desktop'" class="filter-container">
       <el-input
         v-model="listQuery.problem_id"
         placeholder="题目编号"
@@ -58,10 +60,74 @@
         />
       </el-select>
     </div>
-    <el-button-group style="margin: 20px 0">
-      <el-button type="primary" icon="el-icon-d-arrow-left" @click="firstPage">刷新/首页</el-button>
-      <el-button type="primary" icon="el-icon-arrow-left" @click="prevPage">上一页</el-button>
-      <el-button type="primary" @click="nextPage">下一页<i class="el-icon-arrow-right el-icon--right" /></el-button>
+    <!--end desktop view-->
+
+    <!--   start mobile view-->
+    <div v-else>
+      <el-row :gutter="10">
+        <el-col :span="12">
+          <el-input
+            v-model="listQuery.problem_id"
+            placeholder="题目编号"
+            style="width: 100%;"
+            class="filter-item"
+            size="mini"
+          />
+        </el-col>
+        <el-col :span="12">
+          <el-input
+            v-model="listQuery.user_id"
+            placeholder="用户"
+            style="width: 100%;"
+            class="filter-item"
+            size="mini"
+          />
+        </el-col>
+      </el-row>
+      <el-row :gutter="10" style="margin-top: 10px">
+        <el-col :span="12">
+          <el-select
+            v-model="listQuery.language"
+            placeholder="语言"
+            style="width: 100%"
+            class="filter-item"
+            size="mini"
+            @change="handleFilter"
+          >
+            <el-option
+              v-for="item in languageOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="12">
+          <el-select
+            v-model="listQuery.jresult"
+            placeholder="结果"
+            style="width: 100%"
+            class="filter-item"
+            size="mini"
+            @change="handleFilter"
+          >
+            <el-option
+              v-for="item in resultOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-col>
+      </el-row>
+      <el-button type="primary" style="width: 100%;margin-top: 10px" size="mini" @click="handleFilter">过滤</el-button>
+    </div>
+    <!--   end mobile view-->
+
+    <el-button-group :style="device==='desktop'?'margin:20px 0;':'margin:10px 0;width:100%'">
+      <el-button type="primary" icon="el-icon-d-arrow-left" :size="device==='desktop'?'medium':'mini'" @click="firstPage">刷新/首页</el-button>
+      <el-button type="primary" icon="el-icon-arrow-left" :size="device==='desktop'?'medium':'mini'" @click="prevPage">上一页</el-button>
+      <el-button type="primary" :size="device==='desktop'?'medium':'mini'" @click="nextPage">下一页<i class="el-icon-arrow-right el-icon--right" /></el-button>
     </el-button-group>
     <el-table
       :key="tableKey"
@@ -71,6 +137,7 @@
       fit
       highlight-current-row
       style="width: 100%;"
+      :size="device==='desktop'?'medium':'mini'"
     >
       <el-table-column label="运行编号" align="center">
         <template slot-scope="scope">
@@ -158,23 +225,24 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-button-group style="margin: 20px 0">
-      <el-button type="primary" icon="el-icon-d-arrow-left" @click="firstPage">刷新/首页</el-button>
-      <el-button type="primary" icon="el-icon-arrow-left" @click="prevPage">上一页</el-button>
-      <el-button type="primary" @click="nextPage">下一页<i class="el-icon-arrow-right el-icon--right" /></el-button>
+    <el-button-group :style="'margin:20px 0;' + (device==='desktop'?'':'width:100%')">
+      <el-button type="primary" icon="el-icon-d-arrow-left" :size="device==='desktop'?'medium':'mini'" @click="firstPage">刷新/首页</el-button>
+      <el-button type="primary" icon="el-icon-arrow-left" :size="device==='desktop'?'medium':'mini'" @click="prevPage">上一页</el-button>
+      <el-button type="primary" :size="device==='desktop'?'medium':'mini'" @click="nextPage">下一页<i class="el-icon-arrow-right el-icon--right" /></el-button>
     </el-button-group>
     <el-dialog
       title="查看源码"
       :visible.sync="sourceDialogVisible"
-      width="70%"
+      :width="device==='desktop'?'70%':'95%'"
     >
-      <pre>{{ source }}</pre>
+      <p v-if="device==='mobile'">当前屏幕较小，您可以点击复制按钮，将代码复制到其他地方查看</p>
+      <pre :style="device==='mobile'?'font-size: 10px':''">{{ source }}</pre>
       <el-button type="primary" @click="handleCopy(source,$event)">复制</el-button>
     </el-dialog>
     <el-dialog
       title="详情"
       :visible.sync="detailDialogVisible"
-      width="70%"
+      :width="device==='desktop'?'70%':'95%'"
     >
       <pre>{{ detail }}</pre>
     </el-dialog>
@@ -187,6 +255,7 @@ import { fetchStatus, fetchSource, fetchCE, fetchRE } from '@/api/problem'
 import clip from '@/utils/clipboard'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
+import { mapState } from 'vuex'
 
 export default {
   name: 'StatusComponent',
@@ -292,6 +361,11 @@ export default {
         value: '100', label: '100%'
       }]
     }
+  },
+  computed: {
+    ...mapState({
+      device: state => state.app.device
+    })
   },
   mounted() {
     this.getList()
