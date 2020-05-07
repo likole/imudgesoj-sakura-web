@@ -1,19 +1,28 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="pid" type="number" placeholder="输入题号按回车直接跳转" style="width: 200px;" class="filter-item" @keyup.enter.native="handleDirect" />
-      <el-tooltip placement="bottom" content="多关键词以空格分隔">
-        <el-input v-model="listQuery.search" placeholder="标题，来源，描述" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      </el-tooltip>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-        搜索
-      </el-button>
-      <el-checkbox v-model="showCategory" class="filter-item" style="margin-left:15px;" @change="handleCategory">
-        显示分类
-      </el-checkbox>
-      <el-button v-waves class="filter-item" type="primary" @click="showAllCategory">
-        查看所有分类
-      </el-button>
+      <div v-if="device==='desktop'">
+        <el-input v-model="pid" type="number" placeholder="输入题号按回车直接跳转" style="width: 200px;" class="filter-item" @keyup.enter.native="handleDirect" />
+        <el-tooltip placement="bottom" content="多关键词以空格分隔">
+          <el-input v-model="listQuery.search" placeholder="标题，来源，描述" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        </el-tooltip>
+        <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+          搜索
+        </el-button>
+        <el-checkbox v-model="showCategory" class="filter-item" style="margin-left:15px;" @change="handleCategory">
+          显示分类
+        </el-checkbox>
+        <el-button v-waves class="filter-item" type="primary" @click="showAllCategory">
+          查看所有分类
+        </el-button>
+      </div>
+      <div v-else>
+        <el-input v-model="listQuery.search" placeholder="标题，来源，描述。多关键词以空格分隔" style="width: 100%" class="filter-item" size="mini" @keyup.enter.native="handleFilter" />
+        <br>
+        <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="width: 100%;" size="mini" @click="handleFilter">
+          搜索
+        </el-button>
+      </div>
     </div>
 
     <el-table
@@ -25,20 +34,27 @@
       highlight-current-row
       :row-class-name="tableRowClassName"
       style="width: 100%;"
+      :size="device==='desktop'?'medium':'mini'"
     >
 
-      <el-table-column label="" align="center" width="80px">
+      <el-table-column label="" align="center" :width="device==='desktop'?'80px':'28px'">
         <template slot-scope="scope">
-          <el-tag v-show="scope.row.result=='Y'" type="success">Y</el-tag>
-          <el-tag v-show="scope.row.result=='N'" type="danger">N</el-tag>
+          <div v-if="device==='desktop'">
+            <el-tag v-show="scope.row.result=='Y'" type="success">Y</el-tag>
+            <el-tag v-show="scope.row.result=='N'" type="danger">N</el-tag>
+          </div>
+          <div v-else>
+            <p v-show="scope.row.result=='Y'" style="color: green">Y</p>
+            <p v-show="scope.row.result=='N'" style="color: red">N</p>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column label="题目编号" sortable prop="id" align="center" width="150px">
+      <el-table-column :label="device==='desktop'?'题目编号':'ID'" sortable prop="id" align="center" :width="device==='desktop'?'150px':'60px'">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="标题" align="center">
+      <el-table-column label="标题" align="center" min-width="200px">
         <template slot-scope="scope">
           <router-link :to="'/problem/submit/'+scope.row.id" class="link-type">
             <span>{{ scope.row.title }}</span>
@@ -50,7 +66,7 @@
           <el-tag v-for="(item,index) in scope.row.category" :key="index" @click="searchCategory(item)">{{ item }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="正确率" :sortable="true" :sort-method="sortMethod" width="200px" align="center">
+      <el-table-column label="正确率" :sortable="true" :sort-method="sortMethod" width="device==='desktop'?'200px':'100px'" align="center">
         <template slot-scope="scope">
           <el-progress :show-text="false" :percentage="scope.row.submit==0?0:(scope.row.ac /scope.row.submit*100)" />
           <span>{{ scope.row.ac }}/{{ scope.row.submit }}</span>
@@ -58,7 +74,16 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :page-sizes="[10,20,30,50,100]" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="listQuery.page"
+      :page-sizes="[10,20,30,50,100]"
+      :limit.sync="listQuery.limit"
+      :layout="device==='desktop'?'total, sizes, prev, pager, next, jumper':'prev, pager, next'"
+      :small="device==='mobile'"
+      @pagination="getList"
+    />
 
     <el-dialog
       title="所有分类"
@@ -75,6 +100,7 @@ import { fetchList, fetchCategories } from '@/api/problem'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Cookies from 'js-cookie'
+import { mapState } from 'vuex'
 
 export default {
   name: 'ProblemList',
@@ -106,6 +132,11 @@ export default {
       categoryDialogVisible: false,
       categories: null
     }
+  },
+  computed: {
+    ...mapState({
+      device: state => state.app.device
+    })
   },
   created() {
     if (Cookies.get('page') !== undefined) this.listQuery.page = parseInt(Cookies.get('page'))
