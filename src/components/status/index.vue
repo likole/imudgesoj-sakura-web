@@ -144,7 +144,7 @@
           <span>{{ scope.row.solution_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户名" align="center">
+      <el-table-column label="用户名" align="center" min-width="110px">
         <template slot-scope="scope">
           <router-link v-if="cid===0" :to="'/profile/user/'+scope.row.user_id" class="link-type">
             {{ scope.row.user_id }}
@@ -178,17 +178,19 @@
           <el-tag
             v-if="scope.row.result.ce===true"
             :type="scope.row.result.code|statusFilter"
+            :size="device==='desktop'?'medium':'mini'"
             @click="handleCE(scope.row.solution_id)"
           >{{ scope.row.result.msg }}
           </el-tag>
           <el-tag
             v-else-if="scope.row.result.re===true"
             :type="scope.row.result.code|statusFilter"
+            :size="device==='desktop'?'medium':'mini'"
             @click="handleRE(scope.row.solution_id)"
           >{{ scope.row.result.msg }}
           </el-tag>
-          <el-tag v-else :type="scope.row.result.code|statusFilter">{{ scope.row.result.msg }}</el-tag>
-          <el-tag v-show="scope.row.result.sim_s_id!=undefined">{{ scope.row.result.sim_s_id }}</el-tag>
+          <el-tag v-else :type="scope.row.result.code|statusFilter" :size="device==='desktop'?'medium':'mini'">{{ scope.row.result.msg }}</el-tag>
+          <el-tag v-show="scope.row.result.sim_s_id!=undefined" :size="device==='desktop'?'medium':'mini'">{{ scope.row.result.sim_s_id }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="内存" align="center">
@@ -214,7 +216,7 @@
           <span>{{ scope.row.code_length }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="提交时间" align="center">
+      <el-table-column label="提交时间" align="center" min-width="120px">
         <template slot-scope="scope">
           <span>{{ scope.row.in_data| parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>

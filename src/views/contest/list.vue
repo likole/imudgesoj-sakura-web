@@ -29,12 +29,12 @@
             <el-button type="text" @click="getProblems(scope.row.id)" v-html="scope.row.title" />
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center" width="250px">
+        <el-table-column label="状态" align="center" width="230px">
           <template slot-scope="scope">
             <p v-html="scope.row.time" />
           </template>
         </el-table-column>
-        <el-table-column label="创建者" align="center" width="250px">
+        <el-table-column label="创建者" align="center" width="150px">
           <template slot-scope="scope">
             {{ scope.row.creator }}
           </template>
