@@ -2,10 +2,11 @@
   <div class="app-container">
     <div v-if="cid===0">
       <div class="filter-container">
-        <el-button v-waves class="filter-item" type="primary" icon="el-icon-refresh" @click="getContests">
+        <el-button v-waves class="filter-item" type="primary" icon="el-icon-refresh" :size="device==='desktop'?'medium':'mini'" @click="getContests">
           刷新
         </el-button>
-        <el-input v-model="password" class="filter-item" style="width: 300px;margin-left: 10px" placeholder="如果访问的竞赛需要密码，请在此处输入" />
+        <el-input v-if="device==='desktop'" v-model="password" class="filter-item" style="width: 300px;margin-left: 10px" placeholder="如果访问的竞赛需要密码，请在此处输入" />
+        <el-input v-else v-model="password" class="filter-item" style="width: 200px;margin-left: 10px" placeholder="竞赛访问密码" size="mini" />
       </div>
       <el-table
         :key="tableKey"
@@ -15,14 +16,15 @@
         fit
         highlight-current-row
         style="width: 100%;"
+        :size="device==='desktop'?'medium':'mini'"
       >
-        <el-table-column label="编号" align="center" width="100px">
+        <el-table-column label="编号" align="center" :width="device==='desktop'?'100px':'66px'">
           <template slot-scope="scope">
             <svg-icon v-if="scope.row.private===1" icon-class="password" />
             {{ scope.row.id }}
           </template>
         </el-table-column>
-        <el-table-column label="标题" align="center">
+        <el-table-column label="标题" align="center" min-width="250px">
           <template slot-scope="scope">
             <el-button type="text" @click="getProblems(scope.row.id)" v-html="scope.row.title" />
           </template>
@@ -41,23 +43,28 @@
     </div>
     <div v-if="cid!==0">
       <div class="filter-container">
-        <el-button v-waves class="filter-item" type="primary" icon="el-icon-back" @click="getContests">
+        <el-button v-waves class="filter-item" type="primary" icon="el-icon-back" :size="device==='desktop'?'medium':'mini'" @click="getContests">
           返回竞赛列表
         </el-button>
       </div>
 
       <h2 align="center">{{ cid }} - <span v-html="contest.title" /></h2>
       <div align="center" v-html="contest.description" />
-      <div style="margin-top: 20px;padding-bottom: 55px">
+      <div v-if="device==='desktop'" style="margin-top: 20px;padding-bottom: 55px">
         <el-progress :percentage="progress" :show-text="false" />
         <p style="float: left">开始时间: {{ contest.start }}</p>
         <p style="float: right">结束时间: {{ contest.end }}</p>
+      </div>
+      <div v-else style="margin-top: 20px;padding-bottom: 55px">
+        <el-progress :percentage="progress" :show-text="false" />
+        <p style="float: left;font-size: 14px">{{ contest.start }}</p>
+        <p style="float: right;font-size: 14px">{{ contest.end }}</p>
       </div>
 
       <el-tabs v-model="activeTab">
         <el-tab-pane label="问 题" name="problems">
           <div class="filter-container">
-            <el-button v-waves class="filter-item" type="primary" icon="el-icon-refresh" @click="getProblems(cid)">
+            <el-button v-waves class="filter-item" type="primary" icon="el-icon-refresh" :size="device==='desktop'?'medium':'mini'" @click="getProblems(cid)">
               刷新
             </el-button>
           </div>
@@ -70,19 +77,26 @@
             highlight-current-row
             :row-class-name="tableRowClassName"
             style="width: 100%;"
+            :size="device==='desktop'?'medium':'mini'"
           >
-            <el-table-column label="" align="center" width="80px">
+            <el-table-column label="" align="center" :width="device==='desktop'?'80px':'28px'">
               <template slot-scope="scope">
-                <el-tag v-show="scope.row.status=='Y'" type="success">Y</el-tag>
-                <el-tag v-show="scope.row.status=='N'" type="danger">N</el-tag>
+                <div v-if="device==='desktop'">
+                  <el-tag v-show="scope.row.status=='Y'" type="success">Y</el-tag>
+                  <el-tag v-show="scope.row.status=='N'" type="danger">N</el-tag>
+                </div>
+                <div v-else>
+                  <p v-show="scope.row.status=='Y'" style="color: green">Y</p>
+                  <p v-show="scope.row.status=='N'" style="color: red">N</p>
+                </div>
               </template>
             </el-table-column>
-            <el-table-column label="编号" align="center" width="150px">
+            <el-table-column label="编号" align="center" :width="device==='desktop'?'150px':'115px'">
               <template slot-scope="scope">
                 {{ scope.row.pid }} Problem{{ scope.row.id }}
               </template>
             </el-table-column>
-            <el-table-column label="标题" align="center" width="">
+            <el-table-column label="标题" align="center" min-width="200px">
               <template slot-scope="scope">
                 <router-link
                   :to="'/contest/submit/'+cid+'/'+scope.row.id_num"
@@ -92,17 +106,17 @@
                 </router-link>
               </template>
             </el-table-column>
-            <el-table-column label="来源" align="center" width="200px">
+            <el-table-column v-if="device==='desktop'" label="来源" align="center" width="200px">
               <template slot-scope="scope">
                 {{ scope.row.source }}
               </template>
             </el-table-column>
-            <el-table-column label="解决" align="center" width="80px">
+            <el-table-column label="解决" align="center" :width="device==='desktop'?'80px':'50px'">
               <template slot-scope="scope">
                 {{ scope.row.ac }}
               </template>
             </el-table-column>
-            <el-table-column label="提交" align="center" width="80px">
+            <el-table-column label="提交" align="center" :width="device==='desktop'?'80px':'50px'">
               <template slot-scope="scope">
                 {{ scope.row.submit }}
               </template>
@@ -128,6 +142,7 @@ import StatusComponent from '@/components/status/index'
 import ContestRank from './components/contestrank'
 import waves from '@/directive/waves' // waves directive
 import Cookies from 'js-cookie'
+import { mapState } from 'vuex'
 
 export default {
   name: 'ContestList',
@@ -144,6 +159,11 @@ export default {
       activeTab: 'problems',
       password: ''
     }
+  },
+  computed: {
+    ...mapState({
+      device: state => state.app.device
+    })
   },
   created() {
     if (Cookies.get('cid') !== undefined && Cookies.get('cid') !== '0') { this.getProblems(parseInt(Cookies.get('cid'))) } else { this.getContests() }

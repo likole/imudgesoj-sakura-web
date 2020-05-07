@@ -8,6 +8,7 @@
       fit
       highlight-current-row
       style="width: 100%;"
+      :size="device==='desktop'?'medium':'mini'"
     >
       <el-table-column label="排名" align="center" width="70px">
         <template slot-scope="scope">
@@ -21,7 +22,7 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="昵称" align="center">
+      <el-table-column label="昵称" align="center" min-width="200px">
         <template slot-scope="scope">
           <router-link :to="'/profile/user/'+scope.row.user_id" class="link-type">
             {{ scope.row.nick }}
@@ -35,7 +36,16 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="page" :page-sizes="[50]" :limit="50" @pagination="getList" />
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="page"
+      :page-sizes="[50]"
+      :limit="50"
+      :layout="device==='desktop'?'total, sizes, prev, pager, next, jumper':'prev, pager, next'"
+      :small="device==='mobile'"
+      @pagination="getList"
+    />
 
   </div>
 </template>
@@ -44,6 +54,7 @@
 import { scoreRanklist } from '../../api/score'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { mapState } from 'vuex'
 
 export default {
   name: 'RanklistScore',
@@ -57,6 +68,11 @@ export default {
       total: 0,
       listLoading: true
     }
+  },
+  computed: {
+    ...mapState({
+      device: state => state.app.device
+    })
   },
   created() {
     this.getList()

@@ -2,13 +2,14 @@
   <div class="app-container">
     <div class="filter-container">
       <el-tooltip placement="bottom" content="提示: 搜索用户时会显示总榜">
-        <el-input v-model="listQuery.prefix" placeholder="搜索用户" style="width: 200px;" class="filter-item" @keyup.enter.native="getList" />
+        <el-input v-model="listQuery.prefix" placeholder="搜索用户" :style="device==='desktop'?'width:200px':'width:100%'" class="filter-item" :size="device==='desktop'?'medium':'mini'" @keyup.enter.native="getList" />
       </el-tooltip>
       <el-select
         v-model="listQuery.scope"
         placeholder="范围"
-        style="width: 200px"
+        :style="device==='desktop'?'width:200px':'width:100%'"
         class="filter-item"
+        :size="device==='desktop'?'medium':'mini'"
         @change="handleFilter"
       >
         <el-option
@@ -18,6 +19,9 @@
           :value="item.value"
         />
       </el-select>
+      <el-button v-if="device==='mobile'" type="primary" icon="el-icon-search" style="width: 100%;" size="mini" @click="getList">
+        搜索
+      </el-button>
     </div>
 
     <el-table
@@ -28,6 +32,7 @@
       fit
       highlight-current-row
       style="width: 100%;"
+      :size="device==='desktop'?'medium':'mini'"
     >
 
       <el-table-column label="排名" align="center" width="70px">
@@ -42,7 +47,7 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="昵称" align="center">
+      <el-table-column label="昵称" align="center" min-width="200px">
         <template slot-scope="scope">
           <router-link :to="'/profile/user/'+scope.row.user_id" class="link-type">
             {{ scope.row.nick }}
@@ -66,7 +71,16 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.start" :page-sizes="[50]" :limit="50" @pagination="getList" />
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="listQuery.start"
+      :page-sizes="[50]"
+      :limit="50"
+      :layout="device==='desktop'?'total, sizes, prev, pager, next, jumper':'prev, pager, next'"
+      :small="device==='mobile'"
+      @pagination="getList"
+    />
 
   </div>
 </template>
@@ -75,6 +89,7 @@
 import { fetchRanklist } from '@/api/problem'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { mapState } from 'vuex'
 
 export default {
   name: 'Ranklist',
@@ -109,6 +124,11 @@ export default {
         { label: '年榜', value: 'y' }
       ]
     }
+  },
+  computed: {
+    ...mapState({
+      device: state => state.app.device
+    })
   },
   created() {
     this.getList()

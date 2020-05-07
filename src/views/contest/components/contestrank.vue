@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <div class="filter-container">
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-refresh" @click="getRank">
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-refresh" :size="device==='desktop'?'medium':'mini'" @click="getRank">
         刷新
       </el-button>
     </div>
@@ -12,18 +12,19 @@
       fit
       highlight-current-row
       style="width: 100%;"
+      :size="device==='desktop'?'medium':'mini'"
     >
       <el-table-column label="排名" align="center">
         <template slot-scope="scope">
           {{ scope.row.rank }}
         </template>
       </el-table-column>
-      <el-table-column label="用户" align="center">
+      <el-table-column label="用户" align="center" min-width="110px">
         <template slot-scope="scope">
           {{ scope.row.user_id }}
         </template>
       </el-table-column>
-      <el-table-column label="昵称" align="center">
+      <el-table-column label="昵称" align="center" min-width="110px">
         <template slot-scope="scope">
           {{ scope.row.nick }}
         </template>
@@ -51,6 +52,7 @@
 <script>
 import { fetchRanklist } from '@/api/contest'
 import waves from '@/directive/waves' // waves directive
+import { mapState } from 'vuex'
 
 export default {
   name: 'ContestRank',
@@ -67,6 +69,11 @@ export default {
       view: null,
       listLoading: true
     }
+  },
+  computed: {
+    ...mapState({
+      device: state => state.app.device
+    })
   },
   mounted() {
     this.getRank()
