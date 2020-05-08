@@ -313,6 +313,12 @@ export const asyncRoutes = [
         component: () => import('@/views/develop/token'),
         name: 'DevelopToken',
         meta: { title: '会话管理' }
+      },
+      {
+        path: 'test',
+        component: () => import('@/views/develop/test'),
+        name: 'DevelopTest',
+        meta: { title: '调试专用页面' }
       }
     ]
   },
