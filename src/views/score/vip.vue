@@ -8,9 +8,9 @@
       <p>
         可以查看答案错误详情
       </p>
-      <el-button type="primary" v-show="vip1==0" @click="updateStatus(11)">开通一天（10积分）</el-button>
+      <el-button v-show="vip1==0" type="primary" @click="updateStatus(11)">开通一天（10积分）</el-button>
       <br v-if="device==='mobile'">
-      <el-button type="success" v-show="vip1==0" :style="device==='mobile'?'margin-top:10px':''" @click="updateStatus(12)">开通七天（50积分）</el-button>
+      <el-button v-show="vip1==0" type="success" :style="device==='mobile'?'margin-top:10px':''" @click="updateStatus(12)">开通七天（50积分）</el-button>
       <el-button v-show="vip1==1" disabled="disabled">您已开通</el-button>
     </el-card>
 
