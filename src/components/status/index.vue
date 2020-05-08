@@ -72,6 +72,7 @@
             style="width: 100%;"
             class="filter-item"
             size="mini"
+            @keyup.enter.native="handleFilter"
           />
         </el-col>
         <el-col :span="12">
@@ -81,6 +82,7 @@
             style="width: 100%;"
             class="filter-item"
             size="mini"
+            @keyup.enter.native="handleFilter"
           />
         </el-col>
       </el-row>
@@ -138,6 +140,7 @@
       highlight-current-row
       style="width: 100%;"
       :size="device==='desktop'?'medium':'mini'"
+      :cell-style="{padding:'0'}"
     >
       <el-table-column label="运行编号" align="center">
         <template slot-scope="scope">
