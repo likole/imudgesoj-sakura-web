@@ -26,12 +26,12 @@
         </el-table-column>
         <el-table-column label="标题" align="center" min-width="250px">
           <template slot-scope="scope">
-            <el-button type="text" @click="getProblems(scope.row.id)" v-html="scope.row.title" />
+            <el-button type="text" :style="device==='mobile'?'padding: 0':''" @click="getProblems(scope.row.id)" v-html="scope.row.title" />
           </template>
         </el-table-column>
         <el-table-column label="状态" align="center" width="230px">
           <template slot-scope="scope">
-            <p v-html="scope.row.time" />
+            <p style="margin: 0" v-html="scope.row.time" />
           </template>
         </el-table-column>
         <el-table-column label="创建者" align="center" width="150px">

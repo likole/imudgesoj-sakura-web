@@ -9,7 +9,8 @@
         可以查看答案错误详情
       </p>
       <el-button type="primary" v-show="vip1==0" @click="updateStatus(11)">开通一天（10积分）</el-button>
-      <el-button type="success" v-show="vip1==0" @click="updateStatus(12)">开通七天（50积分）</el-button>
+      <br v-if="device==='mobile'">
+      <el-button type="success" v-show="vip1==0" :style="device==='mobile'?'margin-top:10px':''" @click="updateStatus(12)">开通七天（50积分）</el-button>
       <el-button v-show="vip1==1" disabled="disabled">您已开通</el-button>
     </el-card>
 
@@ -18,6 +19,7 @@
 <script>
 import { fetchVip, openVip } from '@/api/score'
 import waves from '@/directive/waves' // waves directive
+import { mapState } from 'vuex'
 export default {
   name: 'ScoreVIP',
   directives: { waves },
@@ -26,6 +28,11 @@ export default {
       score: 0,
       vip1: -1
     }
+  },
+  computed: {
+    ...mapState({
+      device: state => state.app.device
+    })
   },
   created() {
     this.getStatus()
