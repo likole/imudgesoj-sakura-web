@@ -65,13 +65,12 @@ import 'codemirror/lib/codemirror.css'
 // theme
 import 'codemirror/theme/monokai.css'
 // mode
-import 'codemirror/mode/meta'
 import 'codemirror/mode/clike/clike'
 import 'codemirror/mode/python/python'
 // addon
 import 'codemirror/addon/hint/show-hint'
-import 'codemirror/addon/hint/anyword-hint'
 import 'codemirror/addon/hint/show-hint.css'
+import 'codemirror/addon/hint/anyword-hint'
 import 'codemirror/addon/edit/matchbrackets'
 import 'codemirror/addon/edit/closebrackets'
 import 'codemirror/addon/fold/foldcode'
@@ -79,16 +78,21 @@ import 'codemirror/addon/fold/foldgutter'
 import 'codemirror/addon/fold/foldgutter.css'
 import 'codemirror/addon/fold/brace-fold'
 import 'codemirror/addon/fold/comment-fold'
-import 'codemirror/addon/scroll/simplescrollbars.css'
+import 'codemirror/addon/scroll/annotatescrollbar'
 import 'codemirror/addon/scroll/simplescrollbars'
+import 'codemirror/addon/scroll/simplescrollbars.css'
 import 'codemirror/addon/selection/active-line'
 import 'codemirror/addon/comment/continuecomment'
-import 'codemirror/addon/display/placeholder'
 import 'codemirror/addon/display/autorefresh'
+import 'codemirror/addon/display/placeholder'
 import 'codemirror/addon/dialog/dialog'
 import 'codemirror/addon/dialog/dialog.css'
 import 'codemirror/addon/search/searchcursor'
 import 'codemirror/addon/search/search'
+import 'codemirror/addon/search/jump-to-line'
+import 'codemirror/addon/search/matchesonscrollbar'
+import 'codemirror/addon/search/matchesonscrollbar.css'
+import 'codemirror/addon/search/match-highlighter'
 
 import { submitProblem, ajaxStatus, fetchRE, fetchCE } from '@/api/problem'
 
@@ -179,14 +183,15 @@ export default {
     console.log(CodeMirror.modeInfo)
     this.editor = CodeMirror.fromTextArea(this.$refs.editor, {
       placeholder: '请 输入代码 或 拖拽文件至此\n\n' +
-        '部分快捷键\n' +
+        '部分快捷键(Mac系统详见帮助文档)\n' +
         '代码提示\t\t`\n' +
         '删除当前行\tCtrl-D\n' +
         '查找\t\tCtrl-F\n' +
         '查找下一个\tCtrl-G\n' +
         '查找上一个\tShift-Ctrl-G\n' +
-        '替换\t\tShift-Ctrl-F(Mac:Cmd-Alt-F)\n' +
-        '替换全部\t\tShift-Ctrl-R(Mac:Shift-Cmd-Alt-F)\n',
+        '替换\t\tShift-Ctrl-F\n' +
+        '替换全部\t\tShift-Ctrl-R\n' +
+        '跳转\t\tAlt-G',
       indentUnit: 4,
       styleActiveLine: true,
       lineWrapping: true,
@@ -206,7 +211,8 @@ export default {
       continueLineComment: false,
       extraKeys: { '`': 'autocomplete' },
       autoRefresh: true,
-      showCursorWhenSelecting: true
+      showCursorWhenSelecting: true,
+      highlightSelectionMatches: { annotateScrollbar: true }
     })
   },
   methods: {
@@ -276,3 +282,10 @@ export default {
   }
 }
 </script>
+<style>
+  .cm-matchhighlight {
+    color: white !important;
+    background-color: red;
+  }
+  .CodeMirror-selection-highlight-scrollbar {background-color: red}
+</style>
