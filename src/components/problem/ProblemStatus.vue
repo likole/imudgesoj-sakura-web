@@ -31,7 +31,7 @@ export default {
   props: {
     pid: {
       required: true,
-      type: String
+      type: Number
     },
     idForUpdate: {
       type: Number,

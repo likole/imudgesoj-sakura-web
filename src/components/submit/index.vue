@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form>
+    <el-form v-loading="submitLoading">
       <div class="filter-container">
         <el-select v-model="language" style="width: 90px" @change="changeLanguage">
           <el-option v-for="item in allLanguages" :key="item.value" :label="item.label" :value="item.value" />
@@ -22,9 +22,9 @@
       </div>
 
       <div class="filter-container" style="margin-top: 12px">
-        <el-button v-loading="submitLoading" type="primary" @click="submit"> {{ submitted?'再次提交':'提交' }} </el-button>
+        <el-button type="primary" @click="submitWrapper"> {{ submitted?'再次提交':'提交' }} </el-button>
         <el-button v-show="testrunEnable" v-loading="testrunLoading" type="primary" @click="testrunSubmit">测试运行</el-button>
-        <el-button v-if="submitted" v-loading="submitLoading" type="success" @click="dialogVisible=true">查看上次运行结果</el-button>
+        <el-button v-if="submitted" type="success" @click="dialogVisible=true">查看上次运行结果</el-button>
       </div>
     </el-form>
 
@@ -89,6 +89,7 @@ import 'codemirror/addon/display/fullscreen'
 import { submitProblem, ajaxStatus, fetchRE, fetchCE } from '@/api/problem'
 
 import Cookies from 'js-cookie'
+import { MessageBox } from 'element-ui'
 
 export default {
   name: 'SubmitComponent',
@@ -265,6 +266,21 @@ export default {
         }
       })
     },
+    // 在提交外面添加了检查
+    submitWrapper() {
+      const lastCode = Cookies.get('IMUDGESOJ-SAKURA-HISTORY-' + this.cid + '-' + this.pid + '-' + this.language)
+      if (lastCode !== undefined && lastCode === this.editor.getValue()) {
+        MessageBox.confirm('检测到该代码已提交过，是否确定重复提交', '重复提交', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.submit()
+        })
+      } else {
+        this.submit()
+      }
+    },
     submit() {
       let submitData = {}
       if (this.cid === 0) {
@@ -281,8 +297,10 @@ export default {
         this.ce = null
         this.closeDlg = false
         this.dialogVisible = true
-        this.submitLoading = false
         setTimeout(500, this.fetchStatus())
+        // 记录代码在本地
+        Cookies.set('IMUDGESOJ-SAKURA-HISTORY-' + this.cid + '-' + this.pid + '-' + this.language, this.editor.getValue())
+        this.submitLoading = false
       }).catch(() => {
         this.submitLoading = false
       })
