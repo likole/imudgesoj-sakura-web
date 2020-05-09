@@ -144,6 +144,9 @@ export default {
     if (Cookies.get('showCategory') !== undefined) this.showCategory = Cookies.get('showCategory') === 'true'
     this.getList()
   },
+  activated() {
+    this.getList()
+  },
   methods: {
     tableRowClassName({ row, rowIndex }) {
       if (row.result === 'Y') {
