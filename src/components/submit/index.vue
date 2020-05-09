@@ -8,7 +8,9 @@
         <el-checkbox v-model="testrunEnable" style="margin-left: 20px">
           测试运行
         </el-checkbox>
-        <div v-if="true">
+        <el-button v-if="problemChanged&&editor&&editor.getValue()!==''" type="text" style="margin-left: 20px" @click="editor.setValue('')">已更换题目，点击此处清空输入</el-button>
+        <div v-if="false">
+          debug:
           <p>cid: {{ cid }} pid: {{ pid }}</p>
           <p>language:{{ language }} mode:{{ editor&&editor.getOption('mode') }}</p>
         </div>
@@ -178,8 +180,12 @@ export default {
       status: {
         result: 0
       },
+      // 运行错误信息，竞赛中不显示
       re: null,
-      ce: null
+      // 编译错误信息
+      ce: null,
+      // 用户是否切换了问题
+      problemChanged: false
     }
   },
   watch: {
@@ -187,6 +193,7 @@ export default {
       deep: true,
       handler(val) {
         this.testrunInput = this.input
+        this.problemChanged = true
       }
     }
   },
@@ -233,6 +240,10 @@ export default {
       autoRefresh: true,
       showCursorWhenSelecting: true,
       highlightSelectionMatches: { annotateScrollbar: true }
+    })
+    const self = this
+    this.editor.on('change', function(instance, obj) {
+      self.problemChanged = false
     })
     // 恢复上次使用的语言
     const lastLanguage = Cookies.get('IMUDGESOJ-SAKURA-LANGUAGE')
