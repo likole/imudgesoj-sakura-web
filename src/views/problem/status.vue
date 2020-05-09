@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <el-col :span="8">
-        <problem-status-component :pid="problemId" :show-recommend="false" />
+      <el-col :md="24" :lg="8">
+        <problem-status-component :pid="problemId" :is-single="true" />
       </el-col>
-      <el-row :span="16">
+      <el-col :md="24" :lg="16">
         <problem-status-detail-component :pid="problemId" />
-      </el-row>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -34,12 +34,12 @@ export default {
   },
   methods: {
     setTagsViewTitle() {
-      const title = '问题详情'
+      const title = '问题状态'
       const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.problemId}` })
       this.$store.dispatch('tagsView/updateVisitedView', route)
     },
     setPageTitle() {
-      const title = '问题详情'
+      const title = '问题状态'
       document.title = `${title} - ${this.problemId}`
     }
   }

@@ -7,8 +7,11 @@
       <p v-for="(item,index) in problem" :key="index">{{ item[0] }}: {{ item[1] }}</p>
       <pie-chart :chart-data="status" />
       <p v-if="inContest" style="font-size: 10px">* 此数据为该问题的数据，而非竞赛数据</p>
+      <router-link v-if="!isSingle" :to="'/problem/status/'+pid">
+        <el-button type="success" style="margin-top: 10px;width: 100%;">查看问题状态详情</el-button>
+      </router-link>
     </el-card>
-    <el-card v-if="showRecommend&&!inContest">
+    <el-card v-if="!isSingle&&!inContest">
       <div slot="header" class="clearfix">
         <span>推荐题目</span>
       </div>
@@ -41,9 +44,9 @@ export default {
       type: Boolean,
       default: false
     },
-    showRecommend: {
+    isSingle: {
       type: Boolean,
-      default: true
+      required: true
     }
   },
   data() {

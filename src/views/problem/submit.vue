@@ -32,18 +32,10 @@
           <p>空间限制：{{ problem.memory_limit }}MB</p>
           <p>AC/提交：{{ problem.accepted }}/{{ problem.submit }}</p>
           <el-progress :text-inside="true" :stroke-width="26" :percentage="progress" />
-          <problem-status-component :id-for-update="idForUpdate" :pid="problemId" style="margin-top: 20px" />
-          <el-button type="primary" @click="dialogVisible=true"/>
         </el-card>
+        <problem-status-component :id-for-update="idForUpdate" :pid="problemId" :is-single="false" style="margin-top: 20px" />
       </el-col>
     </el-row>
-
-    <el-dialog
-      :visible.sync="dialogVisible"
-      :fullscreen="true"
-    >
-      <problem-status-detail-component :id-for-update="idForUpdate" :pid="problemId" />
-    </el-dialog>
 
     <el-tooltip placement="top" content="返回顶部">
       <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="50" transition-name="fade" />
@@ -84,7 +76,6 @@ export default {
         'line-height': '45px', // 请保持与高度一致以垂直居中 Please keep consistent with height to center vertically
         background: '#e7eaf1'// 按钮的背景颜色 The background color of the button
       },
-      dialogVisible: false,
       idForUpdate: 1
     }
   },

@@ -51,14 +51,24 @@
             <span>{{ scope.row.length }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="提交时间" align="center">
+        <el-table-column label="提交时间" align="center" width="150px">
           <template slot-scope="scope">
             <span>{{ scope.row.in_date }}</span>
           </template>
         </el-table-column>
       </el-table>
 
-      <pagination v-show="total>0" :total="total" :page.sync="page" :page-sizes="[20]" :limit="20" :auto-scroll="false" @pagination="getList" />
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="page"
+        :page-sizes="[20]"
+        :limit="20"
+        :layout="device==='desktop'?'total, prev, pager, next, jumper':'prev, pager, next'"
+        :small="device==='mobile'"
+        :auto-scroll="false"
+        @pagination="getList"
+      />
 
     </el-card>
 
@@ -77,6 +87,8 @@
 import { fetchProblemStatusDetail, fetchSource } from '@/api/problem'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import clip from '@/utils/clipboard'
+import { mapState } from 'vuex'
+
 
 export default {
   name: 'ProblemStatusDetailComponent',
@@ -100,6 +112,11 @@ export default {
       sourceDialogVisible: false,
       source: ''
     }
+  },
+  computed: {
+    ...mapState({
+      device: state => state.app.device
+    })
   },
   watch: {
     idForUpdate: {
