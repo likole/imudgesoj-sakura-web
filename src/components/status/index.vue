@@ -182,6 +182,7 @@
             v-if="scope.row.result.ce===true"
             :type="scope.row.result.code|statusFilter"
             :size="device==='desktop'?'medium':'mini'"
+            style="cursor: pointer"
             @click="handleCE(scope.row.solution_id)"
           >{{ scope.row.result.msg }}
           </el-tag>
@@ -189,11 +190,12 @@
             v-else-if="scope.row.result.re===true"
             :type="scope.row.result.code|statusFilter"
             :size="device==='desktop'?'medium':'mini'"
+            style="cursor: pointer;"
             @click="handleRE(scope.row.solution_id)"
           >{{ scope.row.result.msg }}
           </el-tag>
-          <el-tag v-else :type="scope.row.result.code|statusFilter" :size="device==='desktop'?'medium':'mini'">{{ scope.row.result.msg }}</el-tag>
-          <el-tag v-show="scope.row.result.sim_s_id!=undefined" :size="device==='desktop'?'medium':'mini'">{{ scope.row.result.sim_s_id }}</el-tag>
+          <el-tag v-else :type="scope.row.result.code|statusFilter" :size="device==='desktop'?'medium':'mini'" style="cursor: default">{{ scope.row.result.msg }}</el-tag>
+          <el-tag v-show="scope.row.result.sim_s_id!=undefined" :size="device==='desktop'?'medium':'mini'" style="cursor: default">{{ scope.row.result.sim_s_id }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="内存" align="center">
@@ -259,7 +261,6 @@
 import { fetchStatus, fetchSource, fetchCE, fetchRE } from '@/api/problem'
 import clip from '@/utils/clipboard'
 import waves from '@/directive/waves' // waves directive
-import { parseTime } from '@/utils'
 import { mapState } from 'vuex'
 
 export default {
@@ -425,29 +426,6 @@ export default {
     },
     handleCopy(text, event) {
       clip(text, event)
-    },
-    handleDownload() {
-      this.downloadLoading = true
-        import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['timestamp', 'title', 'type', 'importance', 'index.vue']
-          const filterVal = ['timestamp', 'title', 'type', 'importance', 'index.vue']
-          const data = this.formatJson(filterVal, this.list)
-          excel.export_json_to_excel({
-            header: tHeader,
-            data,
-            filename: 'table-list'
-          })
-          this.downloadLoading = false
-        })
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'timestamp') {
-          return parseTime(v[j])
-        } else {
-          return v[j]
-        }
-      }))
     }
   }
 }
