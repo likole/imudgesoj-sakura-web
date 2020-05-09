@@ -2,59 +2,50 @@
   <div>
     <el-form>
       <div class="filter-container">
-        <el-select v-model="language" style="width: 90px" class="filter-item" @change="changeLanguage">
+        <el-select v-model="language" style="width: 90px" @change="changeLanguage">
           <el-option v-for="item in allLanguages" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-        <el-checkbox v-model="testrun" style="margin-left: 20px" class="filter-item">
+        <el-checkbox v-model="testrunEnable" style="margin-left: 20px">
           测试运行
         </el-checkbox>
       </div>
 
-      <textarea ref="editor" v-model="source" class="codesql" style="height:300px;width:600px;" />
-      <!--      <el-form-item v-show="testrun" label="输入" style="margin-top: 12px ">-->
-      <!--        <el-input v-model="input" type="textarea" :autosize="true" />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item v-show="testrun" label="输出" style="margin-top: 12px ">-->
-      <!--        <el-input :value="output_text" type="textarea" :autosize="true" />-->
-      <!--      </el-form-item>-->
-      <!--      <el-button style="margin-top: 12px" type="primary" @click="submit">{{ submitBtnText }}</el-button>-->
-      <!--      <el-button v-show="testrun" style="margin-top: 12px" type="primary" @click="submit1">测试运行</el-button>-->
-      <!--      <el-button v-show="submitBtnText=='再次提交'" style="margin-top: 12px" type="success" @click="dialogVisible=true">查看上次运行结果</el-button>-->
+      <textarea ref="editor" v-model="source" style="height:300px;width:600px;" />
+
+      <div v-show="testrunEnable" v-loading="testrunLoading" style="margin-top: 12px">
+        <el-form-item label="输入">
+          <el-input v-model="testrunInput" type="textarea" :autosize="true" />
+        </el-form-item>
+        <el-form-item label="输出">
+          <el-input :value="testrunOutput" type="textarea" :autosize="true" />
+        </el-form-item>
+      </div>
+
+      <div class="filter-container" style="margin-top: 12px">
+        <el-button v-loading="submitLoading" type="primary" @click="submit"> {{ submitted?'再次提交':'提交' }} </el-button>
+        <el-button v-show="testrunEnable" v-loading="testrunLoading" type="primary" @click="testrunSubmit">测试运行</el-button>
+        <el-button v-if="submitted" v-loading="submitLoading" type="success" @click="dialogVisible=true">查看上次运行结果</el-button>
+      </div>
     </el-form>
 
-    <!--    <el-dialog-->
-    <!--      title="运行状态"-->
-    <!--      :visible.sync="dialogVisible"-->
-    <!--      :show-close.sync="closeDlg"-->
-    <!--      :close-on-click-modal.sync="closeDlg"-->
-    <!--      :close-on-press-escape.sync="closeDlg"-->
-    <!--      width="70%"-->
-    <!--    >-->
-    <!--      <span v-show="solution_id==0">{{ statusHint }}</span>-->
-    <!--      <div v-show="solution_id!=0">-->
-    <!--        <p>运行编号：{{ solution_id }}</p>-->
-    <!--        <span v-show="status.result==0">正在获取运行结果。。。</span>-->
-    <!--        <div v-show="status.result!=0">-->
-    <!--          <p>运行结果：{{ status.result_name }}</p>-->
-    <!--          <p>时间：{{ status.time }}</p>-->
-    <!--          <p>内存：{{ status.memory }}</p>-->
-    <!--          <p>判题机：{{ status.judger }}</p>-->
-    <!--          <pre v-show="status.ce==true" v-html="ce" />-->
-    <!--          <pre v-show="status.re==true" v-html="re" />-->
-    <!--        </div>-->
-    <!--      </div>-->
-
-    <!--    </el-dialog>-->
-    <!--    <el-dialog-->
-    <!--      title="测试运行"-->
-    <!--      :visible.sync="dialogVisible1"-->
-    <!--      :show-close="false"-->
-    <!--      :close-on-click-modal="false"-->
-    <!--      :close-on-press-escape="false"-->
-    <!--      width="30%"-->
-    <!--    >-->
-    <!--      正在获取运行结果，请耐心等待-->
-    <!--    </el-dialog>-->
+    <el-dialog
+      :title="'运行状态（运行编号：'+solutionId+'）'"
+      :visible.sync="dialogVisible"
+      :show-close.sync="closeDlg"
+      :close-on-click-modal.sync="closeDlg"
+      :close-on-press-escape.sync="closeDlg"
+      width="70%"
+    >
+      <span v-if="status.result==0">正在获取运行结果。。。</span>
+      <div v-else :style="'color:'+colorMap[status.result]">
+        <p>{{ status.result_name }}</p>
+        <p>时间：{{ status.time }}</p>
+        <p>内存：{{ status.memory }}</p>
+        <p>判题机：{{ status.judger }}</p>
+        <pre v-show="status.ce==true" v-html="ce" />
+        <pre v-show="status.re==true" v-html="re" />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -93,8 +84,11 @@ import 'codemirror/addon/search/jump-to-line'
 import 'codemirror/addon/search/matchesonscrollbar'
 import 'codemirror/addon/search/matchesonscrollbar.css'
 import 'codemirror/addon/search/match-highlighter'
+import 'codemirror/addon/display/fullscreen'
 
 import { submitProblem, ajaxStatus, fetchRE, fetchCE } from '@/api/problem'
+
+import Cookies from 'js-cookie'
 
 export default {
   name: 'SubmitComponent',
@@ -132,55 +126,59 @@ export default {
         3: 'text/x-java',
         6: 'text/x-python'
       },
-      allResults: [
-        {
-          value: '-1', label: '所有结果'
-        }, {
-          value: '4', label: '正确'
-        }, {
-          value: '5', label: '格式错误'
-        }, {
-          value: '6', label: '答案错误'
-        }, {
-          value: '7', label: '时间超限'
-        }, {
-          value: '8', label: '内存超限'
-        }, {
-          value: '9', label: '输出超限'
-        }, {
-          value: '10', label: '运行错误'
-        }, {
-          value: '11', label: '编译错误'
-        }, {
-          value: '0', label: '等待'
-        }, {
-          value: '1', label: '等待重判'
-        }, {
-          value: '2', label: '编译中'
-        }, {
-          value: '3', label: '运行并评判'
-        }],
+      // 运行结果编号对应的显示颜色
+      colorMap: {
+        '0': '#909399',
+        '1': '#000000',
+        '2': '#E6A23C',
+        '3': '#E6A23C',
+        '4': '#67C23A',
+        '5': '#F56C6C',
+        '6': '#F56C6C',
+        '7': '#E6A23C',
+        '8': '#E6A23C',
+        '9': '#E6A23C',
+        '10': '#E6A23C',
+        '11': '#E6A23C',
+        '12': '#E6A23C',
+        '13': '#000000'
+      },
+      // 当前选择的语言
       language: '1',
+      // 编辑框中的内容
       source: '',
-      dialogVisible: false,
-      dialogVisible1: false,
+      // 代码编辑框
       editor: undefined,
-      solution_id: 0,
-      solution_id1: 0,
+      // 是否启用测试运行
+      testrunEnable: false,
+      // 测试运行时将处于读取状态
+      testrunLoading: false,
+      // 测试运行的输入文本
+      testrunInput: '',
+      // 测试运行的输出结果
+      testrunOutput: '',
+      // 测试运行的solution id
+      testrunSolutionId: undefined,
+      // 是否已经提交过
+      submitted: false,
+      // 提交时尚未获取到运行编号时
+      submitLoading: false,
+      // 显示运行详情的对话框
+      dialogVisible: false,
+      // 对话框是否可关闭
       closeDlg: false,
+      // 提交后获取的运行编号，0代表尚未获取到
+      solutionId: 0,
+      // 运行结果
       status: {
         result: 0
       },
       re: null,
-      ce: null,
-      submitBtnText: '提交',
-      statusHint: '正在获取运行编号。。。',
-      testrun: false,
-      output_text: ''
+      ce: null
     }
   },
   mounted() {
-    console.log(CodeMirror.modeInfo)
+    this.testrunInput = this.input
     this.editor = CodeMirror.fromTextArea(this.$refs.editor, {
       placeholder: '请 输入代码 或 拖拽文件至此\n\n' +
         '部分快捷键(Mac系统详见帮助文档)\n' +
@@ -191,7 +189,9 @@ export default {
         '查找上一个\tShift-Ctrl-G\n' +
         '替换\t\tShift-Ctrl-F\n' +
         '替换全部\t\tShift-Ctrl-R\n' +
-        '跳转\t\tAlt-G',
+        '跳转\t\tAlt-G\n' +
+        '网页全屏\t\tF11\n' +
+        '退出全屏\t\tESC',
       indentUnit: 4,
       styleActiveLine: true,
       lineWrapping: true,
@@ -209,72 +209,101 @@ export default {
       foldCode: true,
       continueComments: true,
       continueLineComment: false,
-      extraKeys: { '`': 'autocomplete' },
+      extraKeys: {
+        '`': 'autocomplete',
+        'F11': function(cm) {
+          cm.setOption('fullScreen', !cm.getOption('fullScreen'))
+        },
+        'Esc': function(cm) {
+          if (cm.getOption('fullScreen')) cm.setOption('fullScreen', false)
+        } },
       autoRefresh: true,
       showCursorWhenSelecting: true,
       highlightSelectionMatches: { annotateScrollbar: true }
     })
+    // 恢复上次使用的语言
+    const lastLanguage = Cookies.get('IMUDGESOJ-SAKURA-LANGUAGE')
+    if (lastLanguage !== undefined) {
+      this.language = lastLanguage
+      this.changeLanguage(lastLanguage)
+    }
   },
   methods: {
+    // 更改语言时更换编辑器模式并记录在cookie中
     changeLanguage(language) {
       this.editor.setOption('mode', this.languageModeMap[language])
+      Cookies.set('IMUDGESOJ-SAKURA-LANGUAGE', language, { expires: 30 })
+    },
+    // 测试运行提交
+    testrunSubmit() {
+      this.testrunLoading = true
+      if (this.cid === 0) {
+        // 竞赛外
+        submitProblem({ 'id': -this.pid, 'source': this.editor.getValue(), 'input_text': this.testrunInput, 'language': this.language }).then(response => {
+          this.testrunSolutionId = parseInt(response.data)
+          setTimeout(this.testrunFetchStatus, 500)
+        }).catch(() => {
+          this.testrunLoading = false
+        })
+      } else {
+        // 竞赛里
+        submitProblem({ 'cid': -this.cid, 'pid': this.pid, 'source': this.editor.getValue(), 'input_text': this.testrunInput, 'language': this.language }).then(response => {
+          this.testrunSolutionId = parseInt(response.data)
+          setTimeout(this.testrunFetchStatus, 500)
+        }).catch(() => {
+          this.testrunLoading = false
+        })
+      }
+    },
+    // 测试运行获取结果
+    testrunFetchStatus() {
+      ajaxStatus({ 'solution_id': this.testrunSolutionId, 'tr': 1 }).then(response => {
+        if (response.data.result === 0)setTimeout(this.testrunFetchStatus, 1500)
+        else {
+          this.testrunOutput = response.data.error
+          this.testrunLoading = false
+        }
+      })
     },
     submit() {
-      this.closeDlg = false
-      this.solution_id = 0
-      this.ce = null
-      this.re = null
-      this.status = { 'result': 0 }
-      this.dialogVisible = true
-      this.submitData.source = this.editor.getValue()
-      submitProblem(this.submitData).then(response => {
-        this.solution_id = parseInt(response.data)
-        this.getStatus()
-      }).catch(err => {
-        this.statusHint = err
-        this.closeDlg = true
+      let submitData = {}
+      if (this.cid === 0) {
+        submitData = { 'id': this.pid, 'source': this.editor.getValue(), 'language': this.language }
+      } else {
+        submitData = { 'cid': this.cid, 'pid': this.pid, 'source': this.editor.getValue(), 'language': this.language }
+      }
+      this.submitLoading = true
+      submitProblem(submitData).then(response => {
+        this.solutionId = parseInt(response.data)
+        this.submitted = true
+        this.status = { 'result': 0 }
+        this.re = null
+        this.ce = null
+        this.closeDlg = false
+        this.dialogVisible = true
+        this.submitLoading = false
+        setTimeout(500, this.fetchStatus())
+      }).catch(() => {
+        this.submitLoading = false
       })
     },
-    submit1() {
-      this.dialogVisible1 = true
-      submitProblem({ 'id': -this.submitData.id, 'source': this.editor.getValue(), 'input_text': this.input_text, 'language': this.submitData.language }).then(
-        response => {
-          this.solution_id1 = parseInt(response.data)
-          this.getStatus1()
-        }
-      ).catch(() => {
-        this.dialogVisible1 = false
-      })
-    },
-    getStatus() {
-      ajaxStatus({ 'solution_id': this.solution_id }).then(response => {
+    fetchStatus() {
+      ajaxStatus({ 'solution_id': this.solutionId }).then(response => {
         this.status = response.data
-        if (parseInt(this.status.result) < 4)setTimeout(this.getStatus, 2000)
+        if (parseInt(this.status.result) < 4)setTimeout(this.fetchStatus, 1500)
         else {
           if (this.status.ce === true) {
-            fetchCE(this.solution_id).then(response => {
+            fetchCE(this.solutionId).then(response => {
               this.ce = response.data.detail
             })
           }
-          if (this.status.re === true) {
-            fetchRE(this.solution_id).then(response => {
+          if (this.cid === 0 && this.status.re === true) {
+            fetchRE(this.solutionId).then(response => {
               this.re = response.data.detail
             })
           }
-          this.submitBtnText = '再次提交'
           this.closeDlg = true
-          this.fetchData(this.submitData.id)
           this.$emit('ac')
-        }
-      }
-      )
-    },
-    getStatus1() {
-      ajaxStatus({ 'solution_id': this.solution_id1, 'tr': 1 }).then(response => {
-        if (response.data.result === 0)setTimeout(this.getStatus1, 2000)
-        else {
-          this.output_text = response.data.error
-          this.dialogVisible1 = false
         }
       }
       )
@@ -288,4 +317,10 @@ export default {
     background-color: red;
   }
   .CodeMirror-selection-highlight-scrollbar {background-color: red}
+  .CodeMirror-fullscreen {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    height: auto;
+    z-index: 9999;
+  }
 </style>
