@@ -47,6 +47,7 @@
           <p>空间限制：{{ problem.memory_limit }}MB</p>
           <p>AC/提交：{{ problem.accepted }}/{{ problem.submit }}</p>
           <el-progress :text-inside="true" :stroke-width="26" :percentage="progress" />
+          <p style="font-size: 10px">* 此数据为该问题的数据，而非竞赛数据</p>
         </el-card>
         <problem-status-component v-if="problem.problem_id" :id-for-update="idForUpdate" :in-contest="true" :pid="parseInt(problem.problem_id)" :is-single="false" />
       </el-col>
