@@ -169,6 +169,11 @@ export default {
     if (Cookies.get('cid') !== undefined && Cookies.get('cid') !== '0') { this.getProblems(parseInt(Cookies.get('cid'))) } else { this.getContests() }
     this.computeProgress()
   },
+  activated() {
+    if (this.cid !== 0) {
+      this.getProblems(this.cid)
+    }
+  },
   methods: {
     tableRowClassName({ row, rowIndex }) {
       if (row.status === 'Y') {

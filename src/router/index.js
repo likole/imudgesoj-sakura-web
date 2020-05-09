@@ -289,13 +289,13 @@ export const asyncRoutes = [
         path: 'document',
         component: () => import('@/views/help/document'),
         name: 'HelpDocument',
-        meta: { title: '使用文档', icon: 'documentation' }
+        meta: { title: '使用文档', icon: 'documentation', noCache: true }
       },
       {
         path: 'faq',
         component: () => import('@/views/help/faq'),
         name: 'HelpFaq',
-        meta: { title: '常见问答', icon: 'FAQ' }
+        meta: { title: '常见问答', icon: 'FAQ', noCache: true }
       },
       {
         path: 'donate',
