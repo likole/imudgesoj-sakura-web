@@ -8,6 +8,10 @@
         <el-checkbox v-model="testrunEnable" style="margin-left: 20px">
           测试运行
         </el-checkbox>
+        <div v-if="true">
+          <p>cid: {{ cid }} pid: {{ pid }}</p>
+          <p>language:{{ language }} mode:{{ editor&&editor.getOption('mode') }}</p>
+        </div>
       </div>
 
       <textarea ref="editor" v-model="source" style="height:300px;width:600px;" />
@@ -176,6 +180,14 @@ export default {
       },
       re: null,
       ce: null
+    }
+  },
+  watch: {
+    input: {
+      deep: true,
+      handler(val) {
+        this.testrunInput = this.input
+      }
     }
   },
   mounted() {
