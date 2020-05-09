@@ -11,7 +11,7 @@
         <el-button type="success" style="margin-top: 10px;width: 100%;">查看问题状态详情</el-button>
       </router-link>
     </el-card>
-    <el-card v-if="!isSingle&&!inContest">
+    <el-card v-if="!isSingle&&!inContest" style="margin-bottom: 20px">
       <div slot="header" class="clearfix">
         <span>推荐题目</span>
       </div>

@@ -1,7 +1,20 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <el-col :lg="18" :sm="24">
+      <el-col :lg="{span:6,push:18}" :md="24">
+        <el-card style="margin-bottom: 20px">
+          <p>题目编号：{{ problem.problem_id }}</p>
+          <p>标题：{{ problem.title }}</p>
+          <p>来源分类：{{ problem.source }}</p>
+          <p>添加时间：{{ problem.in_date }}</p>
+          <p>时间限制：{{ problem.time_limit }}S</p>
+          <p>空间限制：{{ problem.memory_limit }}MB</p>
+          <p>AC/提交：{{ problem.accepted }}/{{ problem.submit }}</p>
+          <el-progress :text-inside="true" :stroke-width="26" :percentage="progress" />
+        </el-card>
+        <problem-status-component class="hidden-md-and-down" :id-for-update="idForUpdate" :pid="problemId" :is-single="false" style="margin-top: 20px" />
+      </el-col>
+      <el-col :lg="{span:18,pull:6}" :md="24">
         <el-card style="margin-bottom: 20px">
           <div>
             <h3 style="color: royalblue">问题描述</h3>
@@ -19,21 +32,8 @@
           </div>
         </el-card>
         <el-card style="margin-bottom: 20px">
-          <submit-component v-if="problem.problem_id" :pid="problemId" :input="problem.sample_input" @ac="fetchData" />
+          <submit-component v-if="problem.problem_id" :pid="problemId" :input="problem.sample_input" @ac="fetchData(problemId)" />
         </el-card>
-      </el-col>
-      <el-col :lg="6" :sm="24">
-        <el-card>
-          <p>题目编号：{{ problem.problem_id }}</p>
-          <p>标题：{{ problem.title }}</p>
-          <p>来源分类：{{ problem.source }}</p>
-          <p>添加时间：{{ problem.in_date }}</p>
-          <p>时间限制：{{ problem.time_limit }}S</p>
-          <p>空间限制：{{ problem.memory_limit }}MB</p>
-          <p>AC/提交：{{ problem.accepted }}/{{ problem.submit }}</p>
-          <el-progress :text-inside="true" :stroke-width="26" :percentage="progress" />
-        </el-card>
-        <problem-status-component :id-for-update="idForUpdate" :pid="problemId" :is-single="false" style="margin-top: 20px" />
       </el-col>
     </el-row>
 
@@ -47,13 +47,13 @@
 import clip from '@/utils/clipboard' // use clipboard directly
 import SubmitComponent from '../../components/submit/index'
 import ProblemStatusComponent from '@/components/problem/ProblemStatus'
-import ProblemStatusDetailComponent from '@/components/problem/ProblemStatusDetail'
 import BackToTop from '@/components/BackToTop'
 import { fetchProblem } from '@/api/problem'
+import 'element-ui/lib/theme-chalk/display.css'
 
 export default {
   name: 'ProblemSubmit',
-  components: { BackToTop, ProblemStatusComponent, ProblemStatusDetailComponent, SubmitComponent },
+  components: { BackToTop, ProblemStatusComponent, SubmitComponent },
   filters: {
     numFilter(value) {
       // 截取当前数据到小数点后两位
@@ -91,6 +91,7 @@ export default {
         // eslint-disable-next-line eqeqeq
         if (this.problem.submit == 0) this.progress = 0
         else this.progress = parseInt(this.problem.accepted * 100 / this.problem.submit)
+        this.idForUpdate++
         this.setTagsViewTitle()
         this.setPageTitle()
       }).catch(err => {
