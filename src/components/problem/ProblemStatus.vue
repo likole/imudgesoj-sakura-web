@@ -4,11 +4,11 @@
       <div slot="header" class="clearfix">
         <span>详细答题情况</span>
       </div>
-      <p v-for="(item,index) in problem" :key="index">{{ item[0] }}:{{ item[1] }}</p>
+      <p v-for="(item,index) in problem" :key="index">{{ item[0] }}: {{ item[1] }}</p>
       <pie-chart :chart-data="status" />
       <p v-if="inContest" style="font-size: 10px">* 此数据为该问题的数据，而非竞赛数据</p>
     </el-card>
-    <el-card v-if="!inContest">
+    <el-card v-if="showRecommend&&!inContest">
       <div slot="header" class="clearfix">
         <span>推荐题目</span>
       </div>
@@ -40,12 +40,16 @@ export default {
     inContest: {
       type: Boolean,
       default: false
+    },
+    showRecommend: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
     return {
       problem: {},
-      status: {},
+      status: [],
       recommend: {}
     }
   },

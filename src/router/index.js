@@ -104,6 +104,13 @@ export const asyncRoutes = [
         hidden: true
       },
       {
+        path: 'status/:id(\\d+)',
+        component: () => import('@/views/problem/status'),
+        name: 'ProblemStatus',
+        meta: { title: '问题状态', activeMenu: '/problems/list' },
+        hidden: true
+      },
+      {
         path: 'list',
         component: () => import('@/views/problem/list'),
         name: 'ProblemList',
