@@ -201,7 +201,7 @@ export default {
     this.testrunInput = this.input
     this.editor = CodeMirror.fromTextArea(this.$refs.editor, {
       placeholder: '请 输入代码 或 拖拽文件至此\n\n' +
-        '部分快捷键(Mac系统详见帮助文档)\n' +
+        '部分快捷键(Mac系统详见帮助中心->使用文档->代码编辑器快捷键)\n' +
         '代码提示\t\t`\n' +
         '删除当前行\tCtrl-D\n' +
         '查找\t\tCtrl-F\n' +

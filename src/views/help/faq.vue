@@ -48,7 +48,7 @@
 
 <script>
 export default {
-  name: 'FaqIndex'
+  name: 'HelpFaq'
 }
 </script>
 

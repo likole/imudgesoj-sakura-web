@@ -242,19 +242,6 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/faq',
-    component: Layout,
-    redirect: '/faq/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/faq/index'),
-        name: 'FaqIndex',
-        meta: { title: '常见问答', icon: 'FAQ' }
-      }
-    ]
-  },
-  {
     path: '/mail',
     component: Layout,
     redirect: '/mail/index',
@@ -290,6 +277,31 @@ export const asyncRoutes = [
         component: () => import('@/views/privilege/index'),
         name: 'PrivilegeIndex',
         meta: { title: '权限管理', icon: 'role', roles: ['管理员'] }
+      }
+    ]
+  },
+  {
+    path: '/help',
+    component: Layout,
+    meta: { title: '帮助中心', icon: 'education' },
+    children: [
+      {
+        path: 'document',
+        component: () => import('@/views/help/document'),
+        name: 'HelpDocument',
+        meta: { title: '使用文档', icon: 'documentation' }
+      },
+      {
+        path: 'faq',
+        component: () => import('@/views/help/faq'),
+        name: 'HelpFaq',
+        meta: { title: '常见问答', icon: 'FAQ' }
+      },
+      {
+        path: 'donate',
+        component: () => import('@/views/help/donate'),
+        name: 'HelpDonate',
+        meta: { title: '捐助', icon: 'money' }
       }
     ]
   },

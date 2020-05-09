@@ -89,7 +89,6 @@ import Pagination from '@/components/Pagination' // secondary package based on e
 import clip from '@/utils/clipboard'
 import { mapState } from 'vuex'
 
-
 export default {
   name: 'ProblemStatusDetailComponent',
   components: { Pagination },
