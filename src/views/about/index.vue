@@ -1,6 +1,6 @@
 <template>
   <div id="about">
-    <el-button type="text" @click="$router.go(-1)" > &lt;&lt; 返回</el-button>
+    <el-button type="text" @click="$router.go(-1)"> &lt;&lt; 返回</el-button>
     <div style="text-align: center">
       <span class="anim-title" spellcheck="false">IMUDGES OJ</span>
       <span style="color: royalblue;font-weight: 800">{{ author }}</span>
@@ -361,7 +361,13 @@ export default {
       version: '0.1',
       innerVersion: '1',
       author: '',
-      contentClass: 'content-hide'
+      contentClass: 'content-hide',
+      publicVisit: true
+    }
+  },
+  created() {
+    if (this.$route.fullPath && this.$route.fullPath.indexOf('index') !== -1) {
+      this.publicVisit = false
     }
   },
   mounted() {

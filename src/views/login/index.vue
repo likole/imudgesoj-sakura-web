@@ -6,7 +6,7 @@
         <h3 class="title">欢迎使用 IMUDGES OJ</h3>
       </div>
 
-      <div id="originalLogin">
+      <div id="originalLogin" v-if="false">
         <el-form-item prop="username">
           <span class="svg-container">
             <svg-icon icon-class="user" />
@@ -53,7 +53,9 @@
 
       <div class="tips">
         <span>如在公共电脑上登录，请在使用完毕后及时退出！</span>
-        <a href="https://acm.likole.com/old/" style="float: right;color: aliceblue">访问旧版>> </a>
+        <span style="float: right;color: gray;">
+        <el-link href="#/public-about">关于</el-link> | <el-link href="https://acm.likole.com/old/">访问旧版>> </el-link>
+        </span>
       </div>
     </el-form>
 
