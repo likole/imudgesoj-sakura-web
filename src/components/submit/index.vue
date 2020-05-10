@@ -82,6 +82,7 @@ import 'codemirror/addon/selection/active-line'
 import 'codemirror/addon/comment/continuecomment'
 import 'codemirror/addon/display/autorefresh'
 import 'codemirror/addon/display/placeholder'
+import 'codemirror/addon/display/fullscreen'
 import 'codemirror/addon/dialog/dialog'
 import 'codemirror/addon/dialog/dialog.css'
 import 'codemirror/addon/search/searchcursor'
@@ -90,7 +91,6 @@ import 'codemirror/addon/search/jump-to-line'
 import 'codemirror/addon/search/matchesonscrollbar'
 import 'codemirror/addon/search/matchesonscrollbar.css'
 import 'codemirror/addon/search/match-highlighter'
-import 'codemirror/addon/display/fullscreen'
 
 import { submitProblem, ajaxStatus, fetchRE, fetchCE } from '@/api/problem'
 
@@ -359,7 +359,7 @@ export default {
   }
   .CodeMirror-selection-highlight-scrollbar {background-color: red}
   .CodeMirror-fullscreen {
-    position: fixed;
+    position: fixed!important;
     top: 0; left: 0; right: 0; bottom: 0;
     height: auto;
     z-index: 9999;
