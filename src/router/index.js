@@ -306,6 +306,19 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/about',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/about/index'),
+        name: 'AboutIndex',
+        hidden: true,
+        meta: { title: '关于', noCache: true }
+      }
+    ]
+  },
+  {
     path: 'website',
     component: Layout,
     children: [

@@ -32,14 +32,15 @@
           <router-link to="/profile/index">
             <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
-          <el-dropdown-item divided=""><a href="http://www.imudges.com" target="_blank">IMUDGES官网</a></el-dropdown-item>
-          <el-dropdown-item><a href="https://www.likole.com" target="_blank">作者博客</a></el-dropdown-item>
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">退出OJ</span>
           </el-dropdown-item>
           <el-dropdown-item>
             <span style="display:block;" @click="logout_oauth2">退出OJ及开放平台</span>
           </el-dropdown-item>
+          <router-link to="/about/index">
+            <el-dropdown-item divided>关于IMUDGES OJ</el-dropdown-item>
+          </router-link>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
