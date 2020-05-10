@@ -139,7 +139,7 @@
           </el-col>
           <el-col :span="16">
             <el-form-item v-if="postForm.private" label="允许用户">
-              <el-input type="textarea" v-model="postForm.ulist" placeholder="一行一个" autosize />
+              <el-input v-model="postForm.ulist" type="textarea" placeholder="一行一个" autosize />
             </el-form-item>
           </el-col>
           <el-col :span="8">

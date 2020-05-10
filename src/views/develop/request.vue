@@ -17,7 +17,7 @@
       <json-editor v-model="requestDetail.data" />
       <el-button style="margin-top: 20px" type="primary" @click="sendRequest">发送请求</el-button>
     </el-form>
-    <json-editor style="margin-top: 20px" v-model="response" />
+    <json-editor v-model="response" style="margin-top: 20px" />
   </div>
 </template>
 <script>

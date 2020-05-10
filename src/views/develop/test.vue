@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-card>
-      <submit-component :pid="1001" input=""/>
+      <submit-component :pid="1001" input="" />
     </el-card>
   </div>
 </template>
