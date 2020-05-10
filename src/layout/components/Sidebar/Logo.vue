@@ -3,19 +3,22 @@
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 v-else class="sidebar-title">{{ title }} </h1>
+        <span v-else class="sidebar-title"><mallki :text="title" /></span>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 class="sidebar-title">{{ title }} </h1>
+        <span class="sidebar-title"><mallki :text="title" /></span>
       </router-link>
     </transition>
   </div>
 </template>
 
 <script>
+import Mallki from '../../../components/TextHoverEffect/Mallki'
+
 export default {
   name: 'SidebarLogo',
+  components: { Mallki },
   props: {
     collapse: {
       type: Boolean,

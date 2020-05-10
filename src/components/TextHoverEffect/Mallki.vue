@@ -1,9 +1,9 @@
 <template>
-  <a :class="className" class="link--mallki" href="#">
+  <span :class="className" class="link--mallki" href="#">
     {{ text }}
     <span :data-letters="text" />
     <span :data-letters="text" />
-  </a>
+  </span>
 </template>
 
 <script>
@@ -25,8 +25,9 @@ export default {
 /* Mallki */
 
 .link--mallki {
+  font-size: 14px;
   font-weight: 800;
-  color: #4dd9d5;
+  color: white;
   font-family: 'Dosis', sans-serif;
   -webkit-transition: color 0.5s 0.25s;
   transition: color 0.5s 0.25s;
@@ -49,7 +50,7 @@ export default {
   width: 100%;
   height: 6px;
   margin: -3px 0 0 0;
-  background: #3888fa;
+  background: royalblue;
   position: absolute;
   left: 0;
   top: 50%;
@@ -77,11 +78,10 @@ export default {
 
 .link--mallki span::before {
   content: attr(data-letters);
-  color: red;
   position: absolute;
   left: 0;
   width: 100%;
-  color: #3888fa;
+  color: rgb(64, 158, 255);
   -webkit-transition: -webkit-transform 0.5s;
   transition: transform 0.5s;
 }
