@@ -134,6 +134,11 @@ module.exports = {
                   priority: 20, // the weight needs to be larger than libs and app or it will be packaged into libs or app
                   test: /[\\/]node_modules[\\/]_?codemirror(.*)/ // in order to adapt to cnpm
                 },
+                xlsx: {
+                  name: 'chunk-codemirror', // split elementUI into a single package
+                  priority: 20, // the weight needs to be larger than libs and app or it will be packaged into libs or app
+                  test: /[\\/]node_modules[\\/]_?xlsx(.*)/ // in order to adapt to cnpm
+                },
                 commons: {
                   name: 'chunk-commons',
                   test: resolve('src/components'), // can customize your rules

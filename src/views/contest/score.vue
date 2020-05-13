@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-alert type="error" style="margin-top: 20px" :closable="false">竞赛范围请勿选择过大，否则你的浏览器可能会卡死</el-alert>
+    <el-alert v-if="showTable" type="error" style="margin-top: 20px" :closable="false">竞赛范围选择过大时，如果您的设备配置较低，浏览器可能会卡顿甚至卡死。您可以关闭表格功能来加快速度～</el-alert>
     <div class="filter-container" style="margin-top: 20px">
       <el-input
         v-model="contestIds"
@@ -9,15 +9,19 @@
         class="filter-item"
         @keyup.enter.native="handleSearch"
       />
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleSearch">
+      <el-button v-loading="listLoading" v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleSearch">
         查询
       </el-button>
       <el-button v-if="list.length" v-loading="downloadLoading" v-waves class="filter-item" type="success" icon="el-icon-download" @click="handleDownload">
         下载
       </el-button>
+      <el-checkbox v-model="showTable" class="filter-item" style="margin-left: 5px" @click="showTable=!showTable">
+        显示表格
+      </el-checkbox>
     </div>
 
     <el-table
+      v-if="showTable"
       :key="tableKey"
       v-loading="listLoading"
       :data="list"
@@ -29,7 +33,7 @@
       max-height="800px"
       :default-sort="{prop: 'total', order: 'descending'}"
     >
-      <el-table-column label="用户编号" sortable :sort-method="sortByUserId" align="center" width="120px">
+      <el-table-column label="用户编号" fixed sortable :sort-method="sortByUserId" align="center" width="120px">
         <template slot-scope="scope">
           <span>{{ scope.row.user_id }}</span>
         </template>
@@ -45,6 +49,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <p v-else>共{{ list.length }}条记录（一条记录为一个用户）</p>
   </div>
 </template>
 
@@ -62,7 +67,8 @@ export default {
       ids: [],
       list: [],
       listLoading: false,
-      downloadLoading: false
+      downloadLoading: false,
+      showTable: true
     }
   },
   methods: {
