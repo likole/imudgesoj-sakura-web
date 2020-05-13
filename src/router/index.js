@@ -182,6 +182,12 @@ export const asyncRoutes = [
         meta: { title: '竞赛', icon: 'example' }
       },
       {
+        path: 'score',
+        component: () => import('@/views/contest/score'),
+        name: 'ContestScore',
+        meta: { title: '竞赛结果查询', icon: 'excel' }
+      },
+      {
         path: 'submit/:cid(\\d+)/:pid(\\d+)',
         component: () => import('@/views/contest/submit'),
         name: 'ContestSubmit',
