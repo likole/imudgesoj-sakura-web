@@ -6,15 +6,28 @@
       <span style="color: royalblue;font-weight: 800">{{ author }}</span>
     </div>
     <el-card :class="contentClass">
-      <p>目前版本: sakura v{{ version }}</p>
-      <p>开发记录: <el-link target="_blank" href="https://www.likole.com/2019/07/imudgesoj-v2-0/">https://www.likole.com/2019/07/imudgesoj-v2-0/</el-link></p>
-      <p>项目地址: <el-link target="_blank" href="https://github.com/likole/imudgesoj-sakura-web">https://github.com/likole/imudgesoj-sakura-web(前端部分)</el-link></p>
-      <p>问题反馈: <el-link target="_blank" href="https://www.likole.com/oj%e9%97%ae%e9%a2%98%e5%8f%8d%e9%a6%88/">https://www.likole.com/oj问题反馈/</el-link></p>
+      <p>
+        该OJ为内蒙古大学精英学生开发者联盟内部训练专用OJ（也可为学院OJ提供替代服务），基于<a href="https://github.com/zhblue/hustoj" target="_blank">HUSTOJ</a>开发。
+        新版界面基于<a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin">vue-element-admin</a>开发。
+      </p>
+      <p>
+        <a target="_blank" href="https://github.com/likole/imudgesoj-sakura-web">项目地址</a> |
+        <a target="_blank" href="https://www.likole.com/2019/07/imudgesoj-v2-0/">开发记录</a> |
+        <a target="_blank" href="https://www.likole.com/oj%e9%97%ae%e9%a2%98%e5%8f%8d%e9%a6%88/">问题反馈</a> |
+        <span>V{{ version }}</span>
+      </p>
     </el-card>
 
     <el-card :class="contentClass">
       维护人员: 陈丰（QQ 765324662）
     </el-card>
+    <div style="position: fixed;bottom: 20px;width: 100%">
+      <div style="margin: 0 auto;width: 520px;max-width: 100%;text-align: center;font-size: 12px">
+        <p>COPYRIGHT © 2020 <a href="https://www.likole.com" target="_blank">Likole</a>. ALL RIGHTS RESERVED.</p>
+        <p>GPLv2 licensed by <a href="https://github.com/zhblue/hustoj">HUSTOJ</a> 2020</p>
+        <a href="http://www.beian.miit.gov.cn/" target="_blank" rel="nofollow" style="">浙ICP备18040075号-3</a>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -447,5 +460,15 @@ export default {
       opacity: 0;
       transform: scale(2);
     }
+  }
+</style>
+<style scoped>
+  a{
+    color: royalblue;
+  }
+  a:hover{
+    color: magenta;
+    text-decoration: underline;
+    text-underline: magenta;
   }
 </style>

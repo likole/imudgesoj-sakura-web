@@ -62,6 +62,7 @@
     <div style="position: fixed;bottom: 20px;width: 100%">
       <div style="margin: 0 auto;width: 520px;max-width: 100%;text-align: center;color: white;font-size: 12px">
         <p>COPYRIGHT © 2020 <a href="https://www.likole.com" target="_blank">Likole</a>. ALL RIGHTS RESERVED.</p>
+        <p>GPLv2 licensed by <a href="https://github.com/zhblue/hustoj">HUSTOJ</a> 2020</p>
         <a href="http://www.beian.miit.gov.cn/" target="_blank" rel="nofollow" style="">浙ICP备18040075号-3</a>
       </div>
     </div>
