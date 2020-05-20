@@ -126,6 +126,13 @@ export const asyncRoutes = [
         component: () => import('@/views/problem/admin'),
         name: 'ProblemAdmin',
         meta: { title: '问题管理', icon: 'set', roles: ['管理员', '问题编辑员'] }
+      },
+      {
+        path: 'data/:id(\\d+)',
+        component: () => import('@/views/problem/data'),
+        name: 'ProblemData',
+        meta: { title: '数据管理', icon: 'set', roles: ['管理员', '问题编辑员'] },
+        hidden: true
       }
     ]
   },

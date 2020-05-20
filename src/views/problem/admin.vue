@@ -59,7 +59,7 @@
           <el-tag v-else type="danger">禁用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="320">
+      <el-table-column align="center" label="操作" width="320px">
         <template slot-scope="scope">
           <el-button type="info" size="small" @click="editProblem(scope.row.problem_id)">
             编辑
@@ -73,6 +73,15 @@
           <el-button v-else type="success" size="small" icon="el-icon-delete" @click="handleChange(scope.row.problem_id)">
             启用
           </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column width="80px">
+        <template slot-scope="scope">
+          <router-link :to="'/problem/data/'+scope.row.problem_id" class="link-type">
+            <el-button type="success" size="small">
+              数据
+            </el-button>
+          </router-link>
         </template>
       </el-table-column>
     </el-table>
