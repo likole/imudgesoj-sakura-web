@@ -90,6 +90,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .theme-dark{
+    .navbar {
+      background: #000;
+      box-shadow: 0 1px 4px #363636;
+      .hamburger-container {
+        &:hover {
+          background: rgba(0, 0, 0, .025)
+        }
+      }
+
+      .right-menu {
+        .right-menu-item {
+          color: #fff;
+
+          &.hover-effect {
+            &:hover {
+              background: #f90;
+              color: #000;
+            }
+          }
+        }
+      }
+    }
+  }
   .navbar {
     height: 50px;
     overflow: hidden;

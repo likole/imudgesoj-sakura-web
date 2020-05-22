@@ -7,7 +7,13 @@
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" class="sidebar-logo">
-        <span class="sidebar-title"><mallki :text="title" /></span>
+        <span class="sidebar-title">
+          <div v-if="theme==='theme-dark'">
+            <span>IMUDGES</span>
+            <span style="background-color: #f90;color: #000;padding: 2px;border-radius: 2px">OJ</span>
+          </div>
+          <mallki v-else :text="title" />
+        </span>
       </router-link>
     </transition>
   </div>
@@ -30,11 +36,30 @@ export default {
       title: 'IMUDGES OJ',
       logo: 'http://www.imudges.com/templets/imudges/img/logowhite.png'
     }
+  },
+  computed: {
+    theme() {
+      return this.$store.state.settings.likoleTheme
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+  .theme-dark{
+    .sidebar-logo-container {
+      background: #000;
+
+      & .sidebar-logo-link {
+        height: 100%;
+        width: 100%;
+
+        & .sidebar-title {
+          color: #fff;
+        }
+      }
+    }
+  }
 .sidebarLogoFade-enter-active {
   transition: opacity 1.5s;
 }

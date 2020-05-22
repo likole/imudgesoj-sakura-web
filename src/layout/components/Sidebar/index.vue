@@ -5,10 +5,10 @@
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
-        :background-color="variables.menuBg"
-        :text-color="variables.menuText"
+        :background-color="theme==='theme-dark'?'#000':'#304156'"
+        :text-color="theme==='theme-dark'?'#FFF':'#bfcbd9'"
         :unique-opened="false"
-        :active-text-color="variables.menuActiveText"
+        :active-text-color="theme==='theme-dark'?'#f90':'#409EFF'"
         :collapse-transition="false"
         mode="vertical"
       >
@@ -48,6 +48,9 @@ export default {
     },
     isCollapse() {
       return !this.sidebar.opened
+    },
+    theme() {
+      return this.$store.state.settings.likoleTheme
     }
   }
 }

@@ -62,7 +62,8 @@ export default {
       const styles = [].slice.call(document.querySelectorAll('style'))
         .filter(style => {
           const text = style.innerText
-          return new RegExp(oldVal, 'i').test(text) && !/Chalk Variables/.test(text)
+          return !/Chalk Variables/.test(text)
+          // return new RegExp(oldVal, 'i').test(text) && !/Chalk Variables/.test(text)
         })
       styles.forEach(style => {
         const { innerText } = style
@@ -78,20 +79,22 @@ export default {
 
   methods: {
     likoleUpdateStyle(style, dark) {
-      const lightPrimaryCluster = this.getThemeCluster('409EFF')
-      const darkPrimaryCluster = this.getThemeCluster('F90')
-      const lightWhiteCluster = this.getThemeCluster('FFFFFF')
-      const darkWhiteCluster = this.getThemeCluster('000000')
-
       let newStyle = style
       if (dark) {
-        lightPrimaryCluster.forEach((color, index) => {
-          newStyle = newStyle.replace(new RegExp(color, 'ig'), darkPrimaryCluster[index])
-        })
-        lightWhiteCluster.forEach((color, index) => {
-          newStyle = newStyle.replace(new RegExp(color, 'ig'), darkWhiteCluster[index])
-        })
+        newStyle = this.likoleUpdateStyleInner(newStyle, '409EFF', 'F90') // primary
+        // newStyle = this.likoleUpdateStyleInner(newStyle, '606266', 'FDFDFD') // regular text
+        // newStyle = newStyle.replace(new RegExp('FEFEFE', 'ig'), '010101') // background
       }
+      return newStyle
+    },
+    likoleUpdateStyleInner(style, original, current) {
+      const originalCluster = this.getThemeCluster(original)
+      const currentCluster = this.getThemeCluster(current)
+      console.log(originalCluster, currentCluster)
+      let newStyle = style
+      originalCluster.forEach((color, index) => {
+        newStyle = newStyle.replace(new RegExp(color, 'ig'), currentCluster[index])
+      })
       return newStyle
     },
 
