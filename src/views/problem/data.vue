@@ -1,7 +1,8 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-select v-model="dataId" placeholder="测试数据组编号" @change="handleChange">
+      <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="addData">添加测试数据</el-button>
+      <el-select v-model="dataId" class="filter-item" placeholder="请选择要查看/编辑的测试数据组" style="min-width: 250px" @change="handleChange">
         <el-option
           v-for="item in dataIdList"
           :key="item"
@@ -11,25 +12,47 @@
         />
       </el-select>
     </div>
-    <el-alert v-if="dataId===null" :closable="false"> 请选择你要操作的数据组↑ </el-alert>
-    <div v-else>
+
+    <el-form>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="输入">
+            <el-button type="text" size="mini" @click="handleCopy(input,$event)">复制</el-button>
+            <el-input v-model="input" type="textarea" :autosize="true" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="输出">
+            <el-button type="text" size="mini" @click="handleCopy(output,$event)">复制</el-button>
+            <el-input v-model="output" type="textarea" :autosize="true" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+
+    <el-dialog
+      title="添加测试数据"
+      :visible.sync="dialogVisible"
+      width="70%"
+    >
       <el-form>
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="输入">
-              <el-button type="text" size="mini" @click="handleCopy(input,$event)">复制</el-button>
               <el-input v-model="input" type="textarea" :autosize="true" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="输出">
-              <el-button type="text" size="mini" @click="handleCopy(output,$event)">复制</el-button>
               <el-input v-model="output" type="textarea" :autosize="true" />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
-    </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -49,7 +72,8 @@ export default {
       dataIdList: null,
       listLoading: true,
       input: '',
-      output: ''
+      output: '',
+      dialogVisible: false
     }
   },
   created() {
@@ -86,6 +110,9 @@ export default {
     },
     handleCopy(text, event) {
       clip(text, event)
+    },
+    addData() {
+      this.dialogVisible = true
     }
   }
 }

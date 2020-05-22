@@ -1,7 +1,7 @@
 <template>
   <div class="drawer-container">
     <div>
-      <h3 class="drawer-title">Page style setting</h3>
+      <h3 class="drawer-title">设置</h3>
 
       <div class="drawer-item">
         <span>标签功能</span>
@@ -11,6 +11,11 @@
       <div class="drawer-item">
         <span>固定头部</span>
         <el-switch v-model="fixedHeader" class="drawer-switch" />
+      </div>
+
+      <div class="drawer-item">
+        <span>深夜模式</span>
+        <el-switch v-model="likoleTheme" class="drawer-switch" />
       </div>
 
     </div>
@@ -43,6 +48,17 @@ export default {
         this.$store.dispatch('settings/changeSetting', {
           key: 'tagsView',
           value: val
+        })
+      }
+    },
+    likoleTheme: {
+      get() {
+        return this.$store.state.settings.likoleTheme === 'theme-dark'
+      },
+      set(val) {
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'likoleTheme',
+          value: val ? 'theme-dark' : 'theme-light'
         })
       }
     },
