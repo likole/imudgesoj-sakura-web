@@ -9,15 +9,15 @@ $yellow:#FEC171;
 $panGreen: #30B08F;
 
 // sidebar
-$menuText:#fff;
-$menuActiveText:#f90;
-$subMenuActiveText:#fff; // https://github.com/ElemeFE/element/issues/12951
+$menuText:#bfcbd9; // 在layout/sidebar/index中用到了该固定值，修改时注意下
+$menuActiveText:#409EFF; // 在layout/sidebar/index中用到了该固定值，修改时注意下
+$subMenuActiveText:#f4f4f5; // https://github.com/ElemeFE/element/issues/12951
 
-$menuBg:#000;
-$menuHover:#363636;
+$menuBg:#304156; // 在layout/sidebar/index中用到了该固定值，修改时注意下
+$menuHover:#263445;
 
-$subMenuBg:#000;
-$subMenuHover:#363636;
+$subMenuBg:#1f2d3d;
+$subMenuHover:#001528;
 
 $sideBarWidth: 210px;
 

@@ -92,8 +92,9 @@ export default {
 <style lang="scss" scoped>
   .theme-dark{
     .navbar {
-      background: #000;
-      box-shadow: 0 1px 4px #363636;
+      background: #1b1b1b;
+      border-top: 1px solid #555;
+      border-bottom: 1px solid #242424;
       .hamburger-container {
         &:hover {
           background: rgba(0, 0, 0, .025)

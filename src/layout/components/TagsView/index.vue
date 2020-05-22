@@ -194,9 +194,10 @@ export default {
 <style lang="scss" scoped>
   .theme-dark{
     .tags-view-container {
-      background: #000;
-      border-bottom: 1px solid #363636;
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+      background: #1b1b1b;
+      border-bottom: 1px solid #1b1b1b;
+      border-bottom: 2px solid transparent;
+      border-collapse: collapse;
       .tags-view-wrapper {
         .tags-view-item {
           border: 1px solid #363636;

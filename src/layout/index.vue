@@ -66,6 +66,10 @@ export default {
   @import "~@/styles/mixin.scss";
   @import "~@/styles/variables.scss";
 
+  .theme-dark{
+    background-color: #000;
+  }
+
   .app-wrapper {
     @include clearfix;
     position: relative;
@@ -103,10 +107,5 @@ export default {
 
   .mobile .fixed-header {
     width: 100%;
-  }
-</style>
-<style>
-  .theme-dark{
-    background-color: #000 !important;
   }
 </style>

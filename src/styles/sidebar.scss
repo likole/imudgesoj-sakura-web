@@ -7,6 +7,40 @@
     position: relative;
   }
 
+  .theme-dark{
+    .sidebar-container {
+      background-color: #000; // 下方边缘的背景颜色
+
+      .el-menu{
+        border: 1px solid #222;
+      }
+
+      // menu hover
+      .submenu-title-noDropdown,
+      .el-submenu__title {
+        color: #fff!important;
+        &:hover {
+          background-color: #262626 !important; // 一级菜单hover的背景颜色
+        }
+      }
+
+      & .nest-menu .el-submenu>.el-submenu__title,
+      & .el-submenu .el-menu-item {
+        min-width: $sideBarWidth !important;
+        background-color: #101010 !important; // 二级菜单背景颜色
+
+        &:hover {
+          background-color: #262626 !important; // 二级菜单hover背景颜色
+        }
+      }
+
+      // 选中的一级菜单
+      .is-active>.el-submenu__title {
+        color: #f90 !important;
+      }
+    }
+  }
+
   .sidebar-container {
     transition: width 0.28s;
     width: $sideBarWidth !important;

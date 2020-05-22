@@ -5,8 +5,8 @@
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
-        :background-color="theme==='theme-dark'?'#000':'#304156'"
-        :text-color="theme==='theme-dark'?'#FFF':'#bfcbd9'"
+        :background-color="theme==='theme-dark'?'#1c1c1c':'#304156'"
+        :text-color="theme==='theme-dark'?'#a2a2a2':'#bfcbd9'"
         :unique-opened="false"
         :active-text-color="theme==='theme-dark'?'#f90':'#409EFF'"
         :collapse-transition="false"

@@ -48,7 +48,9 @@ export default {
 <style lang="scss" scoped>
   .theme-dark{
     .sidebar-logo-container {
-      background: #000;
+      background: #1b1b1b;
+      border-top: 1px solid #555;
+      border-bottom: 1px solid #242424;
 
       & .sidebar-logo-link {
         height: 100%;
