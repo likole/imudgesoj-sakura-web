@@ -18,13 +18,16 @@
         <el-switch v-model="likoleTheme" class="drawer-switch" />
       </div>
 
+      <theme-picker style="float: right;height: 26px;margin: -3px 8px 0 0;" />
     </div>
   </div>
 </template>
 
 <script>
+import ThemePicker from '@/components/ThemePicker'
 
 export default {
+  components: { ThemePicker },
   data() {
     return {}
   },
