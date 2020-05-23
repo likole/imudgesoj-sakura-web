@@ -140,6 +140,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .theme-dark{
+    .header-search {
+      .search-icon {
+        color: #000;
+        font-size: 24px;
+        background-color: #f90;
+        padding: 5px;
+      }
+
+      .header-search-select {
+        /deep/ .el-input__inner {
+          background-color: #363636;
+          border-bottom: 1px solid #363636;
+        }
+        }
+      }
+
+    }
 .header-search {
   font-size: 0 !important;
 

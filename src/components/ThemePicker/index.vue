@@ -59,17 +59,17 @@ export default {
 
       chalkHandler()
 
-      const styles = [].slice.call(document.querySelectorAll('style'))
-        .filter(style => {
-          const text = style.innerText
-          return !/Chalk Variables/.test(text)
-          // return new RegExp(oldVal, 'i').test(text) && !/Chalk Variables/.test(text)
-        })
-      styles.forEach(style => {
-        const { innerText } = style
-        if (typeof innerText !== 'string') return
-        style.innerText = this.likoleUpdateStyle(innerText, val === '#F90')
-      })
+      // const styles = [].slice.call(document.querySelectorAll('style'))
+      //   .filter(style => {
+      //     const text = style.innerText
+      //     return !/Chalk Variables/.test(text)
+      //     // return new RegExp(oldVal, 'i').test(text) && !/Chalk Variables/.test(text)
+      //   })
+      // styles.forEach(style => {
+      //   const { innerText } = style
+      //   if (typeof innerText !== 'string') return
+      //   style.innerText = this.likoleUpdateStyle(innerText, val === '#F90')
+      // })
 
       this.$emit('change', val)
 
@@ -82,6 +82,7 @@ export default {
       let newStyle = style
       if (dark) {
         newStyle = this.likoleUpdateStyleInner(newStyle, '409EFF', 'F90') // primary
+        newStyle = this.likoleUpdateStyleInner(newStyle, '303133', 'FFF') // link color
         // newStyle = this.likoleUpdateStyleInner(newStyle, '606266', 'FDFDFD') // regular text
         // newStyle = newStyle.replace(new RegExp('FEFEFE', 'ig'), '010101') // background
       }

@@ -195,8 +195,8 @@ export default {
   .theme-dark{
     .tags-view-container {
       background: #1b1b1b;
-      border-bottom: 1px solid #1b1b1b;
-      border-bottom: 2px solid transparent;
+      box-shadow: 0 0 0 1px #242424;
+      border-bottom: 1px solid #000;
       border-collapse: collapse;
       .tags-view-wrapper {
         .tags-view-item {
@@ -214,12 +214,12 @@ export default {
         }
       }
       .contextmenu {
-        background: #000;
-        color: #fff;
+        background: #1b1b1b;
+        color: #a2a2a2;
         box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
         li {
           &:hover {
-            background: #f90;
+            background: #262626;
           }
         }
       }

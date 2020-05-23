@@ -102,13 +102,12 @@ export default {
       }
 
       .right-menu {
-        .right-menu-item {
-          color: #fff;
+        .right-menu-item { // 导航栏上的图标
+          color: #cdcdcd;
 
           &.hover-effect {
             &:hover {
-              background: #f90;
-              color: #000;
+              color: #fff;
             }
           }
         }
