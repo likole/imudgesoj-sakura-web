@@ -13,7 +13,7 @@
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
 
-        <error-log class="errLog-container right-menu-item hover-effect" />
+        <!--        <error-log class="errLog-container right-menu-item hover-effect" />-->
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
@@ -21,11 +21,16 @@
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
 
+        <el-tooltip content="开启/关闭夜间模式" effect="dark" placement="bottom">
+          <div class="right-menu-item hover-effet">
+            <i class="el-icon-s-opportunity dark-switch" @click="likoleTheme=!likoleTheme"/>
+          </div>
+        </el-tooltip>
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-<!--          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">-->
+          <!--          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">-->
           {{ name }}
           <i class="el-icon-caret-bottom" />
         </div>
@@ -72,7 +77,18 @@ export default {
       'avatar',
       'device',
       'name'
-    ])
+    ]),
+    likoleTheme: {
+      get() {
+        return this.$store.state.settings.likoleTheme === 'theme-dark'
+      },
+      set(val) {
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'likoleTheme',
+          value: val ? 'theme-dark' : 'theme-light'
+        })
+      }
+    }
   },
   methods: {
     toggleSideBar() {
@@ -115,6 +131,13 @@ export default {
         }
       }
     }
+    .dark-switch{
+      color: #409eff;
+    }
+  }
+  .dark-switch{
+    color: #f90;
+    cursor: pointer;
   }
   .navbar {
     height: 50px;

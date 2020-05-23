@@ -4,7 +4,7 @@ import defaultSettings from '@/settings'
 const { showSettings, tagsView, fixedHeader, sidebarLogo } = defaultSettings
 
 const state = {
-  likoleTheme: 'theme-dark',
+  likoleTheme: 'theme-light',
   theme: variables.theme,
   showSettings: showSettings,
   tagsView: tagsView,
