@@ -48,14 +48,14 @@
         </el-button>
       </div>
 
-      <h2 align="center">{{ cid }} - <span v-html="contest.title" /></h2>
-      <div align="center" v-html="contest.description" />
-      <div v-if="device==='desktop'" style="margin-top: 20px;padding-bottom: 55px">
+      <h2 align="center" class="contest-title">{{ cid }} - <span v-html="contest.title" /></h2>
+      <div align="center" class="contest-description" v-html="contest.description" />
+      <div v-if="device==='desktop'" class="contest-time" style="margin-top: 20px;padding-bottom: 55px">
         <el-progress :percentage="progress" :show-text="false" />
         <p style="float: left">开始时间: {{ contest.start }}</p>
         <p style="float: right">结束时间: {{ contest.end }}</p>
       </div>
-      <div v-else style="margin-top: 20px;padding-bottom: 55px">
+      <div v-else class="contest-time" style="margin-top: 20px;padding-bottom: 55px">
         <el-progress :percentage="progress" :show-text="false" />
         <p style="float: left;font-size: 14px">{{ contest.start }}</p>
         <p style="float: right;font-size: 14px">{{ contest.end }}</p>
@@ -227,5 +227,18 @@ export default {
   .success-row {
     color: darkgreen;
     background: greenyellow;
+  }
+</style>
+<style lang="scss">
+  .theme-dark{
+    .contest-title{
+      color: #f90;
+    }
+    .contest-description{
+      color: #a2a2a2;
+    }
+    .contest-time{
+      color: #fff;
+    }
   }
 </style>

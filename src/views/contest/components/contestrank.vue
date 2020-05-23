@@ -41,7 +41,7 @@
       </el-table-column>
       <el-table-column v-for="(item,index) in pid" :key="index" :label="item" align="center">
         <template slot-scope="scope">
-          <div :style="'background-color: #'+scope.row['p'+item].bg_color">
+          <div class="rank-item" :style="'background-color: #'+scope.row['p'+item].bg_color">
             {{ scope.row['p'+item].text }}
           </div>
         </template>
@@ -91,6 +91,11 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.theme-dark{
+  .rank-item{
+    color: #000;
+    font-weight: 800;
+  }
+}
 </style>
