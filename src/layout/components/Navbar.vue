@@ -26,6 +26,7 @@
             <i class="el-icon-s-opportunity dark-switch" @click="likoleTheme=!likoleTheme"/>
           </div>
         </el-tooltip>
+        <theme-picker v-show="false"/>
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
@@ -61,6 +62,7 @@ import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
+import ThemePicker from '@/components/ThemePicker'
 
 export default {
   components: {
@@ -69,7 +71,8 @@ export default {
     ErrorLog,
     Screenfull,
     SizeSelect,
-    Search
+    Search,
+    ThemePicker
   },
   computed: {
     ...mapGetters([
