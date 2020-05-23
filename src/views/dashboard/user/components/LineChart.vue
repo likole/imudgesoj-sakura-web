@@ -5,6 +5,7 @@
 <script>
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
+require('echarts/theme/dark') // echarts theme
 import resize from './mixins/resize'
 
 export default {
@@ -36,12 +37,31 @@ export default {
       chart: null
     }
   },
+  computed: {
+    theme() {
+      return this.$store.state.settings.likoleTheme
+    }
+  },
   watch: {
     chartData: {
       deep: true,
       handler(val) {
         this.setOptions(val)
       }
+    },
+    theme: {
+      handler: function(val, oldVal) {
+        if (this.chart !== null) {
+          this.chart.dispose()
+        }
+        if (val === 'theme-dark') {
+          this.chart = echarts.init(this.$el, 'dark')
+        } else {
+          this.chart = echarts.init(this.$el, 'macarons')
+        }
+        this.setOptions(this.chartData)
+      },
+      immediate: true
     }
   },
   mounted() {
@@ -58,7 +78,7 @@ export default {
   },
   methods: {
     initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
+      this.chart = echarts.init(this.$el, this.theme === 'theme-dark' ? 'dark' : 'macarons')
       this.setOptions(this.chartData)
     },
     setOptions({ all, ac } = {}) {

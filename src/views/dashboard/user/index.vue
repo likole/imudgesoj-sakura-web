@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+    <el-row class="dashboard-chart-container">
       <line-chart :chart-data="lineChartData" />
     </el-row>
     <el-card v-for="(item,index) in news" :key="index" class="box-card" style="margin-bottom: 20px">
@@ -44,28 +44,48 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dashboard-editor-container {
-  padding: 32px;
-  background-color: rgb(240, 242, 245);
-  position: relative;
+  .theme-dark {
+    .dashboard-chart-container {
+      background: #333;
+    }
 
-  .github-corner {
-    position: absolute;
-    top: 0px;
-    border: 0;
-    right: 0;
+    .dashboard-editor-container {
+      background-color: #000;
+
+      .chart-wrapper {
+        background: #000;
+      }
+    }
   }
 
-  .chart-wrapper {
+  .dashboard-chart-container {
     background: #fff;
     padding: 16px 16px 0;
     margin-bottom: 32px;
   }
-}
 
-@media (max-width:1024px) {
-  .chart-wrapper {
-    padding: 8px;
+  .dashboard-editor-container {
+    padding: 32px;
+    background-color: rgb(240, 242, 245);
+    position: relative;
+
+    .github-corner {
+      position: absolute;
+      top: 0px;
+      border: 0;
+      right: 0;
+    }
+
+    .chart-wrapper {
+      background: #fff;
+      padding: 16px 16px 0;
+      margin-bottom: 32px;
+    }
   }
-}
+
+  @media (max-width: 1024px) {
+    .chart-wrapper {
+      padding: 8px;
+    }
+  }
 </style>

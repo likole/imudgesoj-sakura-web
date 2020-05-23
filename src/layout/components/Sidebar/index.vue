@@ -2,6 +2,7 @@
   <div :class="{'has-logo':showLogo}">
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
+      <!-- NEED_UPDATE: 在此处颜色使用了部分固定值，如果在variable.css中更改了值，需要在这儿更换下     -->
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"

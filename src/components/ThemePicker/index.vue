@@ -3,7 +3,7 @@
 </template>
 
 <script>
-const version = require('element-ui/package.json').version // element-ui version from node_modules
+import { chalk } from '../../styles/chalk'
 
 export default {
   data() {
@@ -25,9 +25,7 @@ export default {
       immediate: true
     },
     async theme(val) {
-      const oldVal = val === 'theme-light' ? '#F90' : '#409EFF'
-      const newVal = val === 'theme-dark' ? '#F90' : '#409EFF'
-
+      const dark = (val === 'theme-dark')
       const $message = this.$message({
         message: '  主题切换中，请稍候......',
         customClass: 'theme-message',
@@ -35,11 +33,9 @@ export default {
         duration: 0,
         iconClass: 'el-icon-loading'
       })
-
       const getHandler = (variable, id) => {
         return () => {
-          const newStyle = this.likoleUpdateStyle(this[variable], newVal === '#F90')
-
+          const newStyle = this.likoleUpdateStyle(this[variable], dark)
           let styleTag = document.getElementById(id)
           if (!styleTag) {
             styleTag = document.createElement('style')
@@ -49,46 +45,27 @@ export default {
           styleTag.innerText = newStyle
         }
       }
-
-      if (!this.chalk) {
-        const url = `https://unpkg.com/element-ui@${version}/lib/theme-chalk/index.css`
-        await this.getCSSString(url, 'chalk')
-      }
-
       const chalkHandler = getHandler('chalk', 'chalk-style')
-
       chalkHandler()
-
-      // const styles = [].slice.call(document.querySelectorAll('style'))
-      //   .filter(style => {
-      //     const text = style.innerText
-      //     return !/Chalk Variables/.test(text)
-      //     // return new RegExp(oldVal, 'i').test(text) && !/Chalk Variables/.test(text)
-      //   })
-      // styles.forEach(style => {
-      //   const { innerText } = style
-      //   if (typeof innerText !== 'string') return
-      //   style.innerText = this.likoleUpdateStyle(innerText, val === '#F90')
-      // })
-
-      this.$emit('change', val)
-
       $message.close()
     }
   },
-
+  created() {
+    this.chalk = chalk.replace(/@font-face{[^}]+}/, '')
+  },
   methods: {
     likoleUpdateStyle(style, dark) {
       let newStyle = style
       if (dark) {
-        newStyle = this.likoleUpdateStyleInner(newStyle, '409EFF', 'F90') // primary
-        newStyle = this.likoleUpdateStyleInner(newStyle, '303133', 'FFF') // link color
-        // newStyle = this.likoleUpdateStyleInner(newStyle, '606266', 'FDFDFD') // regular text
-        // newStyle = newStyle.replace(new RegExp('FEFEFE', 'ig'), '010101') // background
+        newStyle = this.likoleUpdateStyleCluster(newStyle, '409EFF', 'F90') // primary
+        newStyle = newStyle.replace(new RegExp('FFFFFF', 'ig'), '000000') // white color
+        newStyle = newStyle.replace(new RegExp('FFF', 'ig'), '000000') // white color
+        newStyle = newStyle.replace(new RegExp('303133', 'ig'), 'FFF') // white color
+        newStyle = newStyle.replace(new RegExp('606266', 'ig'), 'FDFDFD') // white color
       }
       return newStyle
     },
-    likoleUpdateStyleInner(style, original, current) {
+    likoleUpdateStyleCluster(style, original, current) {
       const originalCluster = this.getThemeCluster(original)
       const currentCluster = this.getThemeCluster(current)
       console.log(originalCluster, currentCluster)
@@ -98,21 +75,6 @@ export default {
       })
       return newStyle
     },
-
-    getCSSString(url, variable) {
-      return new Promise(resolve => {
-        const xhr = new XMLHttpRequest()
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState === 4 && xhr.status === 200) {
-            this[variable] = xhr.responseText.replace(/@font-face{[^}]+}/, '')
-            resolve()
-          }
-        }
-        xhr.open('GET', url)
-        xhr.send()
-      })
-    },
-
     getThemeCluster(theme) {
       const tintColor = (color, tint) => {
         let red = parseInt(color.slice(0, 2), 16)
@@ -162,18 +124,18 @@ export default {
 </script>
 
 <style>
-.theme-message,
-.theme-picker-dropdown {
-  z-index: 99999 !important;
-}
+  .theme-message,
+  .theme-picker-dropdown {
+    z-index: 99999 !important;
+  }
 
-.theme-picker .el-color-picker__trigger {
-  height: 26px !important;
-  width: 26px !important;
-  padding: 2px;
-}
+  .theme-picker .el-color-picker__trigger {
+    height: 26px !important;
+    width: 26px !important;
+    padding: 2px;
+  }
 
-.theme-picker-dropdown .el-color-dropdown__link-btn {
-  display: none;
-}
+  .theme-picker-dropdown .el-color-dropdown__link-btn {
+    display: none;
+  }
 </style>
