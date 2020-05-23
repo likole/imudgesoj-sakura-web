@@ -190,3 +190,12 @@ aside {
 .multiselect--active {
   z-index: 1000 !important;
 }
+
+.theme-dark{
+  .el-loading-mask{
+    background-color: #262626;
+  }
+  .el-input__inner{
+    background-color: #363636;
+  }
+}
