@@ -152,7 +152,7 @@ export default {
       .header-search-select {
         /deep/ .el-input__inner {
           background-color: #363636;
-          border-bottom: 1px solid #363636;
+          border-bottom: 1px solid #f90;
         }
         }
       }

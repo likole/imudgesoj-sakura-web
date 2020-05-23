@@ -53,9 +53,6 @@ export default {
       border-bottom: 1px solid #242424;
 
       & .sidebar-logo-link {
-        height: 100%;
-        width: 100%;
-
         & .sidebar-title {
           color: #fff;
         }

@@ -191,11 +191,68 @@ aside {
   z-index: 1000 !important;
 }
 
-.theme-dark{
-  .el-loading-mask{
+.theme-dark {
+  .el-loading-mask {
     background-color: #262626;
   }
-  .el-input__inner{
+
+  .el-input__inner {
     background-color: #363636;
   }
+
+  .el-checkbox__inner {
+    background-color: #363636;
+  }
+
+  // card
+  .el-card {
+    border: 1px solid #222;
+    background-color: #101010;
+    color: #a2a2a2;
+  }
+
+  .el-card__header {
+    border-bottom: 1px solid #262626;
+    background-color: #1c1c1c;
+  }
+
+  // table
+  .el-table th{
+    background:#1c1c1c; // 表头背景色
+  }
+  .el-table tr{
+    background:#101010; // 表项背景色
+  }
+  .el-table--striped .el-table__body tr.el-table__row--striped td {
+    background: #262626; //斑马线背景色
+  }
+  .el-table td,.el-table th.is-leaf {
+    border-bottom:  1px solid #262626; //行内线
+  }
+  .el-table::before{
+    border-bottom: 2px solid #262626; //底部线
+  }
+  .el-table--border th{
+    border-color:#262626; // 表头列分隔
+  }
+  .el-table--border{
+    border:none;
+  }
+  .el-table thead {
+    color: #fff; // 表头颜色
+    font-weight: 500;
+  }
+  .el-table{
+    color:#a2a2a2; // 文字颜色
+  }
+  .el-table--border::after, .el-table--group::after{
+    background-color: #262626; // 表格最右边边线
+  }
+  .el-table--border td {
+    border-right: 1px solid #262626; // 列之间分隔的颜色
+  }
+  .el-table--enable-row-hover .el-table__body tr:hover>td {
+    background-color: #262626; // hover色
+  }
+
 }

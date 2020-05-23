@@ -50,15 +50,15 @@ export default {
       let newStyle = style
       if (dark) {
         newStyle = this.likoleUpdateStyleCluster(newStyle, '409EFF', 'F90') // primary
-        newStyle = this.likoleUpdateStyleCluster(newStyle, '67C23A', '226003') // success
-        newStyle = this.likoleUpdateStyleCluster(newStyle, 'E6A23C', '825006') // warning
-        newStyle = this.likoleUpdateStyleCluster(newStyle, 'F56C6C', '7A0B0B') // warning
-        newStyle = newStyle.replace(new RegExp('F5F7FA', 'ig'), '262626') // base background (例如表格hover背景色)
-        newStyle = newStyle.replace(new RegExp('FFFFFF', 'ig'), '000000') // white background(大多数的背景色)
+        // newStyle = this.likoleUpdateStyleCluster(newStyle, '67C23A', '226003') // success
+        // newStyle = this.likoleUpdateStyleCluster(newStyle, 'E6A23C', '825006') // warning
+        // newStyle = this.likoleUpdateStyleCluster(newStyle, 'F56C6C', '7A0B0B') // warning
+        // newStyle = newStyle.replace(new RegExp('F5F7FA', 'ig'), '262626') // base background (例如表格hover背景色)
+        // newStyle = newStyle.replace(new RegExp('FFFFFF', 'ig'), '000000') // white background(大多数的背景色)
         newStyle = newStyle.replace(new RegExp('FFF', 'ig'), '000000') // white background(大多数的背景色)
-        newStyle = newStyle.replace(new RegExp('DCDFE6', 'ig'), '222') // base border(例如输入框未hover边框)
-        newStyle = newStyle.replace(new RegExp('EBEEF5', 'ig'), '242424') // lighter border(例如表格边框)
-        newStyle = newStyle.replace(new RegExp('303133', 'ig'), 'FFF') // primary text
+        // newStyle = newStyle.replace(new RegExp('DCDFE6', 'ig'), '222') // base border(例如输入框未hover边框)
+        // newStyle = newStyle.replace(new RegExp('EBEEF5', 'ig'), '242424') // lighter border(例如表格边框)
+        // newStyle = newStyle.replace(new RegExp('303133', 'ig'), 'FFF') // primary text
         newStyle = newStyle.replace(new RegExp('606266', 'ig'), 'EEE') // regular text
       }
       return newStyle

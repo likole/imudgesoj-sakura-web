@@ -97,7 +97,7 @@ export default {
       border-bottom: 1px solid #242424;
       .hamburger-container {
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: #262626;
         }
       }
 
