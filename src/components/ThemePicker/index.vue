@@ -66,7 +66,7 @@ export default {
     likoleUpdateStyleCluster(style, original, current) {
       const originalCluster = this.getThemeCluster(original)
       const currentCluster = this.getThemeCluster(current)
-      console.log(originalCluster, currentCluster)
+      // console.log(originalCluster, currentCluster)
       let newStyle = style
       originalCluster.forEach((color, index) => {
         newStyle = newStyle.replace(new RegExp(color, 'ig'), currentCluster[index])
