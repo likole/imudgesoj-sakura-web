@@ -23,10 +23,10 @@
 
         <el-tooltip content="开启/关闭夜间模式" effect="dark" placement="bottom">
           <div class="right-menu-item hover-effet">
-            <i class="el-icon-s-opportunity dark-switch" @click="likoleTheme=!likoleTheme"/>
+            <i class="el-icon-s-opportunity dark-switch" @click="toggleTheme" />
           </div>
         </el-tooltip>
-        <theme-picker v-show="false"/>
+        <theme-picker v-show="false" />
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
@@ -63,6 +63,7 @@ import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import ThemePicker from '@/components/ThemePicker'
+import Cookies from 'js-cookie'
 
 export default {
   components: {
@@ -80,20 +81,31 @@ export default {
       'avatar',
       'device',
       'name'
-    ]),
-    likoleTheme: {
-      get() {
-        return this.$store.state.settings.likoleTheme === 'theme-dark'
-      },
-      set(val) {
-        this.$store.dispatch('settings/changeSetting', {
-          key: 'likoleTheme',
-          value: val ? 'theme-dark' : 'theme-light'
-        })
-      }
+    ])
+  },
+  created() {
+    // 夜间模式的处理
+    var theme = Cookies.get('likole-theme')
+    if (theme !== undefined && theme === 'theme-dark') {
+      this.toggleTheme()
     }
   },
   methods: {
+    toggleTheme() {
+      if (this.$store.state.settings.likoleTheme === 'theme-dark') {
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'likoleTheme',
+          value: 'theme-light'
+        })
+        Cookies.set('likole-theme', 'theme-light', { expires: 30 })
+      } else {
+        this.$store.dispatch('settings/changeSetting', {
+          key: 'likoleTheme',
+          value: 'theme-dark'
+        })
+        Cookies.set('likole-theme', 'theme-dark', { expires: 30 })
+      }
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
