@@ -1,13 +1,19 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      class="login-form"
+      autocomplete="on"
+      label-position="left"
+    >
 
       <div class="title-container">
         <h3 class="title">欢迎使用 IMUDGES OJ</h3>
       </div>
 
-      <div id="originalLogin">
-        <el-form-item prop="username">
+      <div id="loginForm">
+        <el-form-item v-if="loginType==='username'||loginType==='forget'" prop="username">
           <span class="svg-container">
             <svg-icon icon-class="user" />
           </span>
@@ -22,7 +28,22 @@
           />
         </el-form-item>
 
-        <el-tooltip v-model="capsTooltip" content="大写锁定已开启" placement="right" manual>
+        <el-form-item v-if="loginType==='phone'||loginType==='forget'" prop="phone">
+          <span class="svg-container">
+            <svg-icon icon-class="mobile" />
+          </span>
+          <el-input
+            ref="phone"
+            v-model="loginForm.phone"
+            placeholder="手机号"
+            name="phone"
+            type="text"
+            tabindex="1"
+            autocomplete="on"
+          />
+        </el-form-item>
+
+        <el-tooltip v-if="loginType==='username'||loginType==='phone'" v-model="capsTooltip" content="大写锁定已开启" placement="right" manual>
           <el-form-item prop="password">
             <span class="svg-container">
               <svg-icon icon-class="password" />
@@ -46,20 +67,67 @@
           </el-form-item>
         </el-tooltip>
 
-        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+        <el-form-item v-if="loginType==='forget'" prop="vcode">
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input
+            ref="phone"
+            v-model="loginForm.vcode"
+            placeholder="验证码"
+            name="vcode"
+            type="text"
+            tabindex="1"
+            style="width: 200px"
+          />
+          <el-button style="float: right;height: 33px;margin: 7px 2px" :disabled="leftTime>0" @click="handleSendVcode">发送验证码<span v-if="leftTime>0">({{ leftTime }}S)</span></el-button>
+        </el-form-item>
+
+        <el-tooltip v-if="loginType==='forget'" v-model="capsTooltip" content="大写锁定已开启" placement="right" manual>
+          <el-form-item prop="password">
+            <span class="svg-container">
+              <svg-icon icon-class="password" />
+            </span>
+            <el-input
+              ref="newPassword"
+              v-model="loginForm.newPassword"
+              type="password"
+              placeholder="设置新密码"
+              name="newPassword"
+              tabindex="2"
+              @keyup.native="checkCapslock"
+              @blur="capsTooltip = false"
+              @keyup.enter.native="handleLogin"
+            />
+          </el-form-item>
+        </el-tooltip>
+
+
+        <el-button
+          :loading="loading"
+          type="primary"
+          style="width:100%;margin-bottom:30px;"
+          @click.native.prevent="handleLogin"
+        >登录
+        </el-button>
       </div>
 
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" onclick="window.location.href='/sakura/login_oauth2.php'">使用IMUDGES账号登录</el-button>
-
-      <div class="tips">
-        <span>如在公共电脑上登录，请在使用完毕后及时退出！</span>
+      <div style="color: gray">
+        <span v-if="loginType!=='username'">
+          <el-link @click="loginType='username'">用户名登录</el-link> |
+        </span>
+        <span v-if="loginType!=='phone'">
+          <el-link @click="loginType='phone'">手机号登录</el-link> |
+        </span>
+        <el-link onclick="window.location.href='/sakura/login_oauth2.php'">IMUDGES账号登录</el-link>
         <span style="float: right;color: gray;">
-        <el-link href="#/public-about">关于</el-link> | <el-link href="https://acm.likole.com/old/">访问旧版>> </el-link>
+          <el-link href="#/public-about">关于</el-link> |
+          <el-link @click="loginType='forget'">忘记密码</el-link>
         </span>
       </div>
     </el-form>
 
-    <div style="position: fixed;bottom: 20px;width: 100%">
+    <div id="copyright" style="position: fixed;bottom: 20px;width: 100%">
       <div style="margin: 0 auto;width: 520px;max-width: 100%;text-align: center;color: white;font-size: 12px">
         <p>COPYRIGHT © 2020 <a href="https://www.likole.com" target="_blank">Likole</a>. ALL RIGHTS RESERVED.</p>
         <p>GPLv2 licensed by <a href="https://github.com/zhblue/hustoj">HUSTOJ</a> 2020</p>
@@ -72,30 +140,27 @@
 
 <script>
 
+import { sendVerifyCode, resetPassword } from '../../api/user'
+
 export default {
   name: 'Login',
   data() {
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('密码长度不能小于6位'))
-      } else {
-        callback()
-      }
-    }
     return {
       loginForm: {
         username: '',
-        password: ''
-      },
-      loginRules: {
-        username: [{ required: true, trigger: 'blur' }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: '',
+        phone: '',
+        vcode: '',
+        newPassword: ''
       },
       passwordType: 'password',
       capsTooltip: false,
       loading: false,
       redirect: undefined,
-      otherQuery: {}
+      otherQuery: {},
+      loginType: 'username',
+      leftTime: 0,
+      nonce: ''
     }
   },
   watch: {
@@ -114,11 +179,12 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
-    }
+    this.checkLeftTime()
+    // if (this.loginForm.username === '') {
+    //   this.$refs.username.focus()
+    // } else if (this.loginForm.password === '') {
+    //   this.$refs.password.focus()
+    // }
   },
   destroyed() {
     // window.removeEventListener('storage', this.afterQRScan)
@@ -149,15 +215,41 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+          if (this.loginType === 'username') {
+            // login by username
+            this.loading = true
+            this.$store.dispatch('user/login', { username: this.loginForm.username, password: this.loginForm.password })
+              .then(() => {
+                this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+                this.loading = false
+              })
+              .catch(() => {
+                this.loading = false
+              })
+          } else if (this.loginType === 'phone') {
+            // login by phone
+            this.loading = true
+            this.$store.dispatch('user/loginByPhone', { phone: this.loginForm.phone, password: this.loginForm.password })
+              .then(() => {
+                this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+                this.loading = false
+              })
+              .catch(() => {
+                this.loading = false
+              })
+          } else if (this.loginType === 'forget') {
+            // reset password
+            if (this.loginForm.vcode === '') {
+              this.$message({ type: 'error', message: '验证码不能为空' })
+              return
+            }
+            this.loading = true
+            resetPassword(this.loginForm.username, this.loginForm.phone, this.loginForm.vcode, this.nonce, this.loginForm.newPassword).then(() => {
+              this.loading = false
+            }).catch(() => {
               this.loading = false
             })
-            .catch(() => {
-              this.loading = false
-            })
+          }
         } else {
           console.log('error submit!!')
           return false
@@ -171,6 +263,20 @@ export default {
         }
         return acc
       }, {})
+    },
+    handleSendVcode() {
+      sendVerifyCode(this.loginForm.username, this.loginForm.phone).then(response => {
+        this.nonce = response.data
+        this.leftTime = 60
+      })
+    },
+    checkLeftTime() {
+      if (this.leftTime > 1) {
+        this.leftTime -= 1
+      } else {
+        this.leftTime = 0
+      }
+      setTimeout(this.checkLeftTime, 1000)
     }
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
@@ -195,124 +301,132 @@ export default {
 </script>
 
 <style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
+  /* 修复input 背景不协调 和光标变色 */
+  /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#fff;
-$cursor: #fff;
+  $bg: #283443;
+  $light_gray: #fff;
+  $cursor: #fff;
 
-@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .el-input input {
-    color: $cursor;
-  }
-}
-
-/* reset element-ui css */
-.login-container {
-  .el-input {
-    display: inline-block;
-    height: 47px;
-    width: 85%;
-
-    input {
-      background: transparent;
-      border: 0px;
-      -webkit-appearance: none;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
-      caret-color: $cursor;
-
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
-      }
+  @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
+    .login-container .el-input input {
+      color: $cursor;
     }
   }
 
-  .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    color: #454545;
+  /* reset element-ui css */
+  .login-container {
+    .el-input {
+      display: inline-block;
+      height: 47px;
+      width: 85%;
+
+      input {
+        background: transparent;
+        border: 0px;
+        -webkit-appearance: none;
+        border-radius: 0px;
+        padding: 12px 5px 12px 15px;
+        color: $light_gray;
+        height: 47px;
+        caret-color: $cursor;
+
+        &:-webkit-autofill {
+          box-shadow: 0 0 0px 1000px $bg inset !important;
+          -webkit-text-fill-color: $cursor !important;
+        }
+      }
+    }
+
+    .el-form-item {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      color: #454545;
+    }
   }
-}
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+  $bg: #2d3a4b;
+  $dark_gray: #889aa4;
+  $light_gray: #eee;
 
-.login-container {
-  min-height: 100%;
-  width: 100%;
-  background-color: $bg;
-  overflow: hidden;
-
-  .login-form {
-    position: relative;
-    width: 520px;
-    max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
+  .login-container {
+    min-height: 100%;
+    width: 100%;
+    background-color: $bg;
     overflow: hidden;
-  }
 
-  .tips {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
+    .login-form {
+      position: relative;
+      width: 520px;
+      max-width: 100%;
+      padding: 160px 35px 0;
+      margin: 0 auto;
+      overflow: hidden;
+    }
 
-    span {
-      &:first-of-type {
-        margin-right: 16px;
+    .el-link {
+      color: white;
+    }
+
+    .el-link:hover {
+      color: deepskyblue;
+    }
+
+    .tips {
+      font-size: 14px;
+      color: #fff;
+      margin-bottom: 10px;
+
+      span {
+        &:first-of-type {
+          margin-right: 16px;
+        }
+      }
+    }
+
+    .svg-container {
+      padding: 6px 5px 6px 15px;
+      color: $dark_gray;
+      vertical-align: middle;
+      width: 30px;
+      display: inline-block;
+    }
+
+    .title-container {
+      position: relative;
+
+      .title {
+        font-size: 26px;
+        color: $light_gray;
+        margin: 0px auto 40px auto;
+        text-align: center;
+        font-weight: bold;
+      }
+    }
+
+    .show-pwd {
+      position: absolute;
+      right: 10px;
+      top: 7px;
+      font-size: 16px;
+      color: $dark_gray;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .thirdparty-button {
+      position: absolute;
+      right: 0;
+      bottom: 6px;
+    }
+
+    @media only screen and (max-width: 470px) {
+      .thirdparty-button {
+        display: none;
       }
     }
   }
-
-  .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: $dark_gray;
-    vertical-align: middle;
-    width: 30px;
-    display: inline-block;
-  }
-
-  .title-container {
-    position: relative;
-
-    .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
-    }
-  }
-
-  .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .thirdparty-button {
-    position: absolute;
-    right: 0;
-    bottom: 6px;
-  }
-
-  @media only screen and (max-width: 470px) {
-    .thirdparty-button {
-      display: none;
-    }
-  }
-}
 </style>

@@ -16,6 +16,22 @@ export function loginByPhone(phone, password) {
   })
 }
 
+export function sendVerifyCode(username, phone) {
+  return request({
+    url: '../java/login/forget',
+    method: 'get',
+    params: { username, phone }
+  })
+}
+
+export function resetPassword(username, phone, vcode, nonce, password) {
+  return request({
+    url: '../java/login/forget',
+    method: 'post',
+    data: { username, phone, vcode, nonce, password }
+  })
+}
+
 export function getInfo(token) {
   return request({
     url: '/me.php',
