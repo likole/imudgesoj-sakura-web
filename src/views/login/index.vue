@@ -83,32 +83,29 @@
           <el-button style="float: right;height: 33px;margin: 7px 2px" :disabled="leftTime>0" @click="handleSendVcode">发送验证码<span v-if="leftTime>0">({{ leftTime }}S)</span></el-button>
         </el-form-item>
 
-        <el-tooltip v-if="loginType==='forget'" v-model="capsTooltip" content="大写锁定已开启" placement="right" manual>
-          <el-form-item prop="password">
-            <span class="svg-container">
-              <svg-icon icon-class="password" />
-            </span>
-            <el-input
-              ref="newPassword"
-              v-model="loginForm.newPassword"
-              type="password"
-              placeholder="设置新密码"
-              name="newPassword"
-              tabindex="2"
-              @keyup.native="checkCapslock"
-              @blur="capsTooltip = false"
-              @keyup.enter.native="handleLogin"
-            />
-          </el-form-item>
-        </el-tooltip>
-
+        <el-form-item prop="password">
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input
+            ref="newPassword"
+            v-model="loginForm.newPassword"
+            type="text"
+            placeholder="设置新密码"
+            name="newPassword"
+            tabindex="2"
+            @keyup.enter.native="handleLogin"
+          />
+        </el-form-item>
 
         <el-button
           :loading="loading"
           type="primary"
           style="width:100%;margin-bottom:30px;"
           @click.native.prevent="handleLogin"
-        >登录
+        >
+          <span v-if="loginType==='forget'">重置密码</span>
+          <span v-else>登录</span>
         </el-button>
       </div>
 
@@ -245,6 +242,8 @@ export default {
             }
             this.loading = true
             resetPassword(this.loginForm.username, this.loginForm.phone, this.loginForm.vcode, this.nonce, this.loginForm.newPassword).then(() => {
+              this.$message({ type: 'success', message: '密码重置成功，请登录' })
+              this.loginType = 'username'
               this.loading = false
             }).catch(() => {
               this.loading = false
@@ -267,6 +266,7 @@ export default {
     handleSendVcode() {
       sendVerifyCode(this.loginForm.username, this.loginForm.phone).then(response => {
         this.nonce = response.data
+        this.$message({ type: 'success', message: '验证码已发送，五分钟内有效。在重置密码完成前请勿刷新页面。', duration: 8000 })
         this.leftTime = 60
       })
     },
