@@ -83,7 +83,7 @@
           <el-button style="float: right;height: 33px;margin: 7px 2px" :disabled="leftTime>0" @click="handleSendVcode">发送验证码<span v-if="leftTime>0">({{ leftTime }}S)</span></el-button>
         </el-form-item>
 
-        <el-form-item prop="password">
+        <el-form-item v-if="loginType==='forget'" prop="newPassword">
           <span class="svg-container">
             <svg-icon icon-class="password" />
           </span>
@@ -118,8 +118,10 @@
         </span>
         <el-link onclick="window.location.href='/sakura/login_oauth2.php'">IMUDGES账号登录</el-link>
         <span style="float: right;color: gray;">
-          <el-link href="#/public-about">关于</el-link> |
-          <el-link @click="loginType='forget'">忘记密码</el-link>
+          <el-link href="#/public-about">关于</el-link>
+          <span v-if="loginType!=='forget'">
+            | <el-link @click="loginType='forget'">忘记密码</el-link>
+          </span>
         </span>
       </div>
     </el-form>
@@ -156,8 +158,7 @@ export default {
       redirect: undefined,
       otherQuery: {},
       loginType: 'username',
-      leftTime: 0,
-      nonce: ''
+      leftTime: 0
     }
   },
   watch: {
@@ -241,7 +242,7 @@ export default {
               return
             }
             this.loading = true
-            resetPassword(this.loginForm.username, this.loginForm.phone, this.loginForm.vcode, this.nonce, this.loginForm.newPassword).then(() => {
+            resetPassword(this.loginForm.username, this.loginForm.phone, this.loginForm.vcode, this.loginForm.newPassword).then(() => {
               this.$message({ type: 'success', message: '密码重置成功，请登录' })
               this.loginType = 'username'
               this.loading = false
@@ -265,7 +266,6 @@ export default {
     },
     handleSendVcode() {
       sendVerifyCode(this.loginForm.username, this.loginForm.phone).then(response => {
-        this.nonce = response.data
         this.$message({ type: 'success', message: '验证码已发送，五分钟内有效。在重置密码完成前请勿刷新页面。', duration: 8000 })
         this.leftTime = 60
       })

@@ -24,11 +24,11 @@ export function sendVerifyCode(username, phone) {
   })
 }
 
-export function resetPassword(username, phone, vcode, nonce, password) {
+export function resetPassword(username, phone, vcode, password) {
   return request({
     url: '../java/login/forget',
     method: 'post',
-    data: { username, phone, vcode, nonce, password }
+    data: { username, phone, vcode, password }
   })
 }
 
