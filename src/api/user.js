@@ -1,10 +1,18 @@
 import request from '@/utils/request'
 
-export function login(data) {
+export function loginByUsername(username, password) {
   return request({
-    url: '/login.php',
+    url: '../java/login/username',
     method: 'post',
-    data
+    data: { username, password }
+  })
+}
+
+export function loginByPhone(phone, password) {
+  return request({
+    url: '../java/login/phone',
+    method: 'post',
+    data: { phone, password }
   })
 }
 

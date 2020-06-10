@@ -42,9 +42,9 @@
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">退出OJ</span>
           </el-dropdown-item>
-          <el-dropdown-item>
-            <span style="display:block;" @click="logout_oauth2">退出OJ及开放平台</span>
-          </el-dropdown-item>
+          <!--          <el-dropdown-item>-->
+          <!--            <span style="display:block;" @click="logout_oauth2">退出OJ及开放平台</span>-->
+          <!--          </el-dropdown-item>-->
           <router-link to="/about/index">
             <el-dropdown-item divided>关于IMUDGES OJ</el-dropdown-item>
           </router-link>

@@ -6,7 +6,7 @@
         <h3 class="title">欢迎使用 IMUDGES OJ</h3>
       </div>
 
-      <div id="originalLogin" v-if="false">
+      <div id="originalLogin">
         <el-form-item prop="username">
           <span class="svg-container">
             <svg-icon icon-class="user" />
@@ -114,11 +114,11 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-    // if (this.loginForm.username === '') {
-    //   this.$refs.username.focus()
-    // } else if (this.loginForm.password === '') {
-    //   this.$refs.password.focus()
-    // }
+    if (this.loginForm.username === '') {
+      this.$refs.username.focus()
+    } else if (this.loginForm.password === '') {
+      this.$refs.password.focus()
+    }
   },
   destroyed() {
     // window.removeEventListener('storage', this.afterQRScan)
@@ -171,9 +171,6 @@ export default {
         }
         return acc
       }, {})
-    },
-    openOld() {
-      window.location.href = '/old/'
     }
     // afterQRScan() {
     //   if (e.key === 'x-admin-oauth-code') {
