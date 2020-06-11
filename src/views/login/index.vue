@@ -266,7 +266,7 @@ export default {
     },
     handleSendVcode() {
       sendVerifyCode(this.loginForm.username, this.loginForm.phone).then(response => {
-        this.$message({ type: 'success', message: '验证码已发送，五分钟内有效。在重置密码完成前请勿刷新页面。', duration: 8000 })
+        this.$message({ type: 'success', message: '验证码已发送，五分钟内有效' })
         this.leftTime = 60
       })
     },

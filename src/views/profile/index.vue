@@ -13,9 +13,9 @@
               <el-tab-pane label="个人信息" name="info">
                 <info />
               </el-tab-pane>
-              <!--              <el-tab-pane label="Timeline" name="timeline">-->
-              <!--                <timeline />-->
-              <!--              </el-tab-pane>-->
+              <el-tab-pane label="修改密码" name="password">
+                <password />
+              </el-tab-pane>
               <!--              <el-tab-pane label="Account" name="account">-->
               <!--                <account :user="user" />-->
               <!--              </el-tab-pane>-->
@@ -35,10 +35,11 @@ import UserCard from './components/UserCard'
 // import Timeline from './components/Timeline'
 // import Account from './components/Account'
 import Info from './components/Info'
+import Password from './components/Password'
 
 export default {
   name: 'Profile',
-  components: { UserCard, Info },
+  components: { UserCard, Info, Password },
   data() {
     return {
       user: {},
