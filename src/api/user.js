@@ -113,3 +113,25 @@ export function fetchUserInfo() {
     method: 'get'
   })
 }
+
+/**
+ * 更新用户个人基本信息（UserInfo->Basic)
+ */
+export function updateBasicInfo(data) {
+  return newRequest({
+    url: '/user/info/basic',
+    method: 'put',
+    data
+  })
+}
+
+/**
+ * 更新用户个人联系信息（UserInfo->Contact)
+ */
+export function updateContactInfo(data) {
+  return newRequest({
+    url: '/user/info/contact',
+    method: 'put',
+    data
+  })
+}
