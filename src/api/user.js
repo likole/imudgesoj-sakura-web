@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import newRequest from '../utils/new-request'
 
 /**
  * 使用用户名登录
@@ -6,8 +7,8 @@ import request from '@/utils/request'
  * @param password
  */
 export function loginByUsername(username, password) {
-  return request({
-    url: '../java/auth/username',
+  return newRequest({
+    url: '/auth/username',
     method: 'post',
     data: { username, password }
   })
@@ -19,8 +20,8 @@ export function loginByUsername(username, password) {
  * @param password
  */
 export function loginByPhone(phone, password) {
-  return request({
-    url: '../java/auth/phone',
+  return newRequest({
+    url: '/auth/phone',
     method: 'post',
     data: { phone, password }
   })
@@ -32,8 +33,8 @@ export function loginByPhone(phone, password) {
  * @param phone
  */
 export function sendVerifyCode(username, phone) {
-  return request({
-    url: '../java/auth/forget',
+  return newRequest({
+    url: '/auth/forget',
     method: 'get',
     params: { username, phone }
   })
@@ -47,8 +48,8 @@ export function sendVerifyCode(username, phone) {
  * @param password
  */
 export function resetPassword(username, phone, vcode, password) {
-  return request({
-    url: '../java/auth/forget',
+  return newRequest({
+    url: '/auth/forget',
     method: 'post',
     data: { username, phone, vcode, password }
   })
@@ -59,8 +60,8 @@ export function resetPassword(username, phone, vcode, password) {
  * @param data
  */
 export function changePassword(data) {
-  return request({
-    url: '../java/auth/password',
+  return newRequest({
+    url: '/auth/password',
     method: 'patch',
     params: data
   })

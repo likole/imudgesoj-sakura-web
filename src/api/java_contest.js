@@ -1,7 +1,7 @@
-import request from '@/utils/request'
+import newRequest from '@/utils/new-request'
 
 export function fetchContestScores(id) {
-  return request({
+  return newRequest({
     url: '../java/contest/score/' + id,
     method: 'get'
   })
