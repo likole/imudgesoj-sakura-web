@@ -58,7 +58,7 @@ export default {
       type: Object,
       default: () => {
         return {
-          name: '',
+          username: '',
           email: '',
           avatar: '',
           roles: ''
@@ -76,7 +76,7 @@ export default {
     }
   },
   created() {
-    fetchProfileBasic(this.user.name).then(response => {
+    fetchProfileBasic(this.user.username).then(response => {
       this.profileBasic = response.data
     })
   }
