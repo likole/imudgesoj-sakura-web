@@ -78,9 +78,9 @@
             name="vcode"
             type="text"
             tabindex="1"
-            style="width: 200px"
+            style="width: 150px"
           />
-          <el-button style="float: right;height: 33px;margin: 7px 2px" :disabled="leftTime>0" @click="handleSendVcode">发送验证码<span v-if="leftTime>0">({{ leftTime }}S)</span></el-button>
+          <el-button style="float: right;height: 29px;margin: 9px 2px" :disabled="leftTime>0" size="mini" @click="handleSendVcode">获取验证码<span v-if="leftTime>0">({{ leftTime }}S)</span></el-button>
         </el-form-item>
 
         <el-form-item v-if="loginType==='forget'" prop="newPassword">
@@ -110,18 +110,18 @@
       </div>
 
       <div style="color: gray">
+        <span v-if="loginType!=='forget'">
+          <el-link @click="loginType='forget'">忘记密码</el-link> |
+        </span>
         <span v-if="loginType!=='username'">
           <el-link @click="loginType='username'">用户名登录</el-link> |
         </span>
         <span v-if="loginType!=='phone'">
           <el-link @click="loginType='phone'">手机号登录</el-link> |
         </span>
-        <el-link onclick="window.location.href='/sakura/login_oauth2.php'">IMUDGES账号登录</el-link>
-        <span style="float: right;color: gray;">
+        <el-link onclick="window.location.href='/sakura/login_oauth2.php'">第三方登录</el-link>
+        <span id="public-about" style="float: right">
           <el-link href="#/public-about">关于</el-link>
-          <span v-if="loginType!=='forget'">
-            | <el-link @click="loginType='forget'">忘记密码</el-link>
-          </span>
         </span>
       </div>
     </el-form>
@@ -425,6 +425,12 @@ export default {
 
     @media only screen and (max-width: 470px) {
       .thirdparty-button {
+        display: none;
+      }
+      #copyright{
+        display: none;
+      }
+      #public-about{
         display: none;
       }
     }
