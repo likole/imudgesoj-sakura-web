@@ -67,6 +67,19 @@ export function changePassword(data) {
   })
 }
 
+/**
+ * 管理员使用的更改密码
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function forceChangePassword(data) {
+  return newRequest({
+    url: '/auth/forcePassword',
+    method: 'patch',
+    params: data
+  })
+}
+
 export function getInfo(token) {
   return request({
     url: '/me.php',
@@ -133,5 +146,13 @@ export function updateContactInfo(data) {
     url: '/user/info/contact',
     method: 'put',
     data
+  })
+}
+
+export function getUserList(data) {
+  return newRequest({
+    url: '/user/list',
+    method: 'get',
+    params: data
   })
 }

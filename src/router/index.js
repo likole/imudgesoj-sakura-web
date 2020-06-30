@@ -286,14 +286,20 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/privilege',
+    path: '/user',
     component: Layout,
-    redirect: '/privilege/index',
+    meta: { title: '用户中心', icon: 'user' },
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/privilege/index'),
-        name: 'PrivilegeIndex',
+        path: 'admin',
+        component: () => import('@/views/user/admin'),
+        name: 'UserAdmin',
+        meta: { title: '用户管理', icon: 'user', roles: ['管理员'] }
+      },
+      {
+        path: 'privilege',
+        component: () => import('@/views/user/privilege'),
+        name: 'UserPrivilege',
         meta: { title: '权限管理', icon: 'role', roles: ['管理员'] }
       }
     ]

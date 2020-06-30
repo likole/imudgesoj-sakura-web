@@ -70,7 +70,7 @@ import { getPrivilegeList, deletePrivilege, addPrivilege } from '../../api/privi
 import waves from '@/directive/waves' // waves directive
 
 export default {
-  name: 'PrivilegeIndex',
+  name: 'UserPrivilege',
   directives: { waves },
   data() {
     return {
