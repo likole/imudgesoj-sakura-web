@@ -13,7 +13,7 @@
       </div>
 
       <div id="loginForm">
-        <el-form-item v-if="loginType==='username'||loginType==='forget'" prop="username">
+        <el-form-item v-if="loginType==='username'||loginType==='forget'||loginType==='register'" prop="username">
           <span class="svg-container">
             <svg-icon icon-class="user" />
           </span>
@@ -28,7 +28,7 @@
           />
         </el-form-item>
 
-        <el-form-item v-if="loginType==='phone'||loginType==='forget'" prop="phone">
+        <el-form-item v-if="loginType==='phone'||loginType==='forget'||loginType==='register'" prop="phone">
           <span class="svg-container">
             <svg-icon icon-class="mobile" />
           </span>
@@ -83,7 +83,22 @@
           <el-button style="float: right;height: 29px;margin: 9px 2px" :disabled="leftTime>0" size="mini" @click="handleSendVcode">获取验证码<span v-if="leftTime>0">({{ leftTime }}S)</span></el-button>
         </el-form-item>
 
-        <el-form-item v-if="loginType==='forget'" prop="newPassword">
+        <el-form-item v-if="loginType==='register'" prop="nickname">
+          <span class="svg-container">
+            <svg-icon icon-class="user" />
+          </span>
+          <el-input
+            ref="nickname"
+            v-model="loginForm.nickname"
+            placeholder="昵称"
+            name="nickname"
+            type="text"
+            tabindex="1"
+            autocomplete="off"
+          />
+        </el-form-item>
+
+        <el-form-item v-if="loginType==='forget'||loginType==='register'" prop="newPassword">
           <span class="svg-container">
             <svg-icon icon-class="password" />
           </span>
@@ -91,7 +106,7 @@
             ref="newPassword"
             v-model="loginForm.newPassword"
             type="text"
-            placeholder="设置新密码"
+            placeholder="设置密码"
             name="newPassword"
             tabindex="2"
             @keyup.enter.native="handleLogin"
@@ -105,6 +120,7 @@
           @click.native.prevent="handleLogin"
         >
           <span v-if="loginType==='forget'">重置密码</span>
+          <span v-else-if="loginType==='register'">注册</span>
           <span v-else>登录</span>
         </el-button>
       </div>
@@ -119,8 +135,10 @@
         <span v-if="loginType!=='phone'">
           <el-link @click="loginType='phone'">手机号登录</el-link> |
         </span>
-        <el-link onclick="window.location.href='/sakura/login_oauth2.php'">第三方登录</el-link>
-        <span id="public-about" style="float: right">
+        <span v-if="loginType!=='register'">
+          <el-link @click="loginType='register'">注册</el-link> |
+        </span>
+        <span id="public-about">
           <el-link href="#/public-about">关于</el-link>
         </span>
       </div>
@@ -139,7 +157,7 @@
 
 <script>
 
-import { sendVerifyCode, resetPassword } from '../../api/user'
+import { sendVerifyCode, resetPassword, registerUser } from '../../api/user'
 
 export default {
   name: 'Login',
@@ -150,7 +168,8 @@ export default {
         password: '',
         phone: '',
         vcode: '',
-        newPassword: ''
+        newPassword: '',
+        nickname: ''
       },
       passwordType: 'password',
       capsTooltip: false,
@@ -210,6 +229,14 @@ export default {
         this.$refs.password.focus()
       })
     },
+    getOtherQuery(query) {
+      return Object.keys(query).reduce((acc, cur) => {
+        if (cur !== 'redirect') {
+          acc[cur] = query[cur]
+        }
+        return acc
+      }, {})
+    },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -244,7 +271,16 @@ export default {
             this.loading = true
             resetPassword(this.loginForm.username, this.loginForm.phone, this.loginForm.vcode, this.loginForm.newPassword).then(() => {
               this.$message({ type: 'success', message: '密码重置成功，请登录' })
-              this.loginType = 'username'
+              this.loginType = 'phone'
+              this.loading = false
+            }).catch(() => {
+              this.loading = false
+            })
+          } else if (this.loginType === 'register') {
+            this.loading = true
+            registerUser(this.loginForm).then(() => {
+              this.$message({ type: 'success', message: '注册成功，请登录' })
+              this.loginType = 'phone'
               this.loading = false
             }).catch(() => {
               this.loading = false
@@ -255,14 +291,6 @@ export default {
           return false
         }
       })
-    },
-    getOtherQuery(query) {
-      return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
-        }
-        return acc
-      }, {})
     },
     handleSendVcode() {
       sendVerifyCode(this.loginForm.username, this.loginForm.phone).then(response => {
@@ -430,9 +458,9 @@ export default {
       #copyright{
         display: none;
       }
-      #public-about{
-        display: none;
-      }
+      /*#public-about{*/
+      /*  display: none;*/
+      /*}*/
     }
   }
 </style>

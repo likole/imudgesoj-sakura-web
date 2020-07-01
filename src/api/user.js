@@ -149,10 +149,32 @@ export function updateContactInfo(data) {
   })
 }
 
+/**
+ * 获取用户列表，包含LoginUser以及UserInfo
+ * 用于用户管理界面
+ *
+ * @param data
+ * @returns {AxiosPromise}
+ */
 export function getUserList(data) {
   return newRequest({
     url: '/user/list',
     method: 'get',
+    params: data
+  })
+}
+
+/**
+ * 获取用户列表，包含LoginUser以及UserInfo
+ * 用于用户管理界面
+ *
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function registerUser(data) {
+  return newRequest({
+    url: '/auth/register',
+    method: 'post',
     params: data
   })
 }
