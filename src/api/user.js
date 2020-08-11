@@ -87,13 +87,6 @@ export function getInfo(token) {
   })
 }
 
-// export function logout() {
-//   return request({
-//     url: '/logout.php',
-//     method: 'get'
-//   })
-// }
-
 /**
  * 获取个人基本信息（User以及刷题信息）
  * @param user
@@ -103,17 +96,6 @@ export function fetchProfileBasic(user) {
     url: '/profile_basic.php',
     method: 'get',
     params: { user }
-  })
-}
-
-/**
- * @deprecated
- * 从开放平台获取数据，已废弃
- */
-export function fetchProfileOauth() {
-  return request({
-    url: '/profile_oauth.php',
-    method: 'get'
   })
 }
 
