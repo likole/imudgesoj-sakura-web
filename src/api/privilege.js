@@ -1,22 +1,23 @@
-import request from '@/utils/request'
+import newRequest from '@/utils/new-request'
 
 export function getPrivilegeList() {
-  return request({
-    url: '/admin/privilege.php',
+  return newRequest({
+    url: '/privilege',
     method: 'get'
   })
 }
 
 export function deletePrivilege(uid, rightstr) {
-  return request({
-    url: `/admin/privilege.php?delete=1&uid=${uid}&rightstr=${rightstr}`,
-    method: 'get'
+  return newRequest({
+    url: `/privilege`,
+    method: 'delete',
+    data: { userId: uid, rightstr: rightstr }
   })
 }
 
 export function addPrivilege(data) {
-  return request({
-    url: `/admin/privilege.php?add_privilege=1`,
+  return newRequest({
+    url: `/privilege`,
     method: 'post',
     data
   })

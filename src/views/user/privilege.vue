@@ -14,7 +14,7 @@
     >
       <el-table-column label="用户" align="center">
         <template slot-scope="scope">
-          <p>{{ scope.row.user_id }}</p>
+          <p>{{ scope.row.userId }}</p>
         </template>
       </el-table-column>
       <el-table-column label="权限" align="center">
@@ -24,7 +24,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <el-button type="danger" size="small" @click="handleDelete(scope.row.user_id,scope.row.rightstr)">
+          <el-button type="danger" size="small" @click="handleDelete(scope.row.userId,scope.row.rightstr)">
             删除
           </el-button>
         </template>
@@ -39,7 +39,7 @@
     >
       <el-form :model="postForm">
         <el-form-item label="用户">
-          <el-input v-model="postForm.user_id" />
+          <el-input v-model="postForm.userId" />
         </el-form-item>
         <el-form-item>
           <el-radio v-model="postForm.type" label="0">系统角色</el-radio>
@@ -49,9 +49,9 @@
           <el-select v-if="postForm.type==='0'" v-model="postForm.rightstr" placeholder="请选择">
             <el-option
               v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item"
+              :label="item"
+              :value="item"
             />
           </el-select>
           <el-input v-else v-model="postForm.rightstr_tmp" placeholder="竞赛编号" type="number" />
@@ -79,7 +79,7 @@ export default {
       listLoading: true,
       dialogSendVisible: false,
       options: [],
-      postForm: { user_id: '', rightstr: '', type: '0' }
+      postForm: { userId: '', rightstr: '', type: '0' }
     }
   },
   created() {
@@ -97,7 +97,7 @@ export default {
       })
     },
     createPrivilege() {
-      this.postForm = { user_id: '', rightstr: '', type: '0', rightstr_tmp: '' }
+      this.postForm = { userId: '', rightstr: '', type: '0', rightstr_tmp: '' }
       this.dialogSendVisible = true
     },
     handleCreate() {
