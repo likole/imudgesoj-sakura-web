@@ -288,7 +288,7 @@ export const asyncRoutes = [
   {
     path: '/user',
     component: Layout,
-    meta: { title: '用户中心', icon: 'user' },
+    meta: { title: '用户中心', icon: 'user', roles: ['管理员'] },
     children: [
       {
         path: 'admin',

@@ -1,38 +1,38 @@
-import request from '@/utils/request'
+import newRequest from '@/utils/new-request'
 
 export function getNewsList() {
-  return request({
-    url: '/admin/news.php',
+  return newRequest({
+    url: '/news',
     method: 'get'
   })
 }
 
 export function getNews(id) {
-  return request({
-    url: '/admin/news.php?id=' + id,
+  return newRequest({
+    url: '/news/' + id,
     method: 'get'
   })
 }
 
 export function changeNewsStatus(id) {
-  return request({
-    url: `/admin/news.php?changeStatus=1&id=${id}`,
-    method: 'get'
+  return newRequest({
+    url: `/news/${id}`,
+    method: 'patch'
   })
 }
 
 export function addNews(data) {
-  return request({
-    url: `/admin/news.php?add=1`,
+  return newRequest({
+    url: `/news`,
     method: 'post',
     data
   })
 }
 
 export function editNews(data) {
-  return request({
-    url: `/admin/news.php?edit=1`,
-    method: 'post',
+  return newRequest({
+    url: `/news`,
+    method: 'put',
     data
   })
 }

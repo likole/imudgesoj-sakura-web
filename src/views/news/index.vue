@@ -14,7 +14,7 @@
     >
       <el-table-column label="新闻编号" align="center" width="80px">
         <template slot-scope="scope">
-          <p>{{ scope.row.news_id }}</p>
+          <p>{{ scope.row.id }}</p>
         </template>
       </el-table-column>
       <el-table-column label="标题" align="center">
@@ -24,7 +24,7 @@
       </el-table-column>
       <el-table-column label="状态" align="center" width="80">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.defunct ==='N'" type="success">启用</el-tag>
+          <el-tag v-if="scope.row.defunct ===false" type="success">启用</el-tag>
           <el-tag v-else type="danger">禁用</el-tag>
         </template>
       </el-table-column>
@@ -35,16 +35,16 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="320">
         <template slot-scope="scope">
-          <el-button type="info" size="small" @click="editNews(scope.row.news_id)">
+          <el-button type="info" size="small" @click="editNews(scope.row.id)">
             编辑
           </el-button>
-          <el-button type="primary" size="small" icon="el-icon-tickets" @click="getDetail(scope.row.news_id)">
+          <el-button type="primary" size="small" icon="el-icon-tickets" @click="getDetail(scope.row.id)">
             查看详情
           </el-button>
-          <el-button v-if="scope.row.defunct ==='N'" type="danger" size="small" icon="el-icon-delete" @click="handleChange(scope.row.news_id)">
+          <el-button v-if="scope.row.defunct ===false" type="danger" size="small" icon="el-icon-delete" @click="handleChange(scope.row.id)">
             禁用
           </el-button>
-          <el-button v-else type="success" size="small" icon="el-icon-delete" @click="handleChange(scope.row.news_id)">
+          <el-button v-else type="success" size="small" icon="el-icon-delete" @click="handleChange(scope.row.id)">
             启用
           </el-button>
         </template>
@@ -55,7 +55,7 @@
       :visible.sync="dialogVisible"
       width="70%"
     >
-      <h2>{{ detail.title }}</h2>
+      <h2>{{ detail.title }} - {{ detail.username }}</h2>
       <div v-html="detail.content" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
@@ -153,7 +153,7 @@ export default {
     editNews(id) {
       getNews(id).then(response => {
         this.postForm = response.data
-        this.postForm.news_id = id
+        this.postForm.id = id
         this.create = false
         this.dialogSendVisible = true
       })

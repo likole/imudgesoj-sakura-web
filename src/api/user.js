@@ -81,18 +81,18 @@ export function forceChangePassword(data) {
 }
 
 export function getInfo(token) {
-  return request({
-    url: '/me.php',
+  return newRequest({
+    url: '/auth/me',
     method: 'get'
   })
 }
 
-export function logout() {
-  return request({
-    url: '/logout.php',
-    method: 'get'
-  })
-}
+// export function logout() {
+//   return request({
+//     url: '/logout.php',
+//     method: 'get'
+//   })
+// }
 
 /**
  * 获取个人基本信息（User以及刷题信息）
