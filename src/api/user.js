@@ -1,4 +1,3 @@
-import request from '@/utils/request'
 import newRequest from '../utils/new-request'
 
 /**
@@ -92,10 +91,9 @@ export function getInfo(token) {
  * @param user
  */
 export function fetchProfileBasic(user) {
-  return request({
-    url: '/profile_basic.php',
-    method: 'get',
-    params: { user }
+  return newRequest({
+    url: '/user/profile/' + user,
+    method: 'get'
   })
 }
 
