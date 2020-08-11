@@ -45,7 +45,7 @@ export default {
   created() {
     this.tempRoute = Object.assign({}, this.$route)
     this.user = {
-      name: this.$route.params && this.$route.params.id,
+      username: this.$route.params && this.$route.params.id,
       role: ''
     }
     this.setTagsViewTitle()
@@ -54,12 +54,12 @@ export default {
   methods: {
     setTagsViewTitle() {
       const title = '用户信息'
-      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.user.name}` })
+      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.user.username}` })
       this.$store.dispatch('tagsView/updateVisitedView', route)
     },
     setPageTitle() {
       const title = '用户信息'
-      document.title = `${title} - ${this.user.name}`
+      document.title = `${title} - ${this.user.username}`
     }
   }
 }
