@@ -19,6 +19,9 @@
               <el-tab-pane label="修改密码" name="password">
                 <password />
               </el-tab-pane>
+              <el-tab-pane label="登录历史" name="loginLog">
+                <login-log />
+              </el-tab-pane>
             </el-tabs>
           </el-card>
         </el-col>
@@ -34,11 +37,12 @@ import UserCard from './components/UserCard'
 import Password from './components/Password'
 import BasicInfo from './components/BasicInfo'
 import ContactInfo from './components/ContantInfo'
+import LoginLog from '@/views/profile/components/LoginLog'
 import { fetchUserInfo } from '../../api/user'
 
 export default {
   name: 'Profile',
-  components: { UserCard, Password, BasicInfo, ContactInfo },
+  components: { UserCard, Password, BasicInfo, ContactInfo, LoginLog },
   data() {
     return {
       user: {},

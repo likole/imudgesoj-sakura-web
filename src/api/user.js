@@ -158,3 +158,20 @@ export function registerUser(data) {
     params: data
   })
 }
+
+export function getSelfLoginLog(page) {
+  return newRequest({
+    url: '/login/log/me',
+    method: 'get',
+    params: { page: page }
+  })
+}
+
+export function getLoginLog(username) {
+  return newRequest({
+    url: '/login/log',
+    method: 'get',
+    params: { username }
+  })
+}
+

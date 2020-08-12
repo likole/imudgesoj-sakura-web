@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import newRequest from '@/utils/new-request'
 
 export function fetchList() {
   return request({
@@ -8,8 +9,8 @@ export function fetchList() {
 }
 
 export function fetchAchieveList() {
-  return request({
-    url: '/score_achieve.php',
+  return newRequest({
+    url: '/task',
     method: 'get'
   })
 }
@@ -30,10 +31,9 @@ export function openVip(open) {
 }
 
 export function achieveOper(oper) {
-  return request({
-    url: '/score_achieve.php',
-    method: 'get',
-    params: { oper }
+  return newRequest({
+    url: '/task/finish/' + oper,
+    method: 'patch'
   })
 }
 
