@@ -1,5 +1,9 @@
 <template>
   <div class="app-container">
+    <p>http://127.0.0.1:10086</p>
+    <p>http://acm-test.likole.top</p>
+    <p>https://acm.likole.top</p>
+    <p>https://acm.likole.com/sakura</p>
     <el-form>
       <el-form-item label="BaseUrl">
         <el-input v-model="requestDetail.baseUrl" />

@@ -64,10 +64,15 @@ export function achieveOper(oper) {
   })
 }
 
+/**
+ * 获取积分排名
+ * @param page
+ * @returns {AxiosPromise}
+ */
 export function scoreRanklist(page) {
-  return request({
-    url: '/score_ranklist.php',
+  return newRequest({
+    url: '/points/rank',
     method: 'get',
-    params: { page }
+    params: { page: page, pageSize: 50 }
   })
 }

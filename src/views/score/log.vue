@@ -72,8 +72,8 @@ export default {
   },
   methods: {
     getList() {
-      getTotalScore().then(response=>{
-        this.totalScore=response.data
+      getTotalScore().then(response => {
+        this.totalScore = response.data
       })
       fetchList(this.page, this.pageSize).then(response => {
         this.list = response.data.list

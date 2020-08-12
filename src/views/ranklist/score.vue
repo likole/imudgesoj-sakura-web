@@ -17,21 +17,21 @@
       </el-table-column>
       <el-table-column label="用户" align="center" width="200px">
         <template slot-scope="scope">
-          <router-link :to="'/profile/user/'+scope.row.user_id" class="link-type">
-            {{ scope.row.user_id }}
+          <router-link :to="'/profile/user/'+scope.row.username" class="link-type">
+            {{ scope.row.username }}
           </router-link>
         </template>
       </el-table-column>
       <el-table-column label="昵称" align="center" min-width="200px">
         <template slot-scope="scope">
-          <router-link :to="'/profile/user/'+scope.row.user_id" class="link-type">
-            {{ scope.row.nick }}
+          <router-link :to="'/profile/user/'+scope.row.username" class="link-type">
+            {{ scope.row.nickname }}
           </router-link>
         </template>
       </el-table-column>
       <el-table-column label="积分" align="center" width="80px">
         <template slot-scope="scope">
-          {{ scope.row.score }}
+          {{ scope.row.points }}
         </template>
       </el-table-column>
     </el-table>
@@ -81,8 +81,8 @@ export default {
     getList() {
       this.listLoading = true
       scoreRanklist(this.page).then(response => {
-        this.list = response.data.ranklist
-        this.total = response.data.count
+        this.list = response.data.list
+        this.total = response.data.total
         this.listLoading = false
       })
     }
