@@ -1,4 +1,3 @@
-import request from '@/utils/request'
 import newRequest from '@/utils/new-request'
 
 /**
@@ -37,18 +36,17 @@ export function fetchAchieveList() {
   })
 }
 
-export function fetchVip() {
-  return request({
-    url: '/score_vip.php',
+export function fetchBag() {
+  return newRequest({
+    url: '/bag',
     method: 'get'
   })
 }
 
-export function openVip(open) {
-  return request({
-    url: '/score_vip.php',
-    method: 'get',
-    params: { open }
+export function achieveGoods(id) {
+  return newRequest({
+    url: '/bag/' + id,
+    method: 'post'
   })
 }
 

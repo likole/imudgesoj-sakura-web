@@ -47,7 +47,7 @@ import Pagination from '@/components/Pagination' // secondary package based on e
 import { mapState } from 'vuex'
 import { getTotalScore } from '@/api/score'
 export default {
-  name: 'ScoreLog',
+  name: 'PointsLog',
   directives: { waves },
   components: { Pagination },
   data() {

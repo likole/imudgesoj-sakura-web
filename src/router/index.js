@@ -210,9 +210,9 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/score',
+    path: '/points',
     component: Layout,
-    redirect: '/score/achieve',
+    redirect: '/points/task',
     name: 'Score',
     meta: {
       title: '积分中心',
@@ -220,21 +220,21 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'achieve',
-        component: () => import('@/views/score/achieve'),
-        name: 'ScoreAchieve',
-        meta: { title: '领取积分', icon: 'edit', noCache: true }
+        path: 'task',
+        component: () => import('@/views/points/task'),
+        name: 'PointsTask',
+        meta: { title: '任务中心', icon: 'edit', noCache: true }
       },
       {
-        path: 'vip',
-        component: () => import('@/views/score/vip'),
-        name: 'ScoreVIP',
-        meta: { title: '会员中心', icon: 'peoples', noCache: true }
+        path: 'bag',
+        component: () => import('@/views/points/bag'),
+        name: 'PointsBag',
+        meta: { title: '物品中心', icon: 'peoples', noCache: true }
       },
       {
         path: 'log',
-        component: () => import('@/views/score/log'),
-        name: 'ScoreLog',
+        component: () => import('@/views/points/log'),
+        name: 'PointsLog',
         meta: { title: '积分记录', icon: 'list', noCache: true }
       }
     ]

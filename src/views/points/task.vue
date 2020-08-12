@@ -25,7 +25,7 @@
 import { fetchAchieveList, achieveOper, getTotalScore } from '@/api/score'
 import waves from '@/directive/waves' // waves directive
 export default {
-  name: 'ScoreAchieve',
+  name: 'PointsTask',
   directives: { waves },
   data() {
     return {
