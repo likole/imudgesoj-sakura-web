@@ -18,12 +18,13 @@
       </el-table-column>
       <el-table-column label="IP" align="center">
         <template slot-scope="scope">
-          {{ scope.row.ip }}
+          {{ scope.row.ip }} ( {{ scope.row.location }} )
         </template>
       </el-table-column>
-      <el-table-column label="位置" align="center">
+      <el-table-column label="状态" align="center">
         <template slot-scope="scope">
-          {{ scope.row.location }}
+          <span v-if="scope.row.status===1||scope.row.status===5" style="color: darkred">登录失败（密码错误）</span>
+          <span v-else style="color: green">登录成功</span>
         </template>
       </el-table-column>
     </el-table>
@@ -53,6 +54,10 @@ export default {
     me: {
       type: Boolean,
       default: true
+    },
+    username: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -75,11 +80,19 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getSelfLoginLog(this.page).then(response => {
-        this.list = response.data.list
-        this.total = response.data.total
-        this.listLoading = false
-      })
+      if (this.me) {
+        getSelfLoginLog(this.page).then(response => {
+          this.list = response.data.list
+          this.total = response.data.total
+          this.listLoading = false
+        })
+      } else {
+        getLoginLog(this.username, this.page).then(response => {
+          this.list = response.data.list
+          this.total = response.data.total
+          this.listLoading = false
+        })
+      }
     }
   }
 }

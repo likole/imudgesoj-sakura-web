@@ -167,11 +167,11 @@ export function getSelfLoginLog(page) {
   })
 }
 
-export function getLoginLog(username) {
+export function getLoginLog(username, page) {
   return newRequest({
     url: '/login/log',
     method: 'get',
-    params: { username }
+    params: { username: username, page: page }
   })
 }
 

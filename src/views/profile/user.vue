@@ -9,18 +9,14 @@
 
         <el-col :span="12" :xs="24">
           <el-card>
-            开发中。。。
-            <!--            <el-tabs v-model="activeTab">-->
-            <!--              <el-tab-pane label="Activity" name="activity">-->
-            <!--                <activity />-->
-            <!--              </el-tab-pane>-->
-            <!--              <el-tab-pane label="Timeline" name="timeline">-->
-            <!--                <timeline />-->
-            <!--              </el-tab-pane>-->
-            <!--              <el-tab-pane label="Account" name="account">-->
-            <!--                <account :user="user" />-->
-            <!--              </el-tab-pane>-->
-            <!--            </el-tabs>-->
+            <el-tabs v-model="activeTab">
+              <el-tab-pane label="开发中" name="activity">
+                开发中
+              </el-tab-pane>
+              <el-tab-pane v-if="roles.includes('管理员')" label="登录历史" name="loginLog">
+                <login-log :me="false" :username="user.username" />
+              </el-tab-pane>
+            </el-tabs>
           </el-card>
         </el-col>
 
@@ -31,16 +27,23 @@
 
 <script>
 import UserCard from './components/UserCard'
+import LoginLog from '@/views/profile/components/LoginLog'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ProfileUser',
-  components: { UserCard },
+  components: { UserCard, LoginLog },
   data() {
     return {
       user: {},
       activeTab: 'activity',
       tempRoute: {}
     }
+  },
+  computed: {
+    ...mapGetters([
+      'roles'
+    ])
   },
   created() {
     this.tempRoute = Object.assign({}, this.$route)
