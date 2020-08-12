@@ -420,7 +420,7 @@ export default {
     handleRE(id) {
       this.detail = ''
       fetchRE(id).then(response => {
-        this.detail = response.data.detail
+        this.detail = response.data
         this.detailDialogVisible = true
       })
     },

@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import newRequest from '@/utils/new-request'
 
 export function fetchList(query) {
   return request({
@@ -79,10 +80,9 @@ export function fetchCE(sid) {
 }
 
 export function fetchRE(sid) {
-  return request({
-    url: '/re.php',
-    method: 'get',
-    params: { sid }
+  return newRequest({
+    url: '/solution/re/' + sid,
+    method: 'get'
   })
 }
 
