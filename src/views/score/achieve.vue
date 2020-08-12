@@ -22,14 +22,14 @@
   </div>
 </template>
 <script>
-import { fetchAchieveList, achieveOper } from '@/api/score'
+import { fetchAchieveList, achieveOper, getTotalScore } from '@/api/score'
 import waves from '@/directive/waves' // waves directive
 export default {
   name: 'ScoreAchieve',
   directives: { waves },
   data() {
     return {
-      score: 0,
+      score: undefined,
       list: null
     }
   },
@@ -38,9 +38,11 @@ export default {
   },
   methods: {
     getStatus() {
+      getTotalScore().then(response => {
+        this.score = response.data
+      })
       fetchAchieveList().then(response => {
         this.list = response.data
-        this.score = 0
       })
     },
     updateStatus(id) {
