@@ -1,6 +1,8 @@
 <template>
   <div class="dashboard-editor-container">
-
+    <el-card v-if="unread!==0" style="margin-bottom: 20px">
+     您有 <b style="color: red">{{ unread }}</b> 条新消息，请前往 <router-link to="/mail" class="link-type">站内信</router-link> 查看~
+    </el-card>
     <el-row class="dashboard-chart-container">
       <line-chart :chart-data="lineChartData" />
     </el-row>
@@ -17,6 +19,7 @@
 <script>
 import LineChart from './components/LineChart'
 import { fetchChart } from '@/api/dashboard'
+import { fetchUnreadCount } from '@/api/mail'
 
 export default {
   name: 'DashboardUser',
@@ -25,15 +28,19 @@ export default {
   },
   data() {
     return {
+      unread: 0,
       lineChartData: { all: [], ac: [] },
       news: null
     }
   },
   created() {
-    this.loadChart()
+    this.getAll()
   },
   methods: {
-    loadChart() {
+    getAll() {
+      fetchUnreadCount().then(response => {
+        this.unread = response.data
+      })
       fetchChart().then(response => {
         this.lineChartData = response.data.chart
         this.news = response.data.news
