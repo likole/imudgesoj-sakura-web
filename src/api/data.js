@@ -14,10 +14,25 @@ export function getData(problemId, dataId) {
   })
 }
 
-export function addData(problemId, input,output) {
+export function addData(problemId, input, output) {
   return newRequest({
     url: `/data/${problemId}`,
     method: 'post',
-    params:{input,output}
+    params: { input, output }
+  })
+}
+
+export function updateData(problemId, dataId, input, output) {
+  return newRequest({
+    url: `/data/${problemId}/${dataId}`,
+    method: 'put',
+    params: { input, output }
+  })
+}
+
+export function deleteData(problemId, dataId) {
+  return newRequest({
+    url: `/data/${problemId}/${dataId}`,
+    method: 'delete'
   })
 }
