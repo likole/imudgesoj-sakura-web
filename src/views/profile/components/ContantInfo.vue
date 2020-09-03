@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-alert type="info" style="margin-bottom: 20px">
-      该页面的手机、邮箱不作为登录使用
+      该页面的手机、邮箱不作为登录使用。如需修改登录手机号，请在<b>账号信息</b>中修改。
     </el-alert>
     <el-form ref="form" :model="user" :rules="rules" label-width="80px" label-position="left">
       <el-form-item label="手机1" prop="phone1">

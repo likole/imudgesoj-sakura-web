@@ -22,9 +22,8 @@
         <div class="user-bio-section-header"><svg-icon icon-class="education" /><span>基本信息</span></div>
         <div class="user-bio-section-body">
           <div class="text-muted">
+            <p>用户名：{{ user.username }}</p>
             <p>昵称：{{ profileBasic.nick }}</p>
-            <p>学校：{{ profileBasic.school }}</p>
-            <p>邮箱：{{ profileBasic.email }}</p>
           </div>
         </div>
       </div>
@@ -68,6 +67,10 @@ export default {
     me: {
       type: Boolean,
       default: false
+    },
+    idForUpdate: {
+      type: Number,
+      default: 1
     }
   },
   data() {
@@ -75,10 +78,23 @@ export default {
       profileBasic: {}
     }
   },
+  watch: {
+    idForUpdate: {
+      deep: true,
+      handler(val) {
+        this.getList()
+      }
+    }
+  },
   created() {
-    fetchProfileBasic(this.user.username).then(response => {
-      this.profileBasic = response.data
-    })
+    this.getList()
+  },
+  methods:{
+    getList() {
+      fetchProfileBasic(this.user.username).then(response => {
+        this.profileBasic = response.data
+      })
+    }
   }
 }
 </script>

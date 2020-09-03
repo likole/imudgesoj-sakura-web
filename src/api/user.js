@@ -145,8 +145,7 @@ export function getUserList(data) {
 }
 
 /**
- * 获取用户列表，包含LoginUser以及UserInfo
- * 用于用户管理界面
+ * 注册用户
  *
  * @param data
  * @returns {AxiosPromise}
@@ -159,6 +158,12 @@ export function registerUser(data) {
   })
 }
 
+/**
+ * 获取自己的登录记录
+ *
+ * @param page
+ * @returns {AxiosPromise}
+ */
 export function getSelfLoginLog(page) {
   return newRequest({
     url: '/login/log/me',
@@ -167,6 +172,13 @@ export function getSelfLoginLog(page) {
   })
 }
 
+/**
+ * 管理员使用的获取登录记录
+ *
+ * @param username
+ * @param page
+ * @returns {AxiosPromise}
+ */
 export function getLoginLog(username, page) {
   return newRequest({
     url: '/login/log',
@@ -175,3 +187,52 @@ export function getLoginLog(username, page) {
   })
 }
 
+/**
+ * 获取自己的手机号
+ *
+ * @returns {AxiosPromise}
+ */
+export function getSelfPhone() {
+  return newRequest({
+    url: '/auth/phone',
+    method: 'get'
+  })
+}
+
+/**
+ * 获取自己的昵称
+ *
+ * @returns {AxiosPromise}
+ */
+export function getSelfNickname() {
+  return newRequest({
+    url: '/auth/nickname',
+    method: 'get'
+  })
+}
+
+/**
+ * 更改手机号
+ *
+ * @returns {AxiosPromise}
+ */
+export function changePhone(phone) {
+  return newRequest({
+    url: '/auth/phone',
+    method: 'patch',
+    params: { phone }
+  })
+}
+
+/**
+ * 更改昵称
+ *
+ * @returns {AxiosPromise}
+ */
+export function changeNickname(nickname) {
+  return newRequest({
+    url: '/auth/nickname',
+    method: 'patch',
+    params: { nickname }
+  })
+}
