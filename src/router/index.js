@@ -343,12 +343,15 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: 'website',
+    path: '/system',
     component: Layout,
+    meta: { title: '系统管理', roles: ['管理员'], icon: 'set' },
     children: [
       {
-        path: 'https://acm.likole.com/old',
-        meta: { title: '访问旧版', icon: 'link' }
+        path: 'info',
+        component: () => import('@/views/system/info'),
+        name: 'SystemInfo',
+        meta: { title: '系统信息', noCache: true }
       }
     ]
   },
@@ -356,25 +359,35 @@ export const asyncRoutes = [
     path: '/develop',
     component: Layout,
     alwaysShow: true,
-    meta: { title: '开发&调试工具', roles: ['管理员'] },
+    meta: { title: '开发&调试工具', roles: ['管理员'], icon: 'bug' },
     children: [
       {
         path: 'request',
         component: () => import('@/views/develop/request'),
         name: 'DevelopRequest',
-        meta: { title: '发送请求' }
+        meta: { title: '发送请求', icon: 'guide' }
       },
       {
         path: 'token',
         component: () => import('@/views/develop/token'),
         name: 'DevelopToken',
-        meta: { title: '会话管理' }
+        meta: { title: '会话管理', icon: 'message' }
       },
       {
         path: 'test',
         component: () => import('@/views/develop/test'),
         name: 'DevelopTest',
-        meta: { title: '调试专用页面' }
+        meta: { title: '调试专用页面', icon: 'skill' }
+      }
+    ]
+  },
+  {
+    path: 'website',
+    component: Layout,
+    children: [
+      {
+        path: 'https://acm.likole.com/old',
+        meta: { title: '访问旧版', icon: 'link' }
       }
     ]
   },

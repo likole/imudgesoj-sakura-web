@@ -413,7 +413,7 @@ export default {
     handleCE(id) {
       this.detail = ''
       fetchCE(id).then(response => {
-        this.detail = response.data.detail
+        this.detail = response.data
         this.detailDialogVisible = true
       })
     },

@@ -72,10 +72,9 @@ export function fetchSource(id) {
 }
 
 export function fetchCE(sid) {
-  return request({
-    url: '/ce.php',
-    method: 'get',
-    params: { sid }
+  return newRequest({
+    url: '/solution/ce/' + sid,
+    method: 'get'
   })
 }
 
