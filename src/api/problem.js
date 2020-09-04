@@ -94,8 +94,8 @@ export function fetchRanklist(query) {
 }
 
 export function fetchCategories() {
-  return request({
-    url: '/category.php',
+  return newRequest({
+    url: '/problem/category',
     method: 'get'
   })
 }
