@@ -382,12 +382,14 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: 'website',
+    path: '/old',
     component: Layout,
     children: [
       {
-        path: 'https://acm.likole.com/old',
-        meta: { title: '访问旧版', icon: 'link' }
+        path: 'index',
+        component: () => import('@/views/old/index'),
+        name: 'OldIdex',
+        meta: { title: '旧版界面', icon: 'link' }
       }
     ]
   },
