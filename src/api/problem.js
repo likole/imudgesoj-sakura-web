@@ -2,8 +2,8 @@ import request from '@/utils/request'
 import newRequest from '@/utils/new-request'
 
 export function fetchList(query) {
-  return request({
-    url: '/problems.php',
+  return newRequest({
+    url: '/problem',
     method: 'get',
     params: query
   })

@@ -3,21 +3,22 @@
     <div class="filter-container">
       <div v-if="device==='desktop'">
         <el-input v-model="pid" type="number" placeholder="输入题号按回车直接跳转" style="width: 200px;" class="filter-item" @keyup.enter.native="handleDirect" />
-        <el-tooltip placement="bottom" content="多关键词以空格分隔">
-          <el-input v-model="listQuery.search" placeholder="标题，来源，描述" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        </el-tooltip>
+        <el-input v-model="listQuery.keywords" placeholder="标题，来源，描述" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
         <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
           搜索
+        </el-button>
+        <el-button v-waves class="filter-item" type="danger" icon="el-icon-delete" @click="listQuery.keywords='';handleFilter()">
+          清空条件
+        </el-button>
+        <el-button v-if="showCategory" v-waves class="filter-item" type="warning" @click="showAllCategory">
+          查看所有分类
         </el-button>
         <el-checkbox v-model="showCategory" class="filter-item" style="margin-left:15px;" @change="handleCategory">
           显示分类
         </el-checkbox>
-        <el-button v-waves class="filter-item" type="primary" @click="showAllCategory">
-          查看所有分类
-        </el-button>
       </div>
       <div v-else>
-        <el-input v-model="listQuery.search" placeholder="标题，来源，描述。多关键词以空格分隔" style="width: 100%" class="filter-item" size="mini" @keyup.enter.native="handleFilter" />
+        <el-input v-model="listQuery.keywords" placeholder="标题，来源，描述" style="width: 100%" class="filter-item" size="mini" @keyup.enter.native="handleFilter" />
         <br>
         <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" style="width: 100%;" size="mini" @click="handleFilter">
           搜索
@@ -36,16 +37,15 @@
       style="width: 100%;"
       :size="device==='desktop'?'medium':'mini'"
     >
-
       <el-table-column label="" align="center" :width="device==='desktop'?'80px':'28px'">
         <template slot-scope="scope">
           <div v-if="device==='desktop'">
-            <el-tag v-show="scope.row.result=='Y'" type="success">Y</el-tag>
-            <el-tag v-show="scope.row.result=='N'" type="danger">N</el-tag>
+            <el-tag v-show="scope.row.result===2" type="success">Y</el-tag>
+            <el-tag v-show="scope.row.result===1" type="danger">N</el-tag>
           </div>
           <div v-else>
-            <p v-show="scope.row.result=='Y'" style="color: green">Y</p>
-            <p v-show="scope.row.result=='N'" style="color: red">N</p>
+            <p v-show="scope.row.result===2" style="color: green">Y</p>
+            <p v-show="scope.row.result===1" style="color: red">N</p>
           </div>
         </template>
       </el-table-column>
@@ -63,13 +63,13 @@
       </el-table-column>
       <el-table-column v-if="showCategory" width="200px" label="分类" align="center">
         <template slot-scope="scope">
-          <el-tag v-for="(item,index) in scope.row.category" :key="index" @click="searchCategory(item)">{{ item }}</el-tag>
+          <el-tag v-for="(item,index) in scope.row.category" :key="index" :type="item.color" style="cursor: pointer" @click="searchCategory(item.category)">{{ item.category }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="正确率" :sortable="true" :sort-method="sortMethod" :width="device==='desktop'?'200px':'100px'" align="center">
         <template slot-scope="scope">
-          <el-progress :show-text="false" :percentage="scope.row.submit==0?0:(scope.row.ac /scope.row.submit*100)" />
-          <span>{{ scope.row.ac }}/{{ scope.row.submit }}</span>
+          <el-progress :show-text="false" :percentage="scope.row.submit===0?0:(scope.row.accepted *100 /scope.row.submit)" />
+          <span>{{ scope.row.accepted }}/{{ scope.row.submit }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -79,7 +79,7 @@
       :total="total"
       :page.sync="listQuery.page"
       :page-sizes="[10,20,30,50,100]"
-      :limit.sync="listQuery.limit"
+      :limit.sync="listQuery.pageSize"
       :layout="device==='desktop'?'total, sizes, prev, pager, next, jumper':'prev, pager, next'"
       :small="device==='mobile'"
       @pagination="getList"
@@ -90,7 +90,7 @@
       :visible.sync="categoryDialogVisible"
       width="70%"
     >
-      <el-tag v-for="(item,index) in categories" :key="index" :type="item.color" style="margin:5px 10px" @click="searchCategory(item.category)">{{ item.category }}</el-tag>
+      <el-tag v-for="(item,index) in categories" :key="index" :type="item.color" style="margin:5px 10px;cursor: pointer" @click="searchCategory(item.category)">{{ item.category }}</el-tag>
     </el-dialog>
   </div>
 </template>
@@ -124,8 +124,8 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 20,
-        search: undefined
+        pageSize: 20,
+        keywords: undefined
       },
       showCategory: false,
       pid: undefined,
@@ -140,7 +140,7 @@ export default {
   },
   created() {
     if (Cookies.get('page') !== undefined) this.listQuery.page = parseInt(Cookies.get('page'))
-    if (Cookies.get('limit') !== undefined) this.listQuery.limit = parseInt(Cookies.get('limit'))
+    if (Cookies.get('limit') !== undefined) this.listQuery.pageSize = parseInt(Cookies.get('limit'))
     if (Cookies.get('showCategory') !== undefined) this.showCategory = Cookies.get('showCategory') === 'true'
     this.getList()
   },
@@ -149,19 +149,19 @@ export default {
   },
   methods: {
     tableRowClassName({ row, rowIndex }) {
-      if (row.result === 'Y') {
+      if (row.result === 2) {
         return 'success-row'
-      } else if (row.result === 'N') {
+      } else if (row.result === 1) {
         return 'fail-row'
       }
       return ''
     },
     getList() {
       Cookies.set('page', this.listQuery.page, { expires: 30 })
-      Cookies.set('limit', this.listQuery.limit, { expires: 30 })
+      Cookies.set('limit', this.listQuery.pageSize, { expires: 30 })
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
+        this.list = response.data.list
         this.total = response.data.total
         this.listLoading = false
       })
@@ -171,15 +171,13 @@ export default {
       this.getList()
     },
     searchCategory(category) {
-      this.listQuery.search = category
+      this.listQuery.keywords = category
       this.listQuery.page = 1
       this.getList()
     },
     sortMethod(obj1, obj2) {
-      // eslint-disable-next-line eqeqeq
-      const tmp1 = obj1.submit == 0 ? 0 : (obj1.ac / obj1.submit)
-      // eslint-disable-next-line eqeqeq
-      const tmp2 = obj2.submit == 0 ? 0 : (obj2.ac / obj2.submit)
+      const tmp1 = obj1.submit === 0 ? 0 : (obj1.accepted / obj1.submit)
+      const tmp2 = obj2.submit === 0 ? 0 : (obj2.accepted / obj2.submit)
       if (tmp1 < tmp2) return -1
       return 1
     },
