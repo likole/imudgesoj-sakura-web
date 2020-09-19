@@ -89,7 +89,7 @@ export default {
   created() {
     this.getList()
   },
-  methods:{
+  methods: {
     getList() {
       fetchProfileBasic(this.user.username).then(response => {
         this.profileBasic = response.data
