@@ -100,28 +100,28 @@ export function fetchCategories() {
   })
 }
 
-export function adminGetList(page, keywords) {
-  if (keywords !== undefined && keywords.length > 0) {
-    return request({
-      url: '/admin/problem.php?keyword=' + keywords,
-      method: 'get'
-    })
-  }
-  if (page === undefined) {
-    return request({
-      url: '/admin/problem.php',
-      method: 'get'
-    })
-  }
-  return request({
-    url: '/admin/problem.php?page=' + page,
+export function adminGetList(page, pageSize, keywords) {
+  // if (keywords !== undefined && keywords.length > 0) {
+  //   return request({
+  //     url: '/admin/problem.php?keyword=' + keywords,
+  //     method: 'get'
+  //   })
+  // }
+  // if (page === undefined) {
+  //   return request({
+  //     url: '/admin/problem.php',
+  //     method: 'get'
+  //   })
+  // }
+  return newRequest({
+    url: `/problem/admin?page=${page}&pageSize=${pageSize}&keywords=${keywords}`,
     method: 'get'
   })
 }
 
 export function adminGetProblem(id) {
-  return request({
-    url: '/admin/problem.php?id=' + id,
+  return newRequest({
+    url: '/problem/admin/' + id,
     method: 'get'
   })
 }
@@ -143,8 +143,8 @@ export function adminAdd(data) {
 }
 
 export function adminChangeStatus(id) {
-  return request({
-    url: '/admin/problem.php?changeStatus=1&id=' + id,
-    method: 'get'
+  return newRequest({
+    url: '/problem/admin/' + id,
+    method: 'patch'
   })
 }

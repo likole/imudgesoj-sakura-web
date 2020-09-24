@@ -1,22 +1,13 @@
 <template>
   <div class="app-container">
-    <el-alert style="margin-bottom: 20px">暂不支持测试数据的管理，即将上线；非管理员添加问题后需要重新登录才能编辑</el-alert>
     <div class="filter-container">
       <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="createProblem">添加问题</el-button>
-      <el-select v-model="currentPage" class="filter-item" placeholder="页码" @change="getList">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.text"
-          :value="item.value"
-        />
-      </el-select>
       <el-popover
         placement="bottom"
         title="提示"
         width="200"
         trigger="hover"
-        content="指定关键词时，分页将失效"
+        content="如要搜索题号，输入'id:题号'，例如'id:1001'"
       >
         <el-input slot="reference" v-model="keywords" placeholder="关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="getList" />
       </el-popover>
@@ -35,7 +26,7 @@
     >
       <el-table-column label="问题编号" align="center" width="80px">
         <template slot-scope="scope">
-          <p>{{ scope.row.problem_id }}</p>
+          <p>{{ scope.row.id }}</p>
         </template>
       </el-table-column>
       <el-table-column label="标题" align="center">
@@ -50,34 +41,34 @@
       </el-table-column>
       <el-table-column label="添加时间" align="center" width="220px">
         <template slot-scope="scope">
-          {{ scope.row.in_date }}
+          {{ scope.row.inDate }}
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" width="80px">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status ==='N'" type="success">启用</el-tag>
+          <el-tag v-if="!scope.row.defunct" type="success">启用</el-tag>
           <el-tag v-else type="danger">禁用</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="320px">
         <template slot-scope="scope">
-          <el-button type="info" size="small" @click="editProblem(scope.row.problem_id)">
+          <el-button type="info" size="small" @click="editProblem(scope.row.id)">
             编辑
           </el-button>
-          <el-button type="primary" size="small" icon="el-icon-tickets" @click="getDetail(scope.row.problem_id)">
+          <el-button type="primary" size="small" icon="el-icon-tickets" @click="getDetail(scope.row.id)">
             查看详情
           </el-button>
-          <el-button v-if="scope.row.status ==='N'" type="danger" size="small" icon="el-icon-delete" @click="handleChange(scope.row.problem_id)">
+          <el-button v-if="!scope.row.defunct" type="danger" size="small" icon="el-icon-delete" @click="handleChange(scope.row.id)">
             禁用
           </el-button>
-          <el-button v-else type="success" size="small" icon="el-icon-delete" @click="handleChange(scope.row.problem_id)">
+          <el-button v-else type="success" size="small" icon="el-icon-delete" @click="handleChange(scope.row.id)">
             启用
           </el-button>
         </template>
       </el-table-column>
       <el-table-column width="80px">
         <template slot-scope="scope">
-          <router-link :to="'/problem/data/'+scope.row.problem_id" class="link-type">
+          <router-link v-if="scope.row.manageData" :to="'/problem/data/'+scope.row.id" class="link-type">
             <el-button type="success" size="small">
               数据
             </el-button>
@@ -85,13 +76,22 @@
         </template>
       </el-table-column>
     </el-table>
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="currentPage"
+      :page-sizes="[20,30,50,100]"
+      :limit.sync="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      @pagination="getList"
+    />
     <el-dialog
       title="问题详情"
       :visible.sync="dialogVisible"
       width="70%"
     >
-      <h2>{{ detail.problem_id }}. {{ detail.title }} <span v-if="detail.spj" style="color: red">SPJ</span></h2>
-      <p>时间限制 / 空间限制 / 来源： {{ detail.time_limit }}S / {{ detail.memory_limit }}MB / {{ detail.source }}</p>
+      <h2>{{ detail.id }}. {{ detail.title }} <span v-if="detail.spj" style="color: red">SPJ</span></h2>
+      <p>时间限制 / 空间限制 / 来源： {{ detail.timeLimit }}S / {{ detail.memoryLimit }}MB / {{ detail.source }}</p>
       <h3 style="color: royalblue">描述</h3>
       <div v-html="detail.description" />
       <el-row :gutter="20">
@@ -107,11 +107,11 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <h3 style="color: royalblue">样例输入</h3>
-          <pre v-text="detail.sample_input" />
+          <pre v-text="detail.sampleInput" />
         </el-col>
         <el-col :span="12">
           <h3 style="color: royalblue">样例输出</h3>
-          <pre v-text="detail.sample_output" />
+          <pre v-text="detail.sampleOutput" />
         </el-col>
       </el-row>
       <h3 style="color: royalblue">提示</h3>
@@ -206,18 +206,20 @@
 import { adminGetList, adminChangeStatus, adminGetProblem, adminUpdate, adminAdd } from '../../api/problem'
 import waves from '@/directive/waves' // waves directive
 import Tinymce from '../../components/Tinymce/index'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
   name: 'ProblemAdmin',
   directives: { waves },
-  components: { Tinymce },
+  components: { Tinymce, Pagination },
   data() {
     return {
       tableKey: 0,
+      currentPage: 1,
+      pageSize: 100,
+      keywords: '',
+      total: 0,
       list: null,
-      options: [],
-      currentPage: undefined,
-      keywords: undefined,
       listLoading: true,
       dialogVisible: false,
       dialogSendVisible: false,
@@ -232,10 +234,9 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      adminGetList(this.currentPage, this.keywords).then(response => {
-        this.list = response.data.items
-        this.options = response.data.options
-        this.currentPage = response.data.page
+      adminGetList(this.currentPage, this.pageSize, this.keywords).then(response => {
+        this.list = response.data.list
+        this.total = response.data.total
         this.listLoading = false
       }).catch(() => {
         this.listLoading = false
