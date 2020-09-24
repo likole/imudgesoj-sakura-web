@@ -7,6 +7,13 @@ export function getNewsList() {
   })
 }
 
+export function getPublishedNewsList() {
+  return newRequest({
+    url: '/news/published',
+    method: 'get'
+  })
+}
+
 export function getNews(id) {
   return newRequest({
     url: '/news/' + id,
