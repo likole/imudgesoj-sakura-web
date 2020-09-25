@@ -143,14 +143,14 @@
         <el-row :gutter="20">
           <el-col :span="8">
             <el-form-item label="时间限制">
-              <el-input v-model="postForm.time_limit">
+              <el-input v-model="postForm.timeLimit">
                 <template slot="append">秒</template>
               </el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="空间限制">
-              <el-input v-model="postForm.memory_limit">
+              <el-input v-model="postForm.memoryLimit">
                 <template slot="append">兆字节</template>
               </el-input>
             </el-form-item>
@@ -174,21 +174,21 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <h3>样例输入</h3>
-            <el-input v-model="postForm.sample_input" type="textarea" :rows="10" />
+            <el-input v-model="postForm.sampleInput" type="textarea" :rows="10" />
           </el-col>
           <el-col :span="12">
             <h3>样例输出</h3>
-            <el-input v-model="postForm.sample_output" type="textarea" :rows="10" />
+            <el-input v-model="postForm.sampleOutput" type="textarea" :rows="10" />
           </el-col>
         </el-row>
         <el-row v-if="create" :gutter="20">
           <el-col :span="12">
             <h3>测试输入</h3>
-            <el-input v-model="postForm.test_input" type="textarea" :rows="10" />
+            <el-input v-model="postForm.testInput" type="textarea" :rows="10" />
           </el-col>
           <el-col :span="12">
             <h3>测试输出</h3>
-            <el-input v-model="postForm.test_output" type="textarea" :rows="10" />
+            <el-input v-model="postForm.testOutput" type="textarea" :rows="10" />
           </el-col>
         </el-row>
         <h3>提示</h3>
@@ -253,13 +253,13 @@ export default {
         description: '',
         hint: '',
         input: '',
-        memory_limit: 128,
+        memoryLimit: 128,
         output: '',
-        sample_input: '',
-        sample_output: '',
+        sampleInput: '',
+        sampleOutput: '',
         source: '',
         spj: false,
-        time_limit: 1,
+        timeLimit: 1,
         title: ''
       }
       this.create = true
@@ -291,7 +291,7 @@ export default {
     editProblem(id) {
       adminGetProblem(id).then(response => {
         this.postForm = response.data
-        this.postForm.problem_id = id
+        this.postForm.id = id
         this.create = false
         this.dialogSendVisible = true
       })

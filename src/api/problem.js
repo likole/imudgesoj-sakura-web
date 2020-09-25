@@ -127,16 +127,16 @@ export function adminGetProblem(id) {
 }
 
 export function adminUpdate(data) {
-  return request({
-    url: '/admin/problem.php?update=1',
-    method: 'post',
+  return newRequest({
+    url: '/problem/admin',
+    method: 'put',
     data
   })
 }
 
 export function adminAdd(data) {
-  return request({
-    url: '/admin/problem.php?add=1',
+  return newRequest({
+    url: '/problem/admin',
     method: 'post',
     data
   })
