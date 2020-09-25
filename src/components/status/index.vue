@@ -243,8 +243,8 @@
       :width="device==='desktop'?'70%':'95%'"
     >
       <p v-if="device==='mobile'">当前屏幕较小，您可以点击复制按钮，将代码复制到其他地方查看</p>
-      <pre :style="device==='mobile'?'font-size: 10px':''">{{ source }}</pre>
-      <el-button type="primary" @click="handleCopy(source,$event)">复制</el-button>
+      <pre :style="device==='mobile'?'font-size: 10px':''">{{ source.source }}</pre>
+      <el-button type="primary" @click="handleCopy(source.processedSource,$event)">复制</el-button>
     </el-dialog>
     <el-dialog
       title="详情"

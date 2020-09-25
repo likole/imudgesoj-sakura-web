@@ -64,10 +64,9 @@ export function fetchStatus(query) {
 }
 
 export function fetchSource(id) {
-  return request({
-    url: '/source.php',
-    method: 'get',
-    params: { id }
+  return newRequest({
+    url: '/solution/source/' + id,
+    method: 'get'
   })
 }
 

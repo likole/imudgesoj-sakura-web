@@ -8,7 +8,7 @@
     </el-row>
     <el-card v-for="(item,index) in news" :key="index" class="box-card" style="margin-bottom: 20px">
       <div slot="header" class="clearfix">
-        <span>{{ item.title }} - {{ item.user_id }}</span>
+        <span>{{ item.title }} - {{ item.username }}</span>
         <span style="float: right">{{ item.time }}</span>
       </div>
       <div v-html="item.content" />
