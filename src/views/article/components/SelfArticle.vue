@@ -4,6 +4,7 @@
       <router-link to="/article/create">
         <el-button class="filter-item" type="primary" icon="el-icon-plus">创建新文章</el-button>
       </router-link>
+      <el-button class="filter-item" type="info" icon="el-icon-refresh" @click="getList">刷新列表</el-button>
     </div>
     <!-- 开始文章列表 -->
     <el-table
