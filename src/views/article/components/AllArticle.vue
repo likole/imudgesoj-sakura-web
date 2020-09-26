@@ -21,7 +21,9 @@
           <router-link :to="'/article/detail/'+item.id">
             <el-button type="text" style="margin-top: 10px">查看全文</el-button>
           </router-link>
-          <el-button v-if="item.editable" type="text" style="margin-top: 10px">编辑</el-button>
+          <router-link :to="'/article/edit/'+item.id">
+            <el-button v-if="item.editable" type="text" style="margin-top: 10px">编辑</el-button>
+          </router-link>
         </el-card>
       </el-col>
     </el-row>

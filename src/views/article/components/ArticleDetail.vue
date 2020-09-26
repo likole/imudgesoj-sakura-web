@@ -9,7 +9,7 @@
         <el-button @click="postForm.problemId=''">清空</el-button>
 <!--        <CommentDropdown v-model="postForm.commentDisabled" />-->
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
-          发布
+          发布/更新
         </el-button>
         <el-button v-loading="loading" type="warning" @click="draftForm">
           保存为草稿

@@ -35,6 +35,11 @@
           <span>{{ scope.row.updateTime }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="状态" align="center" width="100px">
+        <template slot-scope="scope">
+          <span>{{ statusMap[scope.row.status] }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="80px">
         <template slot-scope="scope">
           <router-link :to="'/article/edit/'+scope.row.id">
@@ -63,7 +68,6 @@
 import { getSelfArticleList } from '@/api/article'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { mapState } from 'vuex'
-
 export default {
   components: { Pagination },
   data() {
@@ -72,7 +76,14 @@ export default {
       total: 0,
       page: 1,
       list: null,
-      listLoading: true
+      listLoading: true,
+      statusMap: {
+        0: '草稿',
+        1: '等待审核',
+        2: '审核通过',
+        3: '审核通过',
+        4: '审核未通过'
+      }
     }
   },
   computed: {

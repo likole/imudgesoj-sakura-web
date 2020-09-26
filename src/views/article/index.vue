@@ -12,12 +12,24 @@
 <script>
 import AllArticle from './components/AllArticle'
 import SelfArticle from './components/SelfArticle'
+import Cookies from 'js-cookie'
+
 export default {
   name: 'ArticleIndex',
   components: { AllArticle, SelfArticle },
   data() {
     return {
       activeTab: 'allArticle'
+    }
+  },
+  created() {
+    if (Cookies.get('articleTag') !== undefined) this.activeTab = Cookies.get('articleTag')
+    this.setCookie()
+  },
+  methods: {
+    setCookie() {
+      Cookies.set('articleTag', this.activeTab, { expires: 30 })
+      setTimeout(this.setCookie, 1000)
     }
   }
 }
