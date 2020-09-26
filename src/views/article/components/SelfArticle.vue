@@ -1,7 +1,9 @@
 <template>
   <div>
     <div class="filter-container">
-
+      <router-link to="/article/create">
+        <el-button class="filter-item" type="primary" icon="el-icon-plus">创建新文章</el-button>
+      </router-link>
     </div>
     <!-- 开始文章列表 -->
     <el-table

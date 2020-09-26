@@ -230,7 +230,21 @@ export const asyncRoutes = [
         component: () => import('@/views/article/detail'),
         name: 'ArticleDetail',
         hidden: true,
-        meta: { title: '文章/博客详情' }
+        meta: { title: '文章详情' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/article/edit'),
+        name: 'ArticleEdit',
+        hidden: true,
+        meta: { title: '编辑文章' }
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/article/create'),
+        name: 'ArticleCreate',
+        hidden: true,
+        meta: { title: '创建文章' }
       }
     ]
   },

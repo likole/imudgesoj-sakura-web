@@ -15,9 +15,33 @@ export function getSelfArticleList(page) {
   })
 }
 
+export function searchProblemIds(keywords) {
+  return newRequest({
+    url: `/problem/search/ids?keywords=` + keywords,
+    method: 'get'
+  })
+}
+
 export function getArticle(id) {
   return newRequest({
     url: `/article/` + id,
     method: 'get'
   })
 }
+
+export function createOrUpdateArticle(data) {
+  return newRequest({
+    url: `/article/`,
+    method: 'put',
+    data
+  })
+}
+
+export function createOrUpdateDraftArticle(data) {
+  return newRequest({
+    url: `/article/draft`,
+    method: 'put',
+    data
+  })
+}
+

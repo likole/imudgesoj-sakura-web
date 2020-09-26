@@ -148,6 +148,26 @@ aside {
   transition: 600ms ease position;
   background: linear-gradient(90deg, rgba(32, 182, 249, 1) 0%, rgba(32, 182, 249, 1) 0%, rgba(33, 120, 241, 1) 100%, rgba(33, 120, 241, 1) 100%);
 
+  &.s0{
+    background: #d0d0d0;
+  }
+
+  &.s1{
+    background: cornflowerblue;
+  }
+
+  &.s2{
+    background: darkgreen;
+  }
+
+  &.s3{
+    background: darkgreen;
+  }
+
+  &.s4{
+    background: darkred;
+  }
+
   .subtitle {
     font-size: 20px;
     color: #fff;
