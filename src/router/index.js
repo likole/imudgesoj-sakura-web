@@ -212,7 +212,7 @@ export const asyncRoutes = [
   {
     path: '/article',
     component: Layout,
-    redirect: '/article/list',
+    redirect: '/article/index',
     name: 'Article',
     meta: {
       title: '文章/博客中心',
@@ -224,6 +224,13 @@ export const asyncRoutes = [
         component: () => import('@/views/article/index'),
         name: 'ArticleIndex',
         meta: { title: '文章/博客', icon: 'education' }
+      },
+      {
+        path: 'detail/:id(\\d+)',
+        component: () => import('@/views/article/detail'),
+        name: 'ArticleDetail',
+        hidden: true,
+        meta: { title: '文章/博客详情' }
       }
     ]
   },

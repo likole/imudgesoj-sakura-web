@@ -1,9 +1,10 @@
 import newRequest from '../utils/new-request'
 
-export function getAvailArticleList(page) {
+export function getAvailArticleList(query) {
   return newRequest({
-    url: `/article?page=` + page,
-    method: 'get'
+    url: `/article`,
+    method: 'get',
+    params: query
   })
 }
 
