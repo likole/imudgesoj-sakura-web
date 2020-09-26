@@ -17,6 +17,8 @@
       </sticky>
       <el-alert>提示：上方区域背景色为灰色时表示该文章为草稿状态；绿色表示已发布状态。</el-alert>
 
+      <el-alert v-if="isEdit===false&&postForm.id" type="warning">注意：您现在已处于编辑状态，如需再次创建新文章，请 关闭当前标签页重新进入 或者 刷新页面。</el-alert>
+
       <div class="createPost-main-container">
         <el-row>
           <el-col :span="24">
@@ -32,7 +34,7 @@
           <el-input v-model="postForm.summary" type="textarea" :autosize="true" maxlength="100" />
           <el-alert v-if="tmpSummary.length" :closable="false" style="margin-top: 10px">
             自动摘要：{{ tmpSummary }}
-            <br/>
+            <br>
             <el-button type="success" @click="postForm.summary=tmpSummary;tmpSummary=''">使用该摘要</el-button>
             <el-button type="danger" @click="tmpSummary=''">不使用该摘要</el-button>
           </el-alert>
