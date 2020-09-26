@@ -8,6 +8,13 @@ export function getAvailArticleList(query) {
   })
 }
 
+export function getSelfArticleList(page) {
+  return newRequest({
+    url: `/article/self?page=` + page,
+    method: 'get'
+  })
+}
+
 export function getArticle(id) {
   return newRequest({
     url: `/article/` + id,
