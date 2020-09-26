@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       title: 'IMUDGES OJ',
-      logo: 'http://www.imudges.com/templets/imudges/img/logowhite.png'
+      logo: 'logo.png'
     }
   },
   computed: {
