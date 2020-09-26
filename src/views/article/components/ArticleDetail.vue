@@ -7,7 +7,7 @@
           <el-option v-for="(item,index) in categoryListOptions" :key="index" :label="item.title" :value="item.id" />
         </el-select>
         <el-button @click="postForm.problemId=''">清空</el-button>
-<!--        <CommentDropdown v-model="postForm.commentDisabled" />-->
+        <!--        <CommentDropdown v-model="postForm.commentDisabled" />-->
         <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
           发布/更新
         </el-button>
@@ -27,6 +27,16 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-form-item style="margin-bottom: 30px;">
+          <h3><span style="color: gray">摘要</span> <el-button type="text" @click="handleSummary">自动摘要</el-button></h3>
+          <el-input v-model="postForm.summary" type="textarea" :autosize="true" maxlength="100" />
+          <el-alert v-if="tmpSummary.length" :closable="false" style="margin-top: 10px">
+            自动摘要：{{ tmpSummary }}
+            <br/>
+            <el-button type="success" @click="postForm.summary=tmpSummary;tmpSummary=''">使用该摘要</el-button>
+            <el-button type="danger" @click="tmpSummary=''">不使用该摘要</el-button>
+          </el-alert>
+        </el-form-item>
         <el-form-item prop="content" style="margin-bottom: 30px;">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
         </el-form-item>
@@ -39,12 +49,19 @@
 import Tinymce from '@/components/Tinymce'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
-import { getArticle, searchProblemIds, createOrUpdateArticle ,createOrUpdateDraftArticle } from '@/api/article'
+import {
+  getArticle,
+  searchProblemIds,
+  createOrUpdateArticle,
+  createOrUpdateDraftArticle,
+  getSummary
+} from '@/api/article'
 
 const defaultForm = {
   id: undefined,
   title: '',
   content: '',
+  summary: '',
   problemId: null,
   moreProblemIds: null,
   status: 0
@@ -80,7 +97,8 @@ export default {
         content: [{ validator: validateRequire }]
       },
       tempRoute: {},
-      className: ['s0', 's1', 's2', 's3', 's4']
+      className: ['s0', 's1', 's2', 's3', 's4'],
+      tmpSummary: ''
     }
   },
   created() {
@@ -162,6 +180,11 @@ export default {
       searchProblemIds(query).then(response => {
         if (!response.data) return
         this.categoryListOptions = response.data
+      })
+    },
+    handleSummary() {
+      getSummary(this.postForm.content).then(response => {
+        this.tmpSummary = response.data
       })
     }
   }

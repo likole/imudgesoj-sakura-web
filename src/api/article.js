@@ -29,6 +29,14 @@ export function getArticle(id) {
   })
 }
 
+export function getSummary(content) {
+  return newRequest({
+    url: `/article/summary`,
+    method: 'post',
+    params: { content: content }
+  })
+}
+
 export function createOrUpdateArticle(data) {
   return newRequest({
     url: `/article/`,
