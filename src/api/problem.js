@@ -10,10 +10,9 @@ export function fetchList(query) {
 }
 
 export function fetchProblem(id) {
-  return request({
-    url: '/problem.php',
-    method: 'get',
-    params: { id }
+  return newRequest({
+    url: '/problem/' + id,
+    method: 'get'
   })
 }
 

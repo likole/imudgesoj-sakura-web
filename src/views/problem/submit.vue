@@ -24,9 +24,9 @@
             <h3 style="color: royalblue">输出</h3>
             <div v-html="problem.output" />
             <h3 style="color: royalblue">样例输入 <el-button type="text" @click="handleCopy(problem.sample_input,$event)">复制</el-button></h3>
-            <pre v-html="problem.sample_input" />
+            <pre v-html="problem.sampleInput" />
             <h3 style="color: royalblue">样例输出 <el-button type="text" @click="handleCopy(problem.sample_output,$event)">复制</el-button></h3>
-            <pre v-html="problem.sample_output" />
+            <pre v-html="problem.sampleOutput" />
             <h3 v-show="problem.hint!=''" style="color: royalblue">提示</h3>
             <div v-show="problem.hint!=''" v-html="problem.hint" />
           </div>

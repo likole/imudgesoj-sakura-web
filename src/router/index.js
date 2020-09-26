@@ -210,6 +210,24 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/article',
+    component: Layout,
+    redirect: '/article/list',
+    name: 'Article',
+    meta: {
+      title: '文章/博客中心',
+      icon: 'education'
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/article/index'),
+        name: 'ArticleIndex',
+        meta: { title: '文章/博客', icon: 'education' }
+      }
+    ]
+  },
+  {
     path: '/points',
     component: Layout,
     redirect: '/points/task',
