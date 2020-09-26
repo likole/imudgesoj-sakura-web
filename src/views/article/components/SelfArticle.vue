@@ -38,7 +38,7 @@
       </el-table-column>
       <el-table-column label="状态" align="center" width="100px">
         <template slot-scope="scope">
-          <span>{{ statusMap[scope.row.status] }}</span>
+          <span :style="'color:'+statusColor[scope.row.status]">{{ statusMap[scope.row.status] }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="80px">
@@ -84,6 +84,13 @@ export default {
         2: '审核通过',
         3: '审核通过',
         4: '审核未通过'
+      },
+      statusColor: {
+        0: '#b0b0b0',
+        1: 'darkorange',
+        2: 'darkgreen',
+        3: 'darkgreen',
+        4: 'darkred'
       }
     }
   },

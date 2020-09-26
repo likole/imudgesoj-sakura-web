@@ -33,7 +33,7 @@ export function getSummary(content) {
   return newRequest({
     url: `/article/summary`,
     method: 'post',
-    params: { content: content }
+    data: { content }
   })
 }
 
