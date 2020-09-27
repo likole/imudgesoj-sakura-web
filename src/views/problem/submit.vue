@@ -3,12 +3,12 @@
     <el-row :gutter="20">
       <el-col :lg="{span:6,push:18}" :md="24">
         <el-card style="margin-bottom: 20px">
-          <p>题目编号：{{ problem.problem_id }}</p>
+          <p>题目编号：{{ problem.id }}</p>
           <p>标题：{{ problem.title }}</p>
           <p>来源分类：{{ problem.source }}</p>
-          <p>添加时间：{{ problem.in_date }}</p>
-          <p>时间限制：{{ problem.time_limit }}S</p>
-          <p>空间限制：{{ problem.memory_limit }}MB</p>
+          <p>添加时间：{{ problem.inDate }}</p>
+          <p>时间限制：{{ problem.timeLimit }}S</p>
+          <p>空间限制：{{ problem.memoryLimit }}MB</p>
           <p>AC/提交：{{ problem.accepted }}/{{ problem.submit }}</p>
           <el-progress :text-inside="true" :stroke-width="26" :percentage="progress" />
         </el-card>
@@ -32,7 +32,7 @@
           </div>
         </el-card>
         <el-card style="margin-bottom: 20px">
-          <submit-component v-if="problem.problem_id" :pid="problemId" :input="problem.sample_input" @ac="fetchData(problemId)" />
+          <submit-component v-if="problem.id" :pid="problemId" :input="problem.sampleInput" @ac="fetchData(problemId)" />
         </el-card>
       </el-col>
     </el-row>
