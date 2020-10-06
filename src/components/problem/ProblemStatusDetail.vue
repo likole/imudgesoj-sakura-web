@@ -77,8 +77,8 @@
       :visible.sync="sourceDialogVisible"
       width="70%"
     >
-      <pre>{{ source }}</pre>
-      <el-button type="primary" @click="handleCopy(source,$event)">复制</el-button>
+      <pre>{{ source.source }}</pre>
+      <el-button type="primary" @click="handleCopy(source.processedSource,$event)">复制</el-button>
     </el-dialog>
   </div>
 </template>
