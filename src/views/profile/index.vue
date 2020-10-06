@@ -4,7 +4,7 @@
       <el-row :gutter="20">
 
         <el-col :span="6" :xs="24">
-          <user-card v-if="user.username!==undefined" :user="user" :me="true" :id-for-update="idForUpdate" />
+          <user-card v-if="user.username!==undefined" :user="user" :me="true" :id-for-update="idForUpdate" :nickname="nickname"/>
         </el-col>
 
         <el-col :span="18" :xs="24">
@@ -71,7 +71,7 @@ import Password from './components/Password'
 import BasicInfo from './components/BasicInfo'
 import ContactInfo from './components/ContantInfo'
 import LoginLog from '@/views/profile/components/LoginLog'
-import { fetchUserInfo, getSelfPhone, getSelfNickname, changePhone, changeNickname } from '../../api/user'
+import { fetchUserInfo, getSelfPhone, getNickname, changePhone, changeNickname } from '../../api/user'
 
 export default {
   name: 'Profile',
@@ -96,6 +96,11 @@ export default {
   },
   created() {
     this.getUser()
+    if (this.nickname === undefined) {
+      getNickname(this.name).then(response => {
+        this.nickname = response.data
+      })
+    }
   },
   methods: {
     getUser() {
@@ -133,11 +138,6 @@ export default {
       this.accountInfoStatus = 1
     },
     accountInfoSwitchToChangeNickname() {
-      if (this.nickname === undefined) {
-        getSelfNickname().then(response => {
-          this.nickname = response.data
-        })
-      }
       this.accountInfoStatus = 2
     },
     handleChangePhone() {

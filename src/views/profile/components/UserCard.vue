@@ -23,7 +23,7 @@
         <div class="user-bio-section-body">
           <div class="text-muted">
             <p>用户名：{{ user.username }}</p>
-            <p>昵称：{{ profileBasic.nick }}</p>
+            <p>昵称：{{ nickname }}</p>
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@
 
 <script>
 import PanThumb from '@/components/PanThumb'
-import { fetchProfileBasic } from '@/api/user'
+import { fetchProfileSolution } from '@/api/user'
 import PieChart from '@/components/problem/PieChart'
 
 export default {
@@ -68,6 +68,10 @@ export default {
       type: Boolean,
       default: false
     },
+    nickname: {
+      type: String,
+      default: ''
+    },
     idForUpdate: {
       type: Number,
       default: 1
@@ -82,7 +86,7 @@ export default {
     idForUpdate: {
       deep: true,
       handler(val) {
-        this.getList()
+        // this.getList()
       }
     }
   },
@@ -91,7 +95,7 @@ export default {
   },
   methods: {
     getList() {
-      fetchProfileBasic(this.user.username).then(response => {
+      fetchProfileSolution(this.user.username).then(response => {
         this.profileBasic = response.data
       })
     }

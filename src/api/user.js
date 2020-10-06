@@ -87,12 +87,12 @@ export function getInfo(token) {
 }
 
 /**
- * 获取个人基本信息（User以及刷题信息）
+ * 获取刷题信息
  * @param user
  */
-export function fetchProfileBasic(user) {
+export function fetchProfileSolution(user) {
   return newRequest({
-    url: '/user/profile/' + user,
+    url: '/solution/statistic/user/' + user,
     method: 'get'
   })
 }
@@ -200,13 +200,13 @@ export function getSelfPhone() {
 }
 
 /**
- * 获取自己的昵称
+ * 获取昵称
  *
  * @returns {AxiosPromise}
  */
-export function getSelfNickname() {
+export function getNickname(username) {
   return newRequest({
-    url: '/auth/nickname',
+    url: '/auth/nickname/' + username,
     method: 'get'
   })
 }
