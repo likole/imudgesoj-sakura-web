@@ -61,6 +61,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/oauth',
+    component: () => import('@/views/login/oauth'),
+    hidden: true
+  },
+  {
     path: '/public-about',
     component: () => import('@/views/about/index'),
     hidden: true
