@@ -3,18 +3,18 @@
     <div v-if="user">
       <el-row :gutter="20">
 
-        <el-col :span="12" :xs="24">
-          <user-card :user="user" />
+        <el-col :span="8" :xs="24">
+          <user-card :user="user" :nickname="nickname" />
         </el-col>
 
-        <el-col :span="12" :xs="24">
+        <el-col :span="16" :xs="24">
           <el-card>
             <el-tabs v-model="activeTab">
               <el-tab-pane label="开发中" name="activity">
                 开发中
               </el-tab-pane>
               <el-tab-pane v-if="roles.includes('管理员')" label="登录历史" name="loginLog">
-                <login-log :me="false" :username="user.username" />
+                <login-log v-if="activeTab==='loginLog'" :me="false" :username="user.username" />
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -29,6 +29,7 @@
 import UserCard from './components/UserCard'
 import LoginLog from '@/views/profile/components/LoginLog'
 import { mapGetters } from 'vuex'
+import { getNickname } from '@/api/user'
 
 export default {
   name: 'ProfileUser',
@@ -37,7 +38,8 @@ export default {
     return {
       user: {},
       activeTab: 'activity',
-      tempRoute: {}
+      tempRoute: {},
+      nickname: undefined
     }
   },
   computed: {
@@ -53,6 +55,9 @@ export default {
     }
     this.setTagsViewTitle()
     this.setPageTitle()
+    getNickname(this.user.username).then(response => {
+      this.nickname = response.data
+    })
   },
   methods: {
     setTagsViewTitle() {

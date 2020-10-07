@@ -53,7 +53,7 @@
 
               </el-tab-pane>
               <el-tab-pane label="登录历史" name="loginLog">
-                <login-log />
+                <login-log v-if="activeTab==='loginLog'" />
               </el-tab-pane>
             </el-tabs>
           </el-card>

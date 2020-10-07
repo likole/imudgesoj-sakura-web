@@ -24,6 +24,7 @@
           <div class="text-muted">
             <p>用户名：{{ user.username }}</p>
             <p>昵称：{{ nickname }}</p>
+            <following v-if="!me" :to-user="user.username"/>
           </div>
         </div>
       </div>
@@ -49,9 +50,11 @@
 import PanThumb from '@/components/PanThumb'
 import { fetchProfileSolution } from '@/api/user'
 import PieChart from '@/components/problem/PieChart'
+import Following from '@/views/profile/components/Following'
+import { mapGetters } from 'vuex'
 
 export default {
-  components: { PanThumb, PieChart },
+  components: { PanThumb, PieChart, Following },
   props: {
     user: {
       type: Object,
@@ -81,6 +84,11 @@ export default {
     return {
       profileBasic: {}
     }
+  },
+  computed: {
+    ...mapGetters([
+      'name' // self username
+    ])
   },
   watch: {
     idForUpdate: {
