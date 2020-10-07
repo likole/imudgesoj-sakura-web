@@ -4,7 +4,7 @@
       <el-row :gutter="20">
 
         <el-col :span="6" :xs="24">
-          <user-card v-if="user.username!==undefined" :user="user" :me="true" :id-for-update="idForUpdate" :nickname="nickname"/>
+          <user-card v-if="user.username!==undefined" :user="user" :me="true" :id-for-update="idForUpdate" :nickname="nickname" />
         </el-col>
 
         <el-col :span="18" :xs="24">

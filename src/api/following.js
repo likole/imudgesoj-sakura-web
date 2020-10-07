@@ -20,3 +20,10 @@ export function unfollowUser(toUser) {
     method: 'delete'
   })
 }
+
+export function fetchFollowingList() {
+  return newRequest({
+    url: `/following/following`,
+    method: 'get'
+  })
+}

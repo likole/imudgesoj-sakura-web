@@ -3,18 +3,24 @@
     <div class="filter-container">
       <div v-if="device==='desktop'">
         <el-input v-model="pid" type="number" placeholder="输入题号按回车直接跳转" style="width: 200px;" class="filter-item" @keyup.enter.native="handleDirect" />
-        <el-input v-model="listQuery.keywords" placeholder="标题，来源，描述" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        <el-input v-if="!listQuery.following" v-model="listQuery.keywords" placeholder="标题，来源，描述" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        <el-button v-if="!listQuery.following" v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
           搜索
         </el-button>
-        <el-button v-waves class="filter-item" type="danger" icon="el-icon-delete" @click="listQuery.keywords='';handleFilter()">
-          清空条件
+        <el-button v-if="!listQuery.following" v-waves class="filter-item" type="danger" icon="el-icon-delete" @click="listQuery.keywords='';handleFilter()">
+          清空
+        </el-button>
+        <el-button v-if="!listQuery.following" v-waves class="filter-item" type="success" icon="el-icon-star-off" @click="listQuery.following=true;handleFilter()">
+          显示关注者通过的题目
+        </el-button>
+        <el-button v-else v-waves class="filter-item" type="success" icon="el-icon-star-on" @click="listQuery.following=false;handleFilter()">
+          显示所有题目
         </el-button>
         <el-button v-if="showCategory" v-waves class="filter-item" type="warning" @click="showAllCategory">
-          查看所有分类
+          所有分类
         </el-button>
         <el-checkbox v-model="showCategory" class="filter-item" style="margin-left:15px;" @change="handleCategory">
-          显示分类
+          分类
         </el-checkbox>
       </div>
       <div v-else>
@@ -125,7 +131,8 @@ export default {
       listQuery: {
         page: 1,
         pageSize: 20,
-        keywords: undefined
+        keywords: undefined,
+        following: false
       },
       showCategory: false,
       pid: undefined,
@@ -157,12 +164,19 @@ export default {
       return ''
     },
     getList() {
-      Cookies.set('page', this.listQuery.page, { expires: 30 })
-      Cookies.set('limit', this.listQuery.pageSize, { expires: 30 })
+      if (!this.listQuery.following) {
+        Cookies.set('page', this.listQuery.page, { expires: 30 })
+        Cookies.set('limit', this.listQuery.pageSize, { expires: 30 })
+      }
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
         this.list = response.data.list
         this.total = response.data.total
+        this.listLoading = false
+      }).catch(() => {
+        if (this.listQuery.following) {
+          this.listQuery.following = false
+        }
         this.listLoading = false
       })
     },

@@ -24,7 +24,7 @@
           <div class="text-muted">
             <p>用户名：{{ user.username }}</p>
             <p>昵称：{{ nickname }}</p>
-            <following v-if="!me" :to-user="user.username"/>
+            <following v-if="!me" :to-user="user.username" />
           </div>
         </div>
       </div>
