@@ -2,26 +2,48 @@
   <div class="app-container">
     <div class="filter-container">
       <div v-if="device==='desktop'">
-        <el-input v-model="pid" type="number" placeholder="输入题号按回车直接跳转" style="width: 200px;" class="filter-item" @keyup.enter.native="handleDirect" />
-        <el-input v-if="!listQuery.following" v-model="listQuery.keywords" placeholder="标题，来源，描述" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-        <el-button v-if="!listQuery.following" v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-          搜索
-        </el-button>
-        <el-button v-if="!listQuery.following" v-waves class="filter-item" type="danger" icon="el-icon-delete" @click="listQuery.keywords='';handleFilter()">
-          清空
-        </el-button>
-        <el-button v-if="!listQuery.following" v-waves class="filter-item" type="success" icon="el-icon-star-off" @click="listQuery.following=true;handleFilter()">
-          显示关注者通过的题目
-        </el-button>
-        <el-button v-else v-waves class="filter-item" type="success" icon="el-icon-star-on" @click="listQuery.following=false;handleFilter()">
-          显示所有题目
-        </el-button>
-        <el-button v-if="showCategory" v-waves class="filter-item" type="warning" @click="showAllCategory">
+
+        <el-select
+          v-model="pid"
+          :remote-method="getRemoteCategoryList"
+          filterable
+          default-first-option
+          remote
+          placeholder="输入题号或关键字直接跳转"
+          style="width: 220px"
+          @change="handleDirect"
+        >
+          <el-option v-for="(item,index) in categoryListOptions" :key="index" :label="item.title" :value="item.id" />
+        </el-select>
+
+        <el-input
+          v-if="!listQuery.following"
+          v-model="listQuery.keywords"
+          placeholder="标题，来源，描述"
+          style="width: 300px;"
+          clearable
+          @clear="handleFilter()"
+          @keyup.enter.native="handleFilter"
+        >
+          <el-button slot="append" icon="el-icon-search" @click="handleFilter" />
+        </el-input>
+
+        <el-button v-if="showCategory" v-waves type="warning" @click="showAllCategory">
           所有分类
         </el-button>
-        <el-checkbox v-model="showCategory" class="filter-item" style="margin-left:15px;" @change="handleCategory">
-          分类
-        </el-checkbox>
+
+        <el-switch
+          v-model="listQuery.following"
+          active-text="仅显示关注者通过的"
+          @change="handleFilter"
+        />
+
+        <el-switch
+          v-model="showCategory"
+          active-text="显示分类"
+          @change="handleCategory"
+        />
+
       </div>
       <div v-else>
         <el-input v-model="listQuery.keywords" placeholder="标题，来源，描述" style="width: 100%" class="filter-item" size="mini" @keyup.enter.native="handleFilter" />
@@ -107,6 +129,7 @@ import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Cookies from 'js-cookie'
 import { mapState } from 'vuex'
+import { searchProblemIds } from '@/api/article'
 
 export default {
   name: 'ProblemList',
@@ -137,7 +160,8 @@ export default {
       showCategory: false,
       pid: undefined,
       categoryDialogVisible: false,
-      categories: null
+      categories: null,
+      categoryListOptions: []
     }
   },
   computed: {
@@ -209,6 +233,12 @@ export default {
         })
       }
       this.categoryDialogVisible = true
+    },
+    getRemoteCategoryList(query) {
+      searchProblemIds(query).then(response => {
+        if (!response.data) return
+        this.categoryListOptions = response.data
+      })
     }
   }
 }
