@@ -63,7 +63,8 @@ export default {
   methods: {
     redirect() {
       nonceLogin().then(response => {
-        window.location.href = process.env.VUE_APP_BASE_API_NEW + `/oauth/authorize?login_nonce=${response.data}&client_id=${this.query.client_id}&response_type=${this.query.response_type}&state=${this.query.state}`
+        const uri = process.env.VUE_APP_BASE_API_NEW + `/oauth/authorize?login_nonce=${response.data}&client_id=${this.query.client_id}&response_type=${this.query.response_type}&state=${this.query.state}`
+        window.location.replace(uri)
       })
     }
   }
