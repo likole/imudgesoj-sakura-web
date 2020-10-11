@@ -5,23 +5,20 @@
       <div slot="header" class="clearfix">
         登录授权
       </div>
-      <p>您即将使用您的OJ账号登录
-        <el-popover
-          placement="right"
-          title="应用介绍"
-          width="200"
-          trigger="hover"
-          :content="application.description"
-        >
-          <span slot="reference" style="color: royalblue;font-weight: bold">
-            {{ application.name }}
-          </span>
-        </el-popover>
+      <p>
+        <span style="color: royalblue;font-weight: bold">{{ name }}</span>，您即将使用您的IMUDGES OJ账号登录
       </p>
+      <el-alert
+        :title="application.name"
+        :closable="false"
+        style="margin-bottom: 20px"
+        type="warning">
+        {{ application.description }}
+      </el-alert>
       <div>
         该应用将会获得以下权限：
         <ul>
-          <li v-for="scope in application.scopes">
+          <li v-for="scope in application.scopeDescriptions">
             {{ scope }}
           </li>
         </ul>
@@ -32,6 +29,7 @@
 </template>
 <script>
 import { getApplicationInfo, nonceLogin } from '@/api/oauth'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Oauth',
@@ -41,6 +39,11 @@ export default {
       error: '',
       application: {}
     }
+  },
+  computed: {
+    ...mapGetters([
+      'name'
+    ])
   },
   created() {
     this.query = this.$route.query
