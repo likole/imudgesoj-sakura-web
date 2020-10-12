@@ -437,6 +437,20 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/imudges',
+    component: Layout,
+    meta: { title: '排行榜', icon: 'chart' },
+    redirect: '/imudges/recruit',
+    children: [
+      {
+        path: 'recruit',
+        component: () => import('@/views/imudges/recruit'),
+        name: 'ImudgesRecruit',
+        meta: { title: '报名', icon: 'problem' }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
