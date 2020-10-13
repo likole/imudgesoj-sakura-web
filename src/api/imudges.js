@@ -29,3 +29,10 @@ export function updateRecruitStatus(username, id1, id2) {
     method: 'patch'
   })
 }
+
+export function getRecruitOptions() {
+  return newRequest({
+    url: `/imudges/recruit/options`,
+    method: 'get'
+  })
+}
