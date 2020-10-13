@@ -6,3 +6,11 @@ export function getSelfRecruit() {
     method: 'get'
   })
 }
+
+export function postRecruitEnroll(data) {
+  return newRequest({
+    url: `/imudges/recruit/enroll`,
+    method: 'post',
+    data
+  })
+}
