@@ -61,10 +61,18 @@
       </el-table-column>
       <el-table-column label="笔试" align="center" width="160px">
         <template slot-scope="scope">
-          <span v-if="scope.row.acceptedExam" style="color: forestgreen">已通过</span>
-          <span v-if="scope.row.acceptedExam===false" style="color: orangered">未通过</span>
-          <el-button type="success" size="small">通过</el-button>
-          <el-button type="danger" size="small">拒绝</el-button>
+          <div v-if="scope.row.acceptedExam">
+            <span style="color: forestgreen">已通过</span>
+            <el-button type="warning" size="small" @click="updateStatus(scope.row.username,1,0)">撤回</el-button>
+          </div>
+          <div v-else-if="scope.row.acceptedExam===false">
+            <span style="color: orangered">未通过</span>
+            <el-button type="warning" size="small" @click="updateStatus(scope.row.username,1,0)">撤回</el-button>
+          </div>
+          <div v-else>
+            <el-button type="success" size="small" @click="updateStatus(scope.row.username,1,1)">通过</el-button>
+            <el-button type="danger" size="small" @click="updateStatus(scope.row.username,1,-1)">拒绝</el-button>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="面试" align="center" width="160px">
@@ -91,7 +99,7 @@
   </div>
 </template>
 <script>
-import { getRecruitList } from '@/api/imudges'
+import { getRecruitList, updateRecruitStatus } from '@/api/imudges'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -129,6 +137,11 @@ export default {
         this.listLoading = false
       }).catch(() => {
         this.listLoading = false
+      })
+    },
+    updateStatus(username, id1, id2) {
+      updateRecruitStatus(username, id1, id2).then(response => {
+        this.getList()
       })
     }
   }

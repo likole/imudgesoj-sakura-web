@@ -22,3 +22,10 @@ export function getRecruitList(params) {
     params
   })
 }
+
+export function updateRecruitStatus(username, id1, id2) {
+  return newRequest({
+    url: `/imudges/recruit/${username}/${id1}/${id2}`,
+    method: 'patch'
+  })
+}
