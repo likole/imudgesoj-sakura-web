@@ -14,3 +14,11 @@ export function postRecruitEnroll(data) {
     data
   })
 }
+
+export function getRecruitList(params) {
+  return newRequest({
+    url: `/imudges/recruit`,
+    method: 'get',
+    params
+  })
+}

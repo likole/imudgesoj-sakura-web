@@ -50,7 +50,7 @@
               {{ recruit.thirdWish && ', '+options[recruit.thirdWish-1].label }}
             </b>
           </p>
-          在报名截止之前你仍可以
+          在报名截止之前您仍可以
           <el-button type="text" @click="reedit">
             修改报名信息
           </el-button>
@@ -91,7 +91,7 @@
               :value="item.value"
             />
           </el-select>
-          <el-button type="primary" @click="enroll">
+          <el-button :disabled="postForm.firstWish===''" type="primary" @click="enroll">
             提交报名信息
           </el-button>
         </div>
@@ -100,7 +100,7 @@
       <!-- end enroll -->
 
       <div v-else-if="recruit.step===2">
-        2
+        <div v-html="recruit.extra" />
       </div>
       <div v-else-if="recruit.step===3">
         3
@@ -112,7 +112,7 @@
 import { getSelfRecruit, postRecruitEnroll } from '@/api/imudges'
 
 export default {
-  name: 'ImudgesRecruit',
+  name: 'ImudgesRecruitIndex',
   data() {
     return {
       loading: false,

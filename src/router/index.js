@@ -440,14 +440,22 @@ export const asyncRoutes = [
   {
     path: '/imudges',
     component: Layout,
-    meta: { title: '排行榜', icon: 'chart' },
+    meta: { title: 'IMUDGES', icon: 'chart' },
     redirect: '/imudges/recruit',
     children: [
       {
         path: 'recruit',
-        component: () => import('@/views/imudges/recruit'),
-        name: 'ImudgesRecruit',
-        meta: { title: '报名', icon: 'problem' }
+        component: () => import('@/views/imudges/recruit/index'),
+        name: 'ImudgesRecruitIndex',
+        hidden: true,
+        meta: { title: '招新报名', icon: 'problem' }
+      },
+      {
+        path: 'recruitAdmin',
+        component: () => import('@/views/imudges/recruit/admin'),
+        name: 'ImudgesRecruitAdmin',
+        hidden: true,
+        meta: { title: '招新管理', icon: 'problem' }
       }
     ]
   },
