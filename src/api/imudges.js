@@ -36,3 +36,11 @@ export function getRecruitOptions() {
     method: 'get'
   })
 }
+
+export function updateRecruitOptions(data) {
+  return newRequest({
+    url: `/imudges/recruit/options`,
+    method: 'put',
+    data
+  })
+}
