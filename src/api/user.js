@@ -129,6 +129,13 @@ export function updateContactInfo(data) {
   })
 }
 
+export function verifyEmail(type) {
+  return newRequest({
+    url: '/user/info/verify/' + type,
+    method: 'patch'
+  })
+}
+
 /**
  * 获取用户列表，包含LoginUser以及UserInfo
  * 用于用户管理界面

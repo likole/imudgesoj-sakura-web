@@ -10,11 +10,41 @@
       <el-form-item label="手机2" prop="phone2">
         <el-input v-model="user.phone2" />
       </el-form-item>
+      <el-alert v-if="!user.email1Verified && verifying1" :closable="false" type="success" style="margin-bottom: 20px">
+        验证邮件已发送，请前往邮箱 {{ user.email1 }} 查看，如果长时间未收到邮件，请检查垃圾箱或重新发送~
+      </el-alert>
       <el-form-item label="邮箱1" prop="email1">
-        <el-input v-model="user.email1" type="email" />
+        <el-input v-model="user.email1" type="email">
+          <div slot="append">
+            <span v-if="user.email1Verified" style="color: green">
+              √ 已验证
+            </span>
+            <div v-else-if="verifying1===true">
+              <el-button type="primary" @click="$emit('reload')">点击此处刷新状态</el-button>
+            </div>
+            <el-button v-else @click="handleSendVerifyEmail(1)">
+              点击此处验证邮箱
+            </el-button>
+          </div>
+        </el-input>
       </el-form-item>
+      <el-alert v-if="!user.email2Verified && verifying2" :closable="false" type="success" style="margin-bottom: 20px">
+        验证邮件已发送，请前往邮箱 {{ user.email2 }} 查看，如果长时间未收到邮件，请检查垃圾箱或重新发送~
+      </el-alert>
       <el-form-item label="邮箱2" prop="email2">
-        <el-input v-model="user.email2" type="email" />
+        <el-input v-model="user.email2" type="email">
+          <div slot="append">
+            <span v-if="user.email2Verified" style="color: green">
+              √ 已验证
+            </span>
+            <div v-else-if="verifying2===true">
+              <el-button type="primary" @click="$emit('reload')">点击此处刷新状态</el-button>
+            </div>
+            <el-button v-else @click="handleSendVerifyEmail(2)">
+              点击此处验证邮箱
+            </el-button>
+          </div>
+        </el-input>
       </el-form-item>
       <el-form-item label="QQ" prop="qq">
         <el-input v-model="user.qq" />
@@ -28,7 +58,7 @@
 </template>
 
 <script>
-import { updateContactInfo } from '../../../api/user'
+import { updateContactInfo, verifyEmail } from '../../../api/user'
 
 export default {
   props: {
@@ -70,7 +100,9 @@ export default {
         qq: [
 
         ]
-      }
+      },
+      verifying1: false,
+      verifying2: false
     }
   },
   methods: {
@@ -109,6 +141,19 @@ export default {
           console.log('error submit!!')
           return false
         }
+      })
+    },
+    handleSendVerifyEmail(type) {
+      this.$emit('loading')
+      verifyEmail(type).then(response => {
+        if (type === 1) {
+          this.verifying1 = true
+        } else {
+          this.verifying2 = true
+        }
+        this.$emit('finish')
+      }).catch(() => {
+        this.$emit('finish')
       })
     }
   }

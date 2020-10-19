@@ -440,6 +440,7 @@ export const asyncRoutes = [
   {
     path: '/imudges',
     component: Layout,
+    hidden: true,
     meta: { title: 'IMUDGES', icon: 'chart' },
     redirect: '/imudges/recruit',
     children: [
