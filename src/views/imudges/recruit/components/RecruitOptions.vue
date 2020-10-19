@@ -8,6 +8,8 @@
               <el-date-picker
                 v-model="options.enrollEndTime"
                 type="datetime"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                format="yyyy-MM-dd HH:mm:ss"
                 :clearable="false"
                 placeholder="报名截止时间"
               />
@@ -20,6 +22,8 @@
               <el-date-picker
                 v-model="options.examResultNotifyTime"
                 type="datetime"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                format="yyyy-MM-dd HH:mm:ss"
                 :clearable="false"
                 placeholder="笔试结果通知时间"
               />
@@ -50,6 +54,8 @@
               <el-date-picker
                 v-model="options.interviewResultNotifyTime"
                 type="datetime"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                format="yyyy-MM-dd HH:mm:ss"
                 :clearable="false"
                 placeholder="面试结果通知时间"
               />
