@@ -136,6 +136,13 @@ export function verifyEmail(type) {
   })
 }
 
+export function getAvailableClassroom(type) {
+  return newRequest({
+    url: '/user/info/classrooms',
+    method: 'get'
+  })
+}
+
 /**
  * 获取用户列表，包含LoginUser以及UserInfo
  * 用于用户管理界面
