@@ -113,7 +113,12 @@
         </div>
       </div>
       <div v-else-if="recruit.step===4">
-        4
+        <div v-if="recruit.acceptedInterview">
+          {{ recruit.extra }}
+        </div>
+        <div v-else-if="!recruit.acceptedInterview">
+          <el-alert type="error" show-icon title="很遗憾，您没有通过面试。">如果您非常想加入我们，可与我们联系。联系方式：{{ recruit.extra2 }}</el-alert>
+        </div>
       </div>
     </el-card>
   </div>
