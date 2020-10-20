@@ -136,12 +136,10 @@ export default {
         acceptedInterview: false
       },
       options: [
-        { label: '前', value: 1 },
-        { label: '后', value: 2 },
-        { label: '移', value: 3 },
-        { label: '游', value: 4 },
-        { label: '创', value: 5 },
-        { label: '机', value: 6 }
+        { label: '前后', value: 1 },
+        { label: '移', value: 2 },
+        { label: '机', value: 3 },
+        { label: '游', value: 4 }
       ],
       classroomOptions: [
         {

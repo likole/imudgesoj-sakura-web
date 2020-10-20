@@ -100,10 +100,22 @@
       <!-- end enroll -->
 
       <div v-else-if="recruit.step===2">
+        <el-alert type="success" title="报名成功" show-icon style="margin-bottom: 20px">您已报名成功，请按时参加笔试，如有时间冲突可与我们联系。联系方式：</el-alert>
         <div v-html="recruit.extra" />
       </div>
       <div v-else-if="recruit.step===3">
-        3
+        <div v-if="recruit.acceptedExam">
+          <el-alert type="success" title="笔试通过" show-icon style="margin-bottom: 20px">恭喜您通过了笔试，请按时参加面试，如有时间冲突可与我们联系。联系方式：</el-alert>
+          <div v-if="recruit.interviewGroup==null">
+            面试组别信息尚未安排，请耐心等待
+          </div>
+        </div>
+        <div v-else-if="!recruit.acceptedExam">
+          <el-alert type="error" show-icon title="很遗憾，您没有通过笔试，无法参加面试。">如果您非常想加入我们，可与我们联系。联系方式：</el-alert>
+        </div>
+      </div>
+      <div v-else-if="recruit.step===4">
+        4
       </div>
     </el-card>
   </div>
@@ -118,12 +130,10 @@ export default {
       loading: false,
       recruit: undefined,
       options: [
-        { label: '前端', value: 1 },
-        { label: '后端', value: 2 },
-        { label: '移动开发', value: 3 },
-        { label: '游戏开发', value: 4 },
-        { label: '创新交互', value: 5 },
-        { label: '机器学习', value: 6 }
+        { label: '前端后端组', value: 1 },
+        { label: '移动开发组', value: 2 },
+        { label: '机器学习组', value: 3 },
+        { label: '游戏组', value: 4 }
       ],
       postForm: {
         firstWish: '',
