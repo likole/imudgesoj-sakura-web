@@ -139,7 +139,9 @@ export default {
         { label: '前后', value: 1 },
         { label: '移', value: 2 },
         { label: '机', value: 3 },
-        { label: '游', value: 4 }
+        { label: '游', value: 4 },
+        { label: '', value: 5 },
+        { label: '', value: 6 }
       ],
       classroomOptions: [
         {
@@ -330,9 +332,9 @@ export default {
         this.list = response.data.list
         this.total = response.data.total
         for (let i = 0; i < this.list.length; i++) {
-          let index = this.classroomOptions.findIndex(item => item.value === this.list[i].userInfo.classroom)
-          if(index >=0)
-          this.list[i].userInfo.classroomName = this.classroomOptions[index].label
+          if (this.list[i].userInfo.classroom === undefined) continue
+          const index = this.classroomOptions.findIndex(item => item.value === this.list[i].userInfo.classroom)
+          if (index >= 0) { this.list[i].userInfo.classroomName = this.classroomOptions[index].label }
         }
         this.listLoading = false
       }).catch(() => {
