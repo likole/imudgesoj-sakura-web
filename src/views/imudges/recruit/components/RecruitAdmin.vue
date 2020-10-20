@@ -1,5 +1,17 @@
 <template>
   <div>
+    <div class="filter-container">
+      <el-switch
+        v-model="listQuery.acceptedExam"
+        active-text="过滤笔试通过人员"
+        @change="getList"
+      />
+      <el-switch
+        v-model="listQuery.acceptedInterview"
+        active-text="过滤面试通过人员"
+        @change="getList"
+      />
+    </div>
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -36,7 +48,7 @@
       </el-table-column>
       <el-table-column label="班级" align="center" width="150px">
         <template slot-scope="scope">
-          还没写
+          {{ scope.row.classroom }}
         </template>
       </el-table-column>
       <el-table-column label="性别" align="center" width="60px">
@@ -63,7 +75,7 @@
         <template slot-scope="scope">
           <div v-if="scope.row.acceptedExam">
             <span style="color: forestgreen">已通过</span>
-            <el-button type="warning" size="small" @click="updateStatus(scope.row.username,1,0)">撤回</el-button>
+            <el-button v-if="scope.row.acceptedInterview==null" type="warning" size="small" @click="updateStatus(scope.row.username,1,0)">撤回</el-button>
           </div>
           <div v-else-if="scope.row.acceptedExam===false">
             <span style="color: orangered">未通过</span>
@@ -76,12 +88,18 @@
         </template>
       </el-table-column>
       <el-table-column label="面试" align="center" width="160px">
-        <template slot-scope="scope">
-          <div v-if="scope.row.acceptedExam">
-            <span v-if="scope.row.acceptedInterview" style="color: forestgreen">已通过</span>
-            <span v-if="scope.row.acceptedInterview===false" style="color: orangered">未通过</span>
-            <el-button type="success" size="small">通过</el-button>
-            <el-button type="danger" size="small">拒绝</el-button>
+        <template v-if="scope.row.acceptedExam" slot-scope="scope">
+          <div v-if="scope.row.acceptedInterview">
+            <span style="color: forestgreen">已通过</span>
+            <el-button type="warning" size="small" @click="updateStatus(scope.row.username, 2,0)">撤回</el-button>
+          </div>
+          <div v-else-if="scope.row.acceptedInterview===false">
+            <span style="color: orangered">未通过</span>
+            <el-button type="warning" size="small" @click="updateStatus(scope.row.username,2,0)">撤回</el-button>
+          </div>
+          <div v-else>
+            <el-button type="success" size="small" @click="updateStatus(scope.row.username,2,1)">通过</el-button>
+            <el-button type="danger" size="small" @click="updateStatus(scope.row.username,2,-1)">拒绝</el-button>
           </div>
         </template>
       </el-table-column>
@@ -113,7 +131,9 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        pageSize: 50
+        pageSize: 50,
+        acceptedExam: false,
+        acceptedInterview: false
       },
       options: [
         { label: '前', value: 1 },
