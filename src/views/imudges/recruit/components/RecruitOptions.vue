@@ -103,6 +103,13 @@
                 添加
               </el-button>
             </el-form-item>
+            <el-form-item label="联系信息">
+              <el-input v-model="options.contactInfo" type="textarea" autosize />
+              *笔试、面试时间冲突，罢面等情形的联系方式
+            </el-form-item>
+            <el-form-item label="面试通过通知内容">
+              <el-input v-model="options.finalNotification" type="textarea" autosize />
+            </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="updateOptions">更新</el-button>
             </el-form-item>
@@ -141,7 +148,9 @@ export default {
         'interviewNotification': [],
         'interviewResultNotifyTime': undefined,
         'admin': [],
-        'interviewer': []
+        'interviewer': [],
+        'contactInfo': undefined,
+        'finalNotification': undefined
       }
     }
   },
