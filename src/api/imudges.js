@@ -23,6 +23,21 @@ export function getRecruitList(params) {
   })
 }
 
+export function getGroupInfo() {
+  return newRequest({
+    url: `/imudges/recruit/group`,
+    method: 'get'
+  })
+}
+
+export function postGroupInfo(id, data) {
+  return newRequest({
+    url: `/imudges/recruit/group/${id}`,
+    method: 'post',
+    data
+  })
+}
+
 export function updateRecruitStatus(username, id1, id2) {
   return newRequest({
     url: `/imudges/recruit/${username}/${id1}/${id2}`,
