@@ -87,8 +87,13 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column label="面试分组" align="center" width="90px">
+        <template slot-scope="scope">
+          <b>{{ scope.row.interviewGroup!=null?(scope.row.interviewGroup+1):'' }}</b>
+        </template>
+      </el-table-column>
       <el-table-column label="面试" align="center" width="160px">
-        <template v-if="scope.row.acceptedExam" slot-scope="scope">
+        <template v-if="scope.row.acceptedExam&&scope.row.interviewGroup!=null" slot-scope="scope">
           <div v-if="scope.row.acceptedInterview">
             <span style="color: forestgreen">已通过</span>
             <el-button type="warning" size="small" @click="updateStatus(scope.row.username, 2,0)">撤回</el-button>
