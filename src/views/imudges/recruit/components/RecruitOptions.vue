@@ -160,14 +160,16 @@ export default {
   },
   methods: {
     getOptions() {
+      this.loading = true
       getRecruitOptions().then(response => {
         this.options = response.data
+        this.loading = false
       })
     },
     updateOptions() {
       this.loading = true
       updateRecruitOptions(this.options).then(() => {
-        this.loading = false
+        this.getOptions()
         this.$notify({
           title: '更新成功',
           message: '招新系统参数已更新成功',
