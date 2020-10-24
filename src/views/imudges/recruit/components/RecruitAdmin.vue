@@ -347,8 +347,11 @@ export default {
       })
     },
     updateStatus(username, id1, id2) {
+      this.listLoading = true
       updateRecruitStatus(username, id1, id2).then(response => {
         this.getList()
+      }).catch(() => {
+        this.listLoading = false
       })
     }
   }

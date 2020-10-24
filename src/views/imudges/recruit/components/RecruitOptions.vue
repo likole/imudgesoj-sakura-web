@@ -2,7 +2,7 @@
   <div>
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-card>
+        <el-card v-loading="loading">
           <el-form ref="form" :model="options" label-width="130px" label-position="top">
             <el-form-item label="报名截止时间">
               <el-date-picker
@@ -151,7 +151,8 @@ export default {
         'interviewer': [],
         'contactInfo': undefined,
         'finalNotification': undefined
-      }
+      },
+      loading: false
     }
   },
   created() {
@@ -164,12 +165,16 @@ export default {
       })
     },
     updateOptions() {
+      this.loading = true
       updateRecruitOptions(this.options).then(() => {
+        this.loading = false
         this.$notify({
           title: '更新成功',
           message: '招新系统参数已更新成功',
           type: 'success',
           duration: 2000 })
+      }).catch(() => {
+        this.loading = false
       })
     }
   }
