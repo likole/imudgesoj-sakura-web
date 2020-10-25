@@ -59,3 +59,17 @@ export function updateRecruitOptions(data) {
     data
   })
 }
+
+export function getInterviewList(id) {
+  return newRequest({
+    url: `/imudges/recruit/interview/group/${id}`,
+    method: 'get'
+  })
+}
+
+export function getInterviewDetail(username) {
+  return newRequest({
+    url: `/imudges/recruit/interview/${username}`,
+    method: 'get'
+  })
+}

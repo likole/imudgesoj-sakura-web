@@ -457,6 +457,13 @@ export const asyncRoutes = [
         name: 'ImudgesRecruitAdmin',
         hidden: true,
         meta: { title: '招新管理', icon: 'problem' }
+      },
+      {
+        path: 'recruitInterview',
+        component: () => import('@/views/imudges/recruit/interview'),
+        name: 'ImudgesRecruitInterview',
+        hidden: true,
+        meta: { title: '面试', icon: 'problem' }
       }
     ]
   },
