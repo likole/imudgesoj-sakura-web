@@ -12,7 +12,7 @@
       </el-form-item>
     </el-form>
     <div v-else>
-      <el-select v-model="username" filterable placeholder="请选择" @change="getInfo">
+      <el-select v-model="username" filterable placeholder="请选择用户" @change="getInfo">
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -22,14 +22,14 @@
       </el-select>
       <!-- start main -->
       <el-row v-if="info" :gutter="20" style="margin-top: 20px">
-        <el-col :md="8">
+        <el-col :md="12">
           <el-card>
             <p style="color: royalblue">基本信息</p>
             {{ info.studentId }} {{ info.name }} {{ info.grade }}{{ info.classroomName }}
             <p style="color: royalblue">报名信息</p>
-            {{ info.recruit && info.recruit.firstWish && groupOptions[info.recruit.firstWish-1].label }}
-            {{ info.recruit && info.recruit.secondWish && groupOptions[info.recruit.secondWish-1].label }}
-            {{ info.recruit && info.recruit.thirdWish && groupOptions[info.recruit.thirdWish-1].label }}
+            {{ info.recruit && info.recruit.firstWish && groupOptions[info.recruit.firstWish - 1].label }}
+            {{ info.recruit && info.recruit.secondWish && groupOptions[info.recruit.secondWish - 1].label }}
+            {{ info.recruit && info.recruit.thirdWish && groupOptions[info.recruit.thirdWish - 1].label }}
             <p style="color: royalblue">刷题概要信息</p>
             <div v-html="info.abstract" />
             <p style="color: royalblue">参加的竞赛</p>
@@ -74,14 +74,50 @@
             </el-table>
           </el-card>
         </el-col>
-        <el-col :md="8">
+        <el-col :md="12">
           <el-card>
             <el-form>
               <el-form-item>
-                <el-input v-model="note" type="textarea" :autosize="true" placeholder="在此记录信息..." />
+                <el-select
+                  v-model="note.tag"
+                  multiple
+                  filterable
+                  allow-create
+                  default-first-option
+                  style="width: 100%"
+                  placeholder="添加标签/关键词"
+                >
+                  <el-option label="题数要求" value="题数要求" />
+                  <el-option label="编程题" value="编程题" />
+                  <el-option label="查重" value="查重" />
+                  <el-option label="高数" value="高数" />
+                  <el-option label="特长" value="特长" />
+                  <el-option label="更多标签请自行输入" value="更多标签请自行输入" disabled />
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-radio-group v-model="note.type">
+                  <el-radio-button label="差评" />
+                  <el-radio-button label="无感情色彩" />
+                  <el-radio-button label="好评" />
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item>
+                <el-input v-model="note.content" type="textarea" :autosize="true" placeholder="在此输入您的评价/笔记等内容..." />
               </el-form-item>
             </el-form>
-            <el-button type="success">添加笔记</el-button>
+            <el-alert v-if="!serverConnected" type="error" title="服务器连接失败" :closable="false" show-icon>无法连接面试服务器，不能进行评价等操作</el-alert>
+            <el-button v-else type="success" @click="publish">对该用户进行评论</el-button>
+          </el-card>
+          <el-card style="margin-top: 20px">
+            <span slot="header">所有评论</span>
+            <div v-for="(item,index) in noteList" v-if="item.interviewee===username" :key="index" style="margin-bottom: 5px">
+              <span style="color: royalblue;font-weight: bold">{{ item.interviewer }} - {{ timestampToTime(item.time) }}</span><br>
+              <el-tag v-for="(tag,innerIndex) in item.tag" :key="innerIndex" size="mini"> {{ tag }}</el-tag>
+              <span v-if="item.type==='差评'" style="color: red" v-html="item.content" />
+              <span v-else-if="item.type==='好评'" style="color: green" v-html="item.content" />
+              <span v-else v-html="item.content" />
+            </div>
           </el-card>
         </el-col>
       </el-row>
@@ -99,7 +135,8 @@ export default {
   data() {
     return {
       interviewGroup: 1,
-      interviewServer: 'http://127.0.0.1',
+      interviewServer: 'ws://127.0.0.1:10001',
+      socket: undefined,
       started: false,
       options: [],
       username: '',
@@ -287,7 +324,13 @@ export default {
         { label: '机器学习组', value: 3 },
         { label: '游戏组', value: 4 }
       ],
-      note: ''
+      note: {
+        content: '',
+        type: '无感情色彩',
+        tag: []
+      },
+      noteList: [],
+      serverConnected: false
     }
   },
   methods: {
@@ -297,9 +340,19 @@ export default {
         this.started = true
       })
       this.socket = io('ws://127.0.0.1:10001', {
-        query: `token=` + getToken(),
+        query: `group=${this.interviewGroup}&token=` + getToken(),
         transports: ['websocket'],
         upgrade: false
+      })
+      this.socket.on('message', data => {
+        this.$message(data)
+      })
+      this.socket.on('note', data => {
+        this.noteList.unshift(data)
+      })
+      this.socket.on('init', data => {
+        this.noteList = data
+        this.serverConnected = true
       })
     },
     getInfo() {
@@ -307,9 +360,31 @@ export default {
         this.info = response.data
         if (this.info.classroom !== undefined) {
           const index = this.classroomOptions.findIndex(item => item.value === this.info.classroom)
-          if (index >= 0) { this.info.classroomName = this.classroomOptions[index].label }
+          if (index >= 0) {
+            this.info.classroomName = this.classroomOptions[index].label
+          }
         }
       })
+    },
+    publish() {
+      this.note.interviewee = this.username
+      this.socket.emit('note', this.note, () => {
+        this.note = {
+          content: '',
+          type: '无感情色彩',
+          tag: []
+        }
+      })
+    },
+    timestampToTime(timestamp) {
+      var date = new Date(timestamp)
+      var Y = date.getFullYear() + '-'
+      var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+      var D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' '
+      var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':'
+      var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
+      var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
+      return Y + M + D + h + m + s
     }
   }
 }
