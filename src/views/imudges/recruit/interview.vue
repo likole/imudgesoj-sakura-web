@@ -91,6 +91,8 @@
 </template>
 <script>
 import { getInterviewList, getInterviewDetail } from '@/api/imudges'
+import { getToken } from '@/utils/auth'
+import io from 'socket.io-client'
 
 export default {
   name: 'ImudgesRecruitInterview',
@@ -293,6 +295,11 @@ export default {
       getInterviewList(this.interviewGroup - 1).then(response => {
         this.options = response.data
         this.started = true
+      })
+      this.socket = io('ws://127.0.0.1:10001', {
+        query: `token=` + getToken(),
+        transports: ['websocket'],
+        upgrade: false
       })
     },
     getInfo() {
