@@ -22,16 +22,66 @@
       </el-select>
       <!-- start main -->
       <el-row v-if="info" :gutter="20" style="margin-top: 20px">
-        <el-col :md="12">
+        <el-col :md="8">
           <el-card>
             <p style="color: royalblue">基本信息</p>
             {{ info.studentId }} {{ info.name }} {{ info.grade }}{{ info.classroomName }}
             <p style="color: royalblue">报名信息</p>
-            {{ info.recruit.firstWish && groupOptions[info.recruit.firstWish-1].label }}
-            {{ info.recruit.secondWish && groupOptions[info.recruit.secondWish-1].label }}
-            {{ info.recruit.thirdWish && groupOptions[info.recruit.thirdWish-1].label }}
-            <p style="color: royalblue">刷题信息</p>
+            {{ info.recruit && info.recruit.firstWish && groupOptions[info.recruit.firstWish-1].label }}
+            {{ info.recruit && info.recruit.secondWish && groupOptions[info.recruit.secondWish-1].label }}
+            {{ info.recruit && info.recruit.thirdWish && groupOptions[info.recruit.thirdWish-1].label }}
+            <p style="color: royalblue">刷题概要信息</p>
             <div v-html="info.abstract" />
+            <p style="color: royalblue">参加的竞赛</p>
+            <el-tag v-for="(item,index) in info.contestIds" :key="index" style="margin: 3px">{{ item }}</el-tag>
+            <p style="color: royalblue">查重结果（排除1001）</p>
+            <el-tag v-for="(item,index) in info.sim100" :key="index" type="danger" style="margin: 3px;cursor: pointer">
+              <router-link :to="'/problem/submit/'+item">
+                {{ item }}
+              </router-link>
+            </el-tag>
+            <el-table
+              :data="info.sim"
+              border
+              fit
+              highlight-current-row
+              :cell-style="{padding:'1px'}"
+              style="margin-top: 10px"
+            >
+              <el-table-column label="运行编号" align="center">
+                <template slot-scope="scope">
+                  {{ scope.row.selfId }}
+                </template>
+              </el-table-column>
+              <el-table-column label="对方运行编号" align="center">
+                <template slot-scope="scope">
+                  {{ scope.row.otherId }}
+                </template>
+              </el-table-column>
+              <el-table-column label="题目编号" align="center">
+                <template slot-scope="scope">
+                  <router-link :to="'/problem/submit/'+scope.row.problemId" class="link-type">
+                    {{ scope.row.problemId }}
+                  </router-link>
+                </template>
+              </el-table-column>
+              <el-table-column label="相似度" align="center">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.similarity===100" style="color: red">{{ scope.row.similarity }}%</span>
+                  <span v-else>{{ scope.row.similarity }}%</span>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-card>
+        </el-col>
+        <el-col :md="8">
+          <el-card>
+            <el-form>
+              <el-form-item>
+                <el-input v-model="note" type="textarea" :autosize="true" placeholder="在此记录信息..." />
+              </el-form-item>
+            </el-form>
+            <el-button type="success">添加笔记</el-button>
           </el-card>
         </el-col>
       </el-row>
@@ -234,7 +284,8 @@ export default {
         { label: '移动开发组', value: 2 },
         { label: '机器学习组', value: 3 },
         { label: '游戏组', value: 4 }
-      ]
+      ],
+      note: ''
     }
   },
   methods: {
