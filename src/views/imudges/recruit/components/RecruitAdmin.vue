@@ -1,21 +1,28 @@
 <template>
   <div>
-    <div class="filter-container">
-      <el-switch
-        v-model="listQuery.acceptedExam"
-        active-text="过滤笔试通过人员"
-        @change="getList"
-      />
-      <el-switch
-        v-model="listQuery.acceptedInterview"
-        active-text="过滤面试通过人员"
-        @change="getList"
-      />
-    </div>
+    <el-form :inline="true">
+      <el-form-item>
+        <el-switch
+          v-model="listQuery.acceptedExam"
+          active-text="过滤笔试通过人员"
+          @change="getList"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-switch
+          v-model="listQuery.acceptedInterview"
+          active-text="过滤面试通过人员"
+          @change="getList"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-input v-model="search" placeholder="当前页搜索，姓名或学号。如需全局搜索，可以先调大页面大小。" style="width: 450px"/>
+      </el-form-item>
+    </el-form>
     <el-table
       :key="tableKey"
       v-loading="listLoading"
-      :data="list"
+      :data="list.filter(data => !search || (data.userInfo&&data.userInfo.name.includes(search)) || (data.userInfo&&data.userInfo.studentId.includes(search)))"
       border
       fit
       highlight-current-row
@@ -69,6 +76,11 @@
       <el-table-column label="报名志愿" align="center" width="90px">
         <template slot-scope="scope">
           {{ scope.row.firstWish && options[scope.row.firstWish-1].label }}{{ scope.row.secondWish && options[scope.row.secondWish-1].label }}{{ scope.row.thirdWish && options[scope.row.thirdWish-1].label }}
+        </template>
+      </el-table-column>
+      <el-table-column label="个人介绍" align="center" width="90px" type="expand">
+        <template slot-scope="scope">
+          <div>{{ scope.row.introduction }}</div>
         </template>
       </el-table-column>
       <el-table-column label="笔试" align="center" width="160px">
@@ -324,7 +336,8 @@ export default {
           'value': 111,
           'children': null
         }
-      ]
+      ],
+      search: ''
     }
   },
   created() {

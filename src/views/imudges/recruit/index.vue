@@ -58,40 +58,42 @@
         <!-- enrolled -->
         <!-- first time-->
         <div v-else>
-          <el-alert type="info" show-icon :closable="false" style="margin-bottom: 20px">
-            至少填写一个志愿，至多填写三个志愿
-          </el-alert>
-          <el-alert type="warning" show-icon :closable="false" style="margin-bottom: 20px">
-            三个志愿之间有优先级
-          </el-alert>
-          <el-select v-model="postForm.firstWish" placeholder="第一志愿">
-            <el-option
-              v-for="item in options"
-              v-if="item.value !==postForm.secondWish && item.value!==postForm.thirdWish"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-          <el-select v-if="postForm.firstWish" v-model="postForm.secondWish" :clearable="true" placeholder="第二志愿" @clear="postForm.thirdWish=''">
-            <el-option
-              v-for="item in options"
-              v-if="item.value !==postForm.firstWish && item.value!==postForm.thirdWish"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-          <el-select v-if="postForm.secondWish" v-model="postForm.thirdWish" :clearable="true" placeholder="第三志愿">
-            <el-option
-              v-for="item in options"
-              v-if="item.value !==postForm.firstWish && item.value !== postForm.secondWish"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-          <el-button :disabled="postForm.firstWish===''" type="primary" @click="enroll">
+          <el-form label-position="top">
+            <el-form-item label="志愿（1~3个，有优先级）" required>
+              <el-select v-model="postForm.firstWish" placeholder="第一志愿">
+                <el-option
+                  v-for="item in options"
+                  v-if="item.value !==postForm.secondWish && item.value!==postForm.thirdWish"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+              <el-select v-if="postForm.firstWish" v-model="postForm.secondWish" :clearable="true" placeholder="第二志愿" @clear="postForm.thirdWish=''">
+                <el-option
+                  v-for="item in options"
+                  v-if="item.value !==postForm.firstWish && item.value!==postForm.thirdWish"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+              <el-select v-if="postForm.secondWish" v-model="postForm.thirdWish" :clearable="true" placeholder="第三志愿">
+                <el-option
+                  v-for="item in options"
+                  v-if="item.value !==postForm.firstWish && item.value !== postForm.secondWish"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="自我介绍（可选）">
+              <el-input v-model="postForm.introduction" type="textarea" :autosize="true" placeholder="您可以介绍介绍自己，具体内容不限（例如爱好、特长、理想、学业情况、对我们的了解、想选择的方向/加入的组、是否已经提前了解了一些相关知识等），字数不限" />
+            </el-form-item>
+          </el-form>
+
+          <el-button :disabled="postForm.firstWish===''" type="primary" @click="enroll" >
             提交报名信息
           </el-button>
         </div>
@@ -141,7 +143,8 @@ export default {
       postForm: {
         firstWish: '',
         secondWish: '',
-        thirdWish: ''
+        thirdWish: '',
+        introduction: ''
       }
     }
   },
@@ -170,6 +173,7 @@ export default {
       this.postForm.firstWish = this.recruit.firstWish
       this.postForm.secondWish = this.recruit.secondWish
       this.postForm.thirdWish = this.recruit.thirdWish
+      this.postForm.introduction = this.recruit.introduction
       this.recruit.hasEnrolled = false
     }
   }
