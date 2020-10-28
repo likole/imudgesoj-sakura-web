@@ -16,7 +16,10 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-input v-model="search" placeholder="当前页搜索，姓名或学号。如需全局搜索，可以先调大页面大小。" style="width: 450px"/>
+        <el-button v-loading="downloadLoading" type="primary" @click="handleDownload">导出该页信息</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-input v-model="search" placeholder="当前页搜索，姓名或学号" style="width: 300px" />
       </el-form-item>
     </el-form>
     <el-table
@@ -60,7 +63,7 @@
       </el-table-column>
       <el-table-column label="性别" align="center" width="60px">
         <template slot-scope="scope">
-          {{ scope.row.userInfo && (scope.row.userInfo.gender===0?'男':scope.row.user.gender===1?'女':'其他') }}
+          {{ scope.row.userInfo && (scope.row.userInfo.gender === 0 ? '男' : scope.row.user.gender === 1 ? '女' : '其他') }}
         </template>
       </el-table-column>
       <el-table-column label="学号" align="center" width="120px">
@@ -75,7 +78,11 @@
       </el-table-column>
       <el-table-column label="报名志愿" align="center" width="90px">
         <template slot-scope="scope">
-          {{ scope.row.firstWish && options[scope.row.firstWish-1].label }}{{ scope.row.secondWish && options[scope.row.secondWish-1].label }}{{ scope.row.thirdWish && options[scope.row.thirdWish-1].label }}
+          {{
+            scope.row.firstWish && options[scope.row.firstWish - 1].label
+          }}{{
+            scope.row.secondWish && options[scope.row.secondWish - 1].label
+          }}{{ scope.row.thirdWish && options[scope.row.thirdWish - 1].label }}
         </template>
       </el-table-column>
       <el-table-column label="个人介绍" align="center" width="90px" type="expand">
@@ -101,7 +108,7 @@
       </el-table-column>
       <el-table-column label="面试分组" align="center" width="90px">
         <template slot-scope="scope">
-          <b>{{ scope.row.interviewGroup!=null?(scope.row.interviewGroup+1):'' }}</b>
+          <b>{{ scope.row.interviewGroup != null ? (scope.row.interviewGroup + 1) : '' }}</b>
         </template>
       </el-table-column>
       <el-table-column label="面试" align="center" width="160px">
@@ -143,7 +150,7 @@ export default {
   data() {
     return {
       tableKey: 1,
-      list: null,
+      list: [],
       total: 0,
       listLoading: true,
       listQuery: {
@@ -337,7 +344,8 @@ export default {
           'children': null
         }
       ],
-      search: ''
+      search: '',
+      downloadLoading: false
     }
   },
   created() {
@@ -352,7 +360,9 @@ export default {
         for (let i = 0; i < this.list.length; i++) {
           if (this.list[i].userInfo.classroom === undefined) continue
           const index = this.classroomOptions.findIndex(item => item.value === this.list[i].userInfo.classroom)
-          if (index >= 0) { this.list[i].userInfo.classroomName = this.classroomOptions[index].label }
+          if (index >= 0) {
+            this.list[i].userInfo.classroomName = this.classroomOptions[index].label
+          }
         }
         this.listLoading = false
       }).catch(() => {
@@ -366,6 +376,95 @@ export default {
       }).catch(() => {
         this.listLoading = false
       })
+    },
+    handleDownload() {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = [
+          '用户名',
+          '学号',
+          '姓名',
+          '性别',
+          '年级',
+          '班级',
+          '手机1',
+          '邮箱1',
+          'QQ',
+          '第一志愿',
+          '第二志愿',
+          '第三志愿',
+          '个人介绍',
+          '是否已报名',
+          '是否已通过笔试',
+          '面试分组',
+          '是否已通过面试',
+          '最终分组',
+          '创建时间',
+          '报名信息更新时间',
+          '说明\n' +
+          '性别：0男 1女\n' +
+          '志愿：1前端后端组 2移动开发组 3机器学习组 4游戏组'
+        ]
+        const data = this.formatJson([
+          'username',
+          '.studentId',
+          '.name',
+          '.gender',
+          '.grade',
+          '.classroomName',
+          '.phone1',
+          '.email1',
+          '.qq',
+          'firstWish',
+          'secondWish',
+          'thirdWish',
+          'introduction',
+          'hasEnrolled',
+          'acceptedExam',
+          'interviewGroup',
+          'acceptedInterview',
+          'finalGroup',
+          'infoCreateTime',
+          'infoUpdateTime'
+        ], this.list)
+        const d = new Date()
+        const filename = '报名信息导出_' + (
+          d.getMonth() +
+          1 +
+          '月' +
+          d.getDate() +
+          '日' +
+          d.getHours() +
+          '时' +
+          d.getMinutes() +
+          '分')
+        console.log(data)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: filename
+        })
+        this.$notify({
+          type: 'warning',
+          title: '当前页面信息导出成功',
+          message: '注意导出内容仅包含当前页面数据，如需导出所有数据，请先调大页面大小~',
+          duration: 10000
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        if (j[0] === '.') {
+          if (v.userInfo != null) {
+            return v.userInfo[j.replace('.', '')]
+          } else {
+            return null
+          }
+        } else {
+          return v[j]
+        }
+      }))
     }
   }
 }

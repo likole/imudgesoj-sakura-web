@@ -93,7 +93,7 @@
             </el-form-item>
           </el-form>
 
-          <el-button :disabled="postForm.firstWish===''" type="primary" @click="enroll" >
+          <el-button :disabled="postForm.firstWish===''" type="primary" @click="enroll">
             提交报名信息
           </el-button>
         </div>
