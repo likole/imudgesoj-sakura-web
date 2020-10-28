@@ -339,7 +339,7 @@ export default {
         this.options = response.data
         this.started = true
       })
-      this.socket = io('ws://127.0.0.1:10001', {
+      this.socket = io(this.interviewServer, {
         query: `group=${this.interviewGroup}&token=` + getToken(),
         transports: ['websocket'],
         upgrade: false
