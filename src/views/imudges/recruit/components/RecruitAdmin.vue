@@ -63,7 +63,7 @@
       </el-table-column>
       <el-table-column label="性别" align="center" width="60px">
         <template slot-scope="scope">
-          {{ scope.row.userInfo && (scope.row.userInfo.gender === 0 ? '男' : scope.row.user.gender === 1 ? '女' : '其他') }}
+          {{ scope.row.userInfo && (scope.row.userInfo.gender === 0 ? '男' : scope.row.userInfo.gender === 1 ? '女' : '其他') }}
         </template>
       </el-table-column>
       <el-table-column label="学号" align="center" width="120px">
