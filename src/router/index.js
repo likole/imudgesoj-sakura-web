@@ -101,6 +101,34 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
+    path: '/imudges',
+    component: Layout,
+    meta: { title: 'IMUDGES', icon: 'chart' },
+    redirect: '/imudges/recruit',
+    children: [
+      {
+        path: 'recruit',
+        component: () => import('@/views/imudges/recruit/index'),
+        name: 'ImudgesRecruitIndex',
+        meta: { title: 'IMUDGES招新2020', icon: 'imudges10th' }
+      },
+      {
+        path: 'recruitAdmin',
+        component: () => import('@/views/imudges/recruit/admin'),
+        name: 'ImudgesRecruitAdmin',
+        hidden: true,
+        meta: { title: '招新管理', icon: 'problem' }
+      },
+      {
+        path: 'recruitInterview',
+        component: () => import('@/views/imudges/recruit/interview'),
+        name: 'ImudgesRecruitInterview',
+        hidden: true,
+        meta: { title: '面试', icon: 'problem' }
+      }
+    ]
+  },
+  {
     path: '/problem',
     component: Layout,
     redirect: '/problem/list',
@@ -434,36 +462,6 @@ export const asyncRoutes = [
         component: () => import('@/views/old/index'),
         name: 'OldIdex',
         meta: { title: '旧版界面', icon: 'link' }
-      }
-    ]
-  },
-  {
-    path: '/imudges',
-    component: Layout,
-    hidden: true,
-    meta: { title: 'IMUDGES', icon: 'chart' },
-    redirect: '/imudges/recruit',
-    children: [
-      {
-        path: 'recruit',
-        component: () => import('@/views/imudges/recruit/index'),
-        name: 'ImudgesRecruitIndex',
-        hidden: true,
-        meta: { title: '招新报名', icon: 'problem' }
-      },
-      {
-        path: 'recruitAdmin',
-        component: () => import('@/views/imudges/recruit/admin'),
-        name: 'ImudgesRecruitAdmin',
-        hidden: true,
-        meta: { title: '招新管理', icon: 'problem' }
-      },
-      {
-        path: 'recruitInterview',
-        component: () => import('@/views/imudges/recruit/interview'),
-        name: 'ImudgesRecruitInterview',
-        hidden: true,
-        meta: { title: '面试', icon: 'problem' }
       }
     ]
   },
