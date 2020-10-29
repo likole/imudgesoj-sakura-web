@@ -41,6 +41,7 @@
       <!-- start enroll -->
       <div v-else-if="recruit.step===1">
         <!-- enrolled -->
+        <el-alert :closable="false">报名截止时间 <b>{{ recruit.extra }}</b>，请抓紧时间报名。报名截止后请及时在当前页面查看后续的笔试通知。</el-alert>
         <div v-if="recruit.hasEnrolled">
           <h3 style="color: forestgreen">报名成功！</h3>
           <p>您目前填报了

@@ -30,6 +30,8 @@
             {{ info.recruit && info.recruit.firstWish && groupOptions[info.recruit.firstWish - 1].label }}
             {{ info.recruit && info.recruit.secondWish && groupOptions[info.recruit.secondWish - 1].label }}
             {{ info.recruit && info.recruit.thirdWish && groupOptions[info.recruit.thirdWish - 1].label }}
+            <hr/>
+            {{ info.recruit && info.recruit.introduction }}
             <p style="color: royalblue">刷题概要信息</p>
             <div v-html="info.abstract" />
             <p style="color: royalblue">参加的竞赛</p>
