@@ -75,7 +75,7 @@ export default {
       if (!value) {
         callback()
       } else {
-        const reg = /^1[3|7|8]\d{9}$|^19[8-9]\d{8}$|^166\d{8}|^15[0-3|5-9]\d{8}|^14[5|7]\d{8}$/
+        const reg = /^1(3([0-35-9]\d|4[1-8])|4[14-9]\d|5([0125689]\d|7[1-79])|66\d|7[2-35-8]\d|8\d{2}|9[13589]\d)\d{7}$/
         if (reg.test(value)) {
           callback()
         } else {
