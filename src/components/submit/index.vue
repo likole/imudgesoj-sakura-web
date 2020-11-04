@@ -5,6 +5,9 @@
         <el-select v-model="language" style="width: 90px" @change="changeLanguage">
           <el-option v-for="item in allLanguages" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
+        <span v-if="language==='6'" style="font-size: 12px;color: gray">
+          如需使用python2，请在第一行写上 <b style="color: forestgreen">#!/bin/python2</b>
+        </span>
         <el-checkbox v-model="testrunEnable" style="margin-left: 20px">
           测试运行
         </el-checkbox>
@@ -185,7 +188,8 @@ export default {
       // 编译错误信息
       ce: null,
       // 用户是否切换了问题
-      problemChanged: false
+      problemChanged: false,
+      usePython2: false
     }
   },
   watch: {

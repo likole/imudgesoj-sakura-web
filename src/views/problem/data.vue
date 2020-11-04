@@ -1,5 +1,7 @@
 <template>
   <div class="app-container">
+    <el-alert type="error" style="margin-bottom: 20px;">改动数据后不会立即在判题机上生效，数据每5分钟同步一次，请耐心等待~
+      （本来打算写实时同步，但是要用到消息队列，服务器配置能省一点是一点= =）</el-alert>
     <el-row :gutter="20">
       <el-col :span="6" :xs="24">
         <el-card style="margin-bottom: 20px">
