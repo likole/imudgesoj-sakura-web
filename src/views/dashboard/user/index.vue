@@ -59,9 +59,7 @@ import LineChart from './components/LineChart'
 // import TodoList from './components/TodoList'
 // import BoxCard from './components/BoxCard'
 
-import { fetchChart } from '@/api/dashboard'
-import { fetchUnreadCount } from '@/api/mail'
-import { getPublishedNewsList } from '@/api/news'
+import { fetchDashboardData } from '@/api/dashboard'
 
 export default {
   name: 'DashboardUser',
@@ -88,15 +86,10 @@ export default {
   },
   methods: {
     getAll() {
-      fetchUnreadCount().then(response => {
-        this.unread = response.data
-      })
-      fetchChart().then(response => {
+      fetchDashboardData().then(response => {
         this.lineChartData = response.data.chart
-        // this.news = response.data.news
-      })
-      getPublishedNewsList().then(response => {
-        this.news = response.data
+        this.news = response.data.news
+        this.unread = response.data.mail
       })
     }
   }

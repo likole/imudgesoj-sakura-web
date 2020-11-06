@@ -1,8 +1,8 @@
-import request from '@/utils/request'
+import newRequest from '@/utils/new-request'
 
-export function fetchChart() {
-  return request({
-    url: '/dashboard.php',
+export function fetchDashboardData() {
+  return newRequest({
+    url: '/dashboard',
     method: 'get'
   })
 }
