@@ -62,6 +62,14 @@ export function fetchStatus(query) {
   })
 }
 
+export function fetchStatusOutside(query) {
+  return newRequest({
+    url: '/solution/status',
+    method: 'get',
+    params: query
+  })
+}
+
 export function fetchSource(id) {
   return newRequest({
     url: '/solution/source/' + id,

@@ -30,7 +30,7 @@
             {{ info.recruit && info.recruit.firstWish && groupOptions[info.recruit.firstWish - 1].label }}
             {{ info.recruit && info.recruit.secondWish && groupOptions[info.recruit.secondWish - 1].label }}
             {{ info.recruit && info.recruit.thirdWish && groupOptions[info.recruit.thirdWish - 1].label }}
-            <hr/>
+            <hr>
             {{ info.recruit && info.recruit.introduction }}
             <p style="color: royalblue">刷题概要信息</p>
             <div v-html="info.abstract" />
@@ -112,6 +112,16 @@
             <el-button v-else type="success" @click="publish">对该用户进行评论</el-button>
           </el-card>
           <el-card style="margin-top: 20px">
+            <el-rate
+              v-model="myRate"
+              allow-half
+              :max="10"
+              show-score
+            />
+            <el-button type="text" @click="setRate">确认打分（可再次修改）</el-button>
+            <el-button type="text" @click="getRateRank">查看所有分数</el-button>
+          </el-card>
+          <el-card style="margin-top: 20px">
             <span slot="header">所有评论</span>
             <div v-for="(item,index) in noteList" v-if="item.interviewee===username" :key="index" style="margin-bottom: 5px">
               <span style="color: royalblue;font-weight: bold">{{ item.interviewer }} - {{ timestampToTime(item.time) }}</span><br>
@@ -124,6 +134,37 @@
         </el-col>
       </el-row>
       <!-- end main -->
+      <el-dialog :visible.sync="rateDialogVisible">
+        <el-table
+          :data="allRate"
+          border
+          fit
+          highlight-current-row
+          :cell-style="{padding:'1px'}"
+          style="margin-top: 10px"
+        >
+          <el-table-column label="用户名" align="center">
+            <template slot-scope="scope">
+              {{ scope.row.interviewee }}
+            </template>
+          </el-table-column>
+          <el-table-column label="平均分" align="center">
+            <template slot-scope="scope">
+              {{ scope.row.averageRate }}
+            </template>
+          </el-table-column>
+          <el-table-column label="打分人数" align="center">
+            <template slot-scope="scope">
+              {{ scope.row.num }}
+            </template>
+          </el-table-column>
+          <el-table-column label="打分详情" align="center" type="expand" width="120px">
+            <template slot-scope="scope">
+              {{ scope.row.rate }}
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -138,6 +179,7 @@ export default {
     return {
       interviewGroup: 1,
       interviewServer: 'ws://127.0.0.1:10001',
+      // interviewServer: 'ws://106.14.22.115:10001',
       socket: undefined,
       started: false,
       options: [],
@@ -332,7 +374,10 @@ export default {
         tag: []
       },
       noteList: [],
-      serverConnected: false
+      serverConnected: false,
+      myRate: 0,
+      allRate: [],
+      rateDialogVisible: false
     }
   },
   methods: {
@@ -366,6 +411,23 @@ export default {
             this.info.classroomName = this.classroomOptions[index].label
           }
         }
+        this.socket.emit('getRate', this.username, score => {
+          this.myRate = score
+        })
+      })
+    },
+    setRate() {
+      this.socket.emit('setRate', { username: this.username, rate: this.myRate }, () => {
+        this.$message({
+          type: 'success',
+          message: '打分成功'
+        })
+      })
+    },
+    getRateRank() {
+      this.socket.emit('getRateRank', null, rate => {
+        this.allRate = rate
+        this.rateDialogVisible = true
       })
     },
     publish() {
