@@ -15,7 +15,7 @@
       <el-select v-model="username" filterable placeholder="请选择用户" @change="getInfo">
         <el-option
           v-for="item in options"
-          :key="item.value"
+          :key="'user'+item.value"
           :label="item.label"
           :value="item.value"
         />
@@ -35,9 +35,9 @@
             <p style="color: royalblue">刷题概要信息</p>
             <div v-html="info.abstract" />
             <p style="color: royalblue">参加的竞赛</p>
-            <el-tag v-for="(item,index) in info.contestIds" :key="index" style="margin: 3px">{{ item }}</el-tag>
+            <el-tag v-for="item in info.contestIds" :key="'cid'+item" style="margin: 3px">{{ item }}</el-tag>
             <p style="color: royalblue">查重结果（排除1001）</p>
-            <el-tag v-for="(item,index) in info.sim100" :key="index" type="danger" style="margin: 3px;cursor: pointer">
+            <el-tag v-for="(item,index) in info.sim100" :key="'sim'+index" type="danger" style="margin: 3px;cursor: pointer">
               <router-link :to="'/problem/submit/'+item">
                 {{ item }}
               </router-link>
@@ -74,6 +74,7 @@
                 </template>
               </el-table-column>
             </el-table>
+            <p style="color: gray;font-size: 12px">数据生成于：{{ new Date(info.time) }}</p>
           </el-card>
         </el-col>
         <el-col :md="12">
@@ -123,9 +124,9 @@
           </el-card>
           <el-card style="margin-top: 20px">
             <span slot="header">所有评论</span>
-            <div v-for="(item,index) in noteList" v-if="item.interviewee===username" :key="index" style="margin-bottom: 5px">
+            <div v-for="(item,index) in noteList" v-if="item.interviewee===username" :key="'note'+index" style="margin-bottom: 5px">
               <span style="color: royalblue;font-weight: bold">{{ item.interviewer }} - {{ timestampToTime(item.time) }}</span><br>
-              <el-tag v-for="(tag,innerIndex) in item.tag" :key="innerIndex" size="mini"> {{ tag }}</el-tag>
+              <el-tag v-for="(tag,innerIndex) in item.tag" :key="'tag'+innerIndex" size="mini"> {{ tag }}</el-tag>
               <span v-if="item.type==='差评'" style="color: red" v-html="item.content" />
               <span v-else-if="item.type==='好评'" style="color: green" v-html="item.content" />
               <span v-else v-html="item.content" />

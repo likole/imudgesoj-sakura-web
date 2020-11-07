@@ -74,3 +74,8 @@ export default {
   }
 }
 </script>
+<style scopd>
+.el-transfer-panel{
+  width: 250px;
+}
+</style>
