@@ -134,7 +134,7 @@
         </el-col>
       </el-row>
       <!-- end main -->
-      <el-dialog :visible.sync="rateDialogVisible">
+      <el-dialog :visible.sync="rateDialogVisible" width="90%">
         <el-table
           :data="allRate"
           border
@@ -146,6 +146,16 @@
           <el-table-column label="用户名" align="center">
             <template slot-scope="scope">
               {{ scope.row.interviewee }}
+            </template>
+          </el-table-column>
+          <el-table-column label="学号" align="center">
+            <template slot-scope="scope">
+              {{ scope.row.studentId }}
+            </template>
+          </el-table-column>
+          <el-table-column label="姓名" align="center">
+            <template slot-scope="scope">
+              {{ scope.row.name }}
             </template>
           </el-table-column>
           <el-table-column label="平均分" align="center">
@@ -178,8 +188,8 @@ export default {
   data() {
     return {
       interviewGroup: 1,
-      interviewServer: 'ws://127.0.0.1:10001',
-      // interviewServer: 'ws://106.14.22.115:10001',
+      // interviewServer: 'ws://127.0.0.1:10001',
+      interviewServer: 'ws://106.14.22.115:10001',
       socket: undefined,
       started: false,
       options: [],
@@ -417,7 +427,7 @@ export default {
       })
     },
     setRate() {
-      this.socket.emit('setRate', { username: this.username, rate: this.myRate }, () => {
+      this.socket.emit('setRate', { username: this.username, rate: this.myRate, name: this.info.name, studentId: this.info.studentId }, () => {
         this.$message({
           type: 'success',
           message: '打分成功'
