@@ -92,8 +92,8 @@ export function fetchRE(sid) {
 }
 
 export function fetchRanklist(query) {
-  return request({
-    url: '/ranklist.php',
+  return newRequest({
+    url: '/user/ranklist',
     method: 'get',
     params: query
   })

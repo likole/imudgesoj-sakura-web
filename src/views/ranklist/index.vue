@@ -2,10 +2,10 @@
   <div class="app-container">
     <div class="filter-container">
       <el-tooltip placement="bottom" content="提示: 搜索用户时会显示总榜">
-        <el-input v-model="listQuery.prefix" placeholder="搜索用户" :style="device==='desktop'?'width:200px':'width:100%'" class="filter-item" :size="device==='desktop'?'medium':'mini'" @keyup.enter.native="getList" />
+        <el-input v-model="listQuery.username" placeholder="搜索用户" :style="device==='desktop'?'width:200px':'width:100%'" class="filter-item" :size="device==='desktop'?'medium':'mini'" @keyup.enter.native="getList" />
       </el-tooltip>
       <el-select
-        v-model="listQuery.scope"
+        v-model="listQuery.type"
         placeholder="范围"
         :style="device==='desktop'?'width:200px':'width:100%'"
         class="filter-item"
@@ -37,19 +37,19 @@
 
       <el-table-column label="排名" align="center" width="70px">
         <template slot-scope="scope">
-          {{ scope.row.rank }}
+          {{ scope.$index + 1 + (listQuery.page-1)*50 }}
         </template>
       </el-table-column>
       <el-table-column label="用户" align="center" width="200px">
         <template slot-scope="scope">
-          <router-link :to="'/profile/user/'+scope.row.user_id" class="link-type">
-            {{ scope.row.user_id }}
+          <router-link :to="'/profile/user/'+scope.row.userId" class="link-type">
+            {{ scope.row.userId }}
           </router-link>
         </template>
       </el-table-column>
       <el-table-column label="昵称" align="center" min-width="200px">
         <template slot-scope="scope">
-          <router-link :to="'/profile/user/'+scope.row.user_id" class="link-type">
+          <router-link :to="'/profile/user/'+scope.row.userId" class="link-type">
             {{ scope.row.nick }}
           </router-link>
         </template>
@@ -59,14 +59,14 @@
           {{ scope.row.solved }}
         </template>
       </el-table-column>
-      <el-table-column label="提交" align="center" width="80px">
+      <el-table-column v-if="listQuery.type===0" label="提交" align="center" width="80px">
         <template slot-scope="scope">
           {{ scope.row.submit }}
         </template>
       </el-table-column>
-      <el-table-column label="比率" align="center" width="80px">
+      <el-table-column v-if="listQuery.type===0" label="比率" align="center" width="80px">
         <template slot-scope="scope">
-          {{ scope.row.rate }}
+          {{ scope.row.submit !== 0 ? parseInt(scope.row.solved * 100000 / scope.row.submit) / 1000 : 0 }}%
         </template>
       </el-table-column>
     </el-table>
@@ -74,7 +74,7 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="listQuery.start"
+      :page.sync="listQuery.page"
       :page-sizes="[50]"
       :limit="50"
       :layout="device==='desktop'?'total, sizes, prev, pager, next, jumper':'prev, pager, next'"
@@ -110,18 +110,17 @@ export default {
       tableKey: 0,
       list: null,
       listQuery: {
-        scope: '',
-        start: 1,
-        prefix: undefined
+        type: 0,
+        page: 1,
+        username: undefined
       },
       total: 0,
       listLoading: true,
       options: [
-        { label: '总榜', value: '' },
-        { label: '日榜', value: 'd' },
-        { label: '周榜', value: 'w' },
-        { label: '月榜', value: 'm' },
-        { label: '年榜', value: 'y' }
+        { label: '总榜', value: 0 },
+        { label: '学期榜', value: 1 },
+        { label: '月榜', value: 2 },
+        { label: '日榜', value: 3 }
       ]
     }
   },
@@ -135,7 +134,7 @@ export default {
   },
   methods: {
     getList() {
-      if (this.listQuery.prefix !== undefined && this.listQuery.prefix.length > 0) this.listQuery.scope = ''
+      if (this.listQuery.username !== undefined && this.listQuery.username.length > 0) this.listQuery.type = 0
       this.listLoading = true
       fetchRanklist(this.listQuery).then(response => {
         this.list = response.data.list
