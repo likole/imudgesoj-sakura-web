@@ -3,24 +3,29 @@
 
     <!--start desktop view-->
     <div v-if="device==='desktop'" class="filter-container">
+      <el-button-group class="filter-item">
+        <el-button type="primary" icon="el-icon-d-arrow-left" @click="firstPage">刷新/首页</el-button>
+        <el-button type="primary" @click="nextPage">下一页<i class="el-icon-arrow-right el-icon--right" /></el-button>
+      </el-button-group>
+
       <el-input
         v-model="listQuery.problemId"
         placeholder="题目编号"
-        style="width: 200px;"
+        style="width: 150px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <el-input
         v-model="listQuery.userId"
         placeholder="用户"
-        style="width: 200px;"
+        style="width: 150px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <el-select
         v-model="listQuery.language"
         placeholder="语言"
-        style="width: 200px"
+        style="width: 150px"
         class="filter-item"
         @change="handleFilter"
       >
@@ -34,7 +39,7 @@
       <el-select
         v-model="listQuery.result"
         placeholder="结果"
-        style="width: 200px"
+        style="width: 150px"
         class="filter-item"
         @change="handleFilter"
       >
@@ -108,14 +113,16 @@
           </el-select>
         </el-col>
       </el-row>
-      <el-button type="primary" style="width: 100%;margin-top: 10px" size="mini" @click="handleFilter">过滤</el-button>
+
+      <el-button-group style="width: 100%;margin: 10px 0;">
+        <el-button type="primary" size="mini" icon="el-icon-d-arrow-left" @click="firstPage">刷新/首页</el-button>
+        <el-button type="primary" size="mini" @click="nextPage">下一页<i class="el-icon-arrow-right el-icon--right" /></el-button>
+        <el-button type="primary" size="mini" @click="handleFilter">过滤</el-button>
+      </el-button-group>
+
     </div>
     <!--   end mobile view-->
 
-    <el-button-group :style="device==='desktop'?'margin:15px 0;':'margin:10px 0;width:100%'">
-      <el-button type="primary" icon="el-icon-d-arrow-left" :size="device==='desktop'?'medium':'mini'" @click="firstPage">刷新/首页</el-button>
-      <el-button type="primary" :size="device==='desktop'?'medium':'mini'" @click="nextPage">下一页<i class="el-icon-arrow-right el-icon--right" /></el-button>
-    </el-button-group>
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -187,10 +194,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-button-group :style="'margin:20px 0;' + (device==='desktop'?'':'width:100%')">
-      <el-button type="primary" icon="el-icon-d-arrow-left" :size="device==='desktop'?'medium':'mini'" @click="firstPage">刷新/首页</el-button>
-      <el-button type="primary" :size="device==='desktop'?'medium':'mini'" @click="nextPage">下一页<i class="el-icon-arrow-right el-icon--right" /></el-button>
-    </el-button-group>
 
   </div>
 </template>
