@@ -37,10 +37,8 @@
             <p style="color: royalblue">参加的竞赛</p>
             <el-tag v-for="item in info.contestIds" :key="'cid'+item" style="margin: 3px">{{ item }}</el-tag>
             <p style="color: royalblue">查重结果（排除1001）</p>
-            <el-tag v-for="(item,index) in info.sim100" :key="'sim'+index" type="danger" style="margin: 3px;cursor: pointer">
-              <router-link :to="'/problem/submit/'+item">
-                {{ item }}
-              </router-link>
+            <el-tag v-for="(item,index) in info.sim100" :key="'sim'+index" type="danger" style="margin: 3px;cursor: pointer" @click="getProblem(item)">
+              {{ item }}
             </el-tag>
             <el-table
               :data="info.sim"
@@ -62,9 +60,9 @@
               </el-table-column>
               <el-table-column label="题目编号" align="center">
                 <template slot-scope="scope">
-                  <router-link :to="'/problem/submit/'+scope.row.problemId" class="link-type">
+                  <span class="link-type" @click="getProblem(scope.row.problemId)">
                     {{ scope.row.problemId }}
-                  </router-link>
+                  </span>
                 </template>
               </el-table-column>
               <el-table-column label="相似度" align="center">
@@ -176,11 +174,20 @@
           </el-table-column>
         </el-table>
       </el-dialog>
+      <el-dialog :visible.sync="problemDialogVisible" width="90%">
+        <h2> {{ problem.id }} - {{ problem.title }}</h2>
+        <p v-html="problem.description" />
+        <h3 style="color: royalblue">Input</h3>
+        <p v-html="problem.input" />
+        <h3 style="color: royalblue">Output</h3>
+        <p v-html="problem.output" />
+      </el-dialog>
     </div>
   </div>
 </template>
 <script>
 import { getInterviewList, getInterviewDetail } from '@/api/imudges'
+import { fetchProblem } from '@/api/problem'
 import { getToken } from '@/utils/auth'
 import io from 'socket.io-client'
 
@@ -388,7 +395,9 @@ export default {
       serverConnected: false,
       myRate: 0,
       allRate: [],
-      rateDialogVisible: false
+      rateDialogVisible: false,
+      problemDialogVisible: false,
+      problem: {}
     }
   },
   methods: {
@@ -460,6 +469,12 @@ export default {
       var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':'
       var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds())
       return Y + M + D + h + m + s
+    },
+    getProblem(id) {
+      fetchProblem(id).then(response => {
+        this.problem = response.data
+        this.problemDialogVisible = true
+      })
     }
   }
 }
