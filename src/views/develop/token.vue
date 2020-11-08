@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <el-alert type="error">token机制已更换，该部分尚未实现</el-alert>
     <h3>手动操作</h3>
     <el-form label-position="left" label-width="50px">
       <el-row :gutter="20">
@@ -14,8 +15,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-button type="success" @click="addSession">添加 / 更新</el-button>
-          <el-button type="danger" @click="removeSession">移除</el-button>
+          <el-button type="success" disabled @click="addSession">添加 / 更新</el-button>
+          <el-button type="danger" disabled @click="removeSession">移除</el-button>
         </el-col>
       </el-row>
     </el-form>
