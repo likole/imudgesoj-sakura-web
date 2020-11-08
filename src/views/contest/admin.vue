@@ -101,7 +101,6 @@
       :close-on-press-escape="false"
       :close-on-click-modal="false"
     >
-      {{ postForm }}
       <el-form :model="postForm" label-position="left" label-width="80px">
         <el-form-item label="标题">
           <el-input v-model="postForm.title" />
@@ -180,7 +179,7 @@
 </template>
 
 <script>
-import { adminGetList, adminChangeStatus, adminChangePrivate, adminGetContest, adminAddContest, adminUpdateContest } from '../../api/contest'
+import { adminGetList, adminChangeStatus, adminChangePrivate, adminGetContest, adminUpdateContest } from '../../api/contest'
 import { getAllLanguages } from '@/api/language'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -223,36 +222,16 @@ export default {
     },
     createContest() {
       this.postForm = {
+        defunct: false,
         description: '',
         endTime: '',
-        language: [
-          { value: 0, language: 'C' },
-          { value: 1, language: 'C++' },
-          { value: 2, language: 'Pascal' },
-          { value: 3, language: 'Java' },
-          { value: 4, language: 'Ruby' },
-          { value: 5, language: 'Bash' },
-          { value: 6, language: 'Python' },
-          { value: 7, language: 'PHP' },
-          { value: 8, language: 'Perl' },
-          { value: 9, language: 'C#' },
-          { value: 10, language: 'Obj-C' },
-          { value: 11, language: 'FreeBasic' },
-          { value: 12, language: 'Scheme' },
-          { value: 13, language: 'Clang' },
-          { value: 14, language: 'Clang++' },
-          { value: 15, language: 'Lua' },
-          { value: 16, language: 'JavaScript' },
-          { value: 17, language: 'Go' },
-          { value: 18, language: 'SQL(sqlite3)' }
-        ],
-        language_selected: [0, 1],
+        languages: [0, 1],
         password: '',
-        plist: '',
-        private: false,
+        privateContest: false,
+        problemIds: '',
         startTime: '',
         title: '',
-        ulist: ''
+        users: ''
       }
       this.create = true
       this.dialogSendVisible = true
@@ -275,7 +254,7 @@ export default {
     },
     handleCreate() {
       if (this.create) {
-        adminAddContest(this.postForm).then(() => {
+        adminUpdateContest(this.postForm).then(() => {
           this.$message({ 'type': 'success', 'message': '添加成功' })
           this.getList()
           this.dialogSendVisible = false
