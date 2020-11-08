@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import newRequest from '@/utils/new-request'
 
 export function fetchContests() {
   return request({
@@ -33,33 +34,32 @@ export function fetchProblem(cid, pid) {
 }
 
 // admin
-export function adminGetList(page) {
-  return request({
-    url: '/admin/contest.php',
+export function adminGetList(page, keyword) {
+  return newRequest({
+    url: '/contest/admin',
     method: 'get',
-    params: { page }
+    params: { page, keyword }
   })
 }
 
 export function adminGetContest(cid) {
-  return request({
-    url: '/admin/contest.php',
-    method: 'get',
-    params: { cid }
+  return newRequest({
+    url: '/contest/admin/' + cid,
+    method: 'get'
   })
 }
 
 export function adminChangeStatus(cid) {
-  return request({
-    url: '/admin/contest.php?changeStatus=1&cid=' + cid,
-    method: 'get'
+  return newRequest({
+    url: '/contest/admin/status/' + cid,
+    method: 'patch'
   })
 }
 
 export function adminChangePrivate(cid) {
-  return request({
-    url: '/admin/contest.php?changePrivate=1&cid=' + cid,
-    method: 'get'
+  return newRequest({
+    url: '/contest/admin/private/' + cid,
+    method: 'patch'
   })
 }
 

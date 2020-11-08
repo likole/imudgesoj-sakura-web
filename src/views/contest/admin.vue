@@ -2,14 +2,6 @@
   <div class="app-container">
     <div class="filter-container">
       <el-button class="filter-item" type="primary" icon="el-icon-plus" @click="createContest">添加竞赛</el-button>
-      <el-select v-model="page" class="filter-item" placeholder="页码" @change="getList">
-        <el-option
-          v-for="item in total"
-          :key="item"
-          :label="'第 '+item+' 页'"
-          :value="item"
-        />
-      </el-select>
     </div>
     <el-table
       :key="tableKey"
@@ -22,7 +14,7 @@
     >
       <el-table-column label="竞赛编号" align="center" width="60px">
         <template slot-scope="scope">
-          <p>{{ scope.row.contest_id }}</p>
+          <p>{{ scope.row.id }}</p>
         </template>
       </el-table-column>
       <el-table-column label="标题" align="center">
@@ -32,34 +24,34 @@
       </el-table-column>
       <el-table-column label="开始时间" align="center" width="160px">
         <template slot-scope="scope">
-          {{ scope.row.start_time }}
+          {{ scope.row.startTime }}
         </template>
       </el-table-column>
       <el-table-column label="结束时间" align="center" width="160px">
         <template slot-scope="scope">
-          {{ scope.row.end_time }}
+          {{ scope.row.endTime }}
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" width="120px">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.private " type="danger">私有</el-tag>
+          <el-tag v-if="scope.row.privateContest " type="danger">私有</el-tag>
           <el-tag v-else type="success">公有</el-tag>
-          <el-tag v-if="scope.row.status ==='N'" type="success">启用</el-tag>
+          <el-tag v-if="scope.row.defunct===false" type="success">启用</el-tag>
           <el-tag v-else type="danger">禁用</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="320">
         <template slot-scope="scope">
-          <div v-if="scope.row.privilege">
-            <el-button type="info" size="small" @click="editContest(scope.row.contest_id)">
+          <div>
+            <el-button type="info" size="small" @click="editContest(scope.row.id)">
               编辑
             </el-button>
             <el-button
-              v-if="scope.row.private"
+              v-if="scope.row.privateContest"
               type="success"
               size="small"
               icon="el-icon-key"
-              @click="handleChangePrivate(scope.row.contest_id)"
+              @click="handleChangePrivate(scope.row.id)"
             >
               设为公开
             </el-button>
@@ -68,16 +60,16 @@
               type="danger"
               size="small"
               icon="el-icon-lock"
-              @click="handleChangePrivate(scope.row.contest_id)"
+              @click="handleChangePrivate(scope.row.id)"
             >
               设为私有
             </el-button>
             <el-button
-              v-if="scope.row.status ==='N'"
+              v-if="scope.row.defunct ===false"
               type="danger"
               size="small"
               icon="el-icon-delete"
-              @click="handleChangeStatus(scope.row.contest_id)"
+              @click="handleChangeStatus(scope.row.id)"
             >
               禁用
             </el-button>
@@ -86,7 +78,7 @@
               type="success"
               size="small"
               icon="el-icon-delete"
-              @click="handleChangeStatus(scope.row.contest_id)"
+              @click="handleChangeStatus(scope.row.id)"
             >
               启用
             </el-button>
@@ -94,6 +86,14 @@
         </template>
       </el-table-column>
     </el-table>
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="page"
+      :page-sizes="[50]"
+      :limit="50"
+      @pagination="getList"
+    />
     <el-dialog
       title="创建/编辑竞赛"
       :visible.sync="dialogSendVisible"
@@ -101,6 +101,7 @@
       :close-on-press-escape="false"
       :close-on-click-modal="false"
     >
+      {{ postForm }}
       <el-form :model="postForm" label-position="left" label-width="80px">
         <el-form-item label="标题">
           <el-input v-model="postForm.title" />
@@ -131,19 +132,19 @@
           <el-col :span="8">
             <el-form-item label="私有">
               <el-switch
-                v-model="postForm.private"
+                v-model="postForm.privateContest"
                 active-color="#ff4949"
                 inactive-color="#dddddd"
               />
             </el-form-item>
           </el-col>
           <el-col :span="16">
-            <el-form-item v-if="postForm.private" label="允许用户">
-              <el-input v-model="postForm.ulist" type="textarea" placeholder="一行一个" autosize />
+            <el-form-item v-if="postForm.privateContest" label="允许用户">
+              <el-input v-model="postForm.users" type="textarea" placeholder="一行一个" autosize />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item v-if="postForm.private" label="密码">
+            <el-form-item v-if="postForm.privateContest" label="密码">
               <el-input v-model="postForm.password" />
             </el-form-item>
           </el-col>
@@ -151,17 +152,17 @@
         <el-row :gutter="20">
           <el-col :span="16">
             <el-form-item label="题号">
-              <el-input v-model="postForm.plist" />
+              <el-input v-model="postForm.problemIds" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="语言">
-              <el-select v-model="postForm.language_selected" multiple placeholder="可用语言" width="100%">
+              <el-select v-model="postForm.languages" multiple placeholder="可用语言" width="100%">
                 <el-option
-                  v-for="item in postForm.language"
-                  :key="item.value"
-                  :label="item.language"
-                  :value="item.value"
+                  v-for="item in allLanguage"
+                  :key="item.code"
+                  :label="item.name"
+                  :value="item.code"
                 />
               </el-select>
             </el-form-item>
@@ -180,39 +181,41 @@
 
 <script>
 import { adminGetList, adminChangeStatus, adminChangePrivate, adminGetContest, adminAddContest, adminUpdateContest } from '../../api/contest'
+import { getAllLanguages } from '@/api/language'
 import waves from '@/directive/waves' // waves directive
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Tinymce from '../../components/Tinymce/index'
 
 export default {
   name: 'ContestAdmin',
   directives: { waves },
-  components: { Tinymce },
+  components: { Tinymce, Pagination },
   data() {
     return {
       tableKey: 0,
       list: null,
       total: 1,
-      page: undefined,
-      options: [],
+      page: 1,
       keywords: undefined,
       listLoading: true,
-      dialogVisible: false,
       dialogSendVisible: false,
-      detail: {},
       postForm: { title: '' },
-      create: true
+      create: true,
+      allLanguage: []
     }
   },
   created() {
     this.getList()
+    getAllLanguages().then(response => {
+      this.allLanguage = response.data
+    })
   },
   methods: {
     getList() {
       this.listLoading = true
-      adminGetList(this.page).then(response => {
-        this.list = response.data.contests
+      adminGetList(this.page, this.keywords).then(response => {
+        this.list = response.data.list
         this.total = response.data.total
-        this.page = response.data.page
         this.listLoading = false
       }).catch(() => {
         this.listLoading = false
