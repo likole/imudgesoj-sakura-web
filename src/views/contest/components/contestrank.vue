@@ -5,6 +5,7 @@
         刷新
       </el-button>
     </div>
+    {{ view }}
     <el-table
       v-loading="listLoading"
       :data="view"
@@ -83,7 +84,7 @@ export default {
       this.listLoading = true
       fetchRanklist(this.cid).then(response => {
         this.pid = response.data.pid
-        this.view = response.data.view
+        this.view = response.data
         this.listLoading = false
       })
     }

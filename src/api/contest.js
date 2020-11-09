@@ -2,8 +2,8 @@ import request from '@/utils/request'
 import newRequest from '@/utils/new-request'
 
 export function fetchContests() {
-  return request({
-    url: '/contest.php',
+  return newRequest({
+    url: '/contest',
     method: 'get'
   })
 }
@@ -18,10 +18,9 @@ export function fetchProblems(cid, data) {
 }
 
 export function fetchRanklist(cid) {
-  return request({
-    url: '/contestrank.php',
-    method: 'get',
-    params: { cid }
+  return newRequest({
+    url: '/contest/rank/' + cid,
+    method: 'get'
   })
 }
 

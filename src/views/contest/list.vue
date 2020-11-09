@@ -20,7 +20,7 @@
       >
         <el-table-column label="编号" align="center" :width="device==='desktop'?'100px':'66px'">
           <template slot-scope="scope">
-            <svg-icon v-if="scope.row.private===1" icon-class="password" />
+            <svg-icon v-if="scope.row.privateContest" icon-class="password" />
             {{ scope.row.id }}
           </template>
         </el-table-column>
@@ -29,14 +29,18 @@
             <el-button type="text" :style="device==='mobile'?'padding: 0':''" @click="getProblems(scope.row.id)" v-html="scope.row.title" />
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center" width="230px">
-          <template slot-scope="scope">
-            <p style="margin: 0" v-html="scope.row.time" />
+        <el-table-column label="允许语言" align="center" width="250px">
+          <template slot-scope="scope" v-if="languages.length>0">
+            <span v-for="language in scope.row.languages" :key="scope.row.id+''+language">
+              <el-tag v-if="[0,1,3,6].includes(language)" style="margin: 0 2px"> {{ languages[language].name }}</el-tag>
+            </span>
           </template>
         </el-table-column>
-        <el-table-column label="创建者" align="center" width="150px">
+        <el-table-column label="状态" align="center" width="230px">
           <template slot-scope="scope">
-            {{ scope.row.creator }}
+            <span v-if="scope.row.status===2" style="color: green"> 进行中 至 {{ scope.row.startTime }} </span>
+            <span v-else-if="scope.row.status===1" style="color: royalblue"> 即将开始 @ {{ scope.row.startTime }} </span>
+            <span v-else style="color: orangered"> 已结束 @ {{ scope.row.endTime }} </span>
           </template>
         </el-table-column>
       </el-table>
@@ -138,6 +142,7 @@
 
 <script>
 import { fetchContests, fetchProblems } from '@/api/contest'
+import { getAllLanguages } from '@/api/language'
 import StatusComponent from '@/components/status/index'
 import ContestRank from './components/contestrank'
 import waves from '@/directive/waves' // waves directive
@@ -157,7 +162,8 @@ export default {
       cid: 0,
       progress: 0,
       activeTab: 'problems',
-      password: ''
+      password: '',
+      languages: []
     }
   },
   computed: {
@@ -166,6 +172,9 @@ export default {
     })
   },
   created() {
+    getAllLanguages().then(response => {
+      this.languages = response.data
+    })
     if (Cookies.get('cid') !== undefined && Cookies.get('cid') !== '0') { this.getProblems(parseInt(Cookies.get('cid'))) } else { this.getContests() }
     this.computeProgress()
   },
@@ -175,14 +184,6 @@ export default {
     }
   },
   methods: {
-    tableRowClassName({ row, rowIndex }) {
-      if (row.status === 'Y') {
-        return 'success-row'
-      } else if (row.result === 'N') {
-        return 'fail-row'
-      }
-      return ''
-    },
     getContests() {
       this.cid = 0
       this.contest = null
@@ -218,17 +219,6 @@ export default {
   }
 }
 </script>
-<style scoped>
-  .fail-row {
-    color: darkred;
-    background: oldlace;
-  }
-
-  .success-row {
-    color: darkgreen;
-    background: greenyellow;
-  }
-</style>
 <style lang="scss">
   .theme-dark{
     .contest-title{
