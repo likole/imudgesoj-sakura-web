@@ -30,7 +30,7 @@
           </template>
         </el-table-column>
         <el-table-column label="允许语言" align="center" width="250px">
-          <template slot-scope="scope" v-if="languages.length>0">
+          <template v-if="languages.length>0" slot-scope="scope">
             <span v-for="language in scope.row.languages" :key="scope.row.id+''+language">
               <el-tag v-if="[0,1,3,6].includes(language)" style="margin: 0 2px"> {{ languages[language].name }}</el-tag>
             </span>
@@ -79,7 +79,6 @@
             border
             fit
             highlight-current-row
-            :row-class-name="tableRowClassName"
             style="width: 100%;"
             :size="device==='desktop'?'medium':'mini'"
           >
@@ -128,10 +127,10 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="状 态" name="status">
-          <status-component :cid="cid" />
+          <status-component v-if="activeTab==='status'" :cid="cid" />
         </el-tab-pane>
         <el-tab-pane label="排 名" name="ranklist">
-          <contest-rank :cid="cid" />
+          <contest-rank v-if="activeTab==='ranklist'" :cid="cid" />
         </el-tab-pane>
       </el-tabs>
 
@@ -172,9 +171,6 @@ export default {
     })
   },
   created() {
-    getAllLanguages().then(response => {
-      this.languages = response.data
-    })
     if (Cookies.get('cid') !== undefined && Cookies.get('cid') !== '0') { this.getProblems(parseInt(Cookies.get('cid'))) } else { this.getContests() }
     this.computeProgress()
   },
@@ -185,6 +181,11 @@ export default {
   },
   methods: {
     getContests() {
+      if (this.languages.length === 0) {
+        getAllLanguages().then(response => {
+          this.languages = response.data
+        })
+      }
       this.cid = 0
       this.contest = null
       Cookies.set('cid', this.cid, { expires: 1 })

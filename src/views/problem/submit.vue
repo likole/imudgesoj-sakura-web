@@ -12,7 +12,8 @@
           <p>AC/提交：{{ problem.accepted }}/{{ problem.submit }}</p>
           <el-progress :text-inside="true" :stroke-width="26" :percentage="progress" />
         </el-card>
-        <problem-status-component class="hidden-md-and-down" :id-for-update="idForUpdate" :pid="problemId" :is-single="false" style="margin-top: 20px" />
+        <el-button v-if="!showStatus" type="success" style="width: 100%" @click="showStatus=true">显示问题状态</el-button>
+        <problem-status-component v-else class="hidden-md-and-down" :id-for-update="idForUpdate" :pid="problemId" :is-single="false" style="margin-top: 20px" />
       </el-col>
       <el-col :lg="{span:18,pull:6}" :md="24">
         <el-card style="margin-bottom: 20px">
@@ -76,7 +77,8 @@ export default {
         'line-height': '45px', // 请保持与高度一致以垂直居中 Please keep consistent with height to center vertically
         background: '#e7eaf1'// 按钮的背景颜色 The background color of the button
       },
-      idForUpdate: 1
+      idForUpdate: 1,
+      showStatus: false
     }
   },
   created() {
