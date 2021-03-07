@@ -56,13 +56,13 @@
       <div align="center" class="contest-description" v-html="contest.description" />
       <div v-if="device==='desktop'" class="contest-time" style="margin-top: 20px;padding-bottom: 55px">
         <el-progress :percentage="progress" :show-text="false" />
-        <p style="float: left">开始时间: {{ contest.start }}</p>
-        <p style="float: right">结束时间: {{ contest.end }}</p>
+        <p style="float: left">开始时间: {{ contest.startTime }}</p>
+        <p style="float: right">结束时间: {{ contest.endTime }}</p>
       </div>
       <div v-else class="contest-time" style="margin-top: 20px;padding-bottom: 55px">
         <el-progress :percentage="progress" :show-text="false" />
-        <p style="float: left;font-size: 14px">{{ contest.start }}</p>
-        <p style="float: right;font-size: 14px">{{ contest.end }}</p>
+        <p style="float: left;font-size: 14px">{{ contest.startTime }}</p>
+        <p style="float: right;font-size: 14px">{{ contest.endTime }}</p>
       </div>
 
       <el-tabs v-model="activeTab">
@@ -75,7 +75,7 @@
           <el-table
             :key="tableKey"
             v-loading="listLoading"
-            :data="contest.problemset"
+            :data="contest.problems"
             border
             fit
             highlight-current-row
@@ -96,13 +96,13 @@
             </el-table-column>
             <el-table-column label="编号" align="center" :width="device==='desktop'?'150px':'115px'">
               <template slot-scope="scope">
-                {{ scope.row.pid }} Problem{{ scope.row.id }}
+                {{ scope.row.id }} Problem {{ scope.row.iid + 1 }}
               </template>
             </el-table-column>
             <el-table-column label="标题" align="center" min-width="200px">
               <template slot-scope="scope">
                 <router-link
-                  :to="'/contest/submit/'+cid+'/'+scope.row.id_num"
+                  :to="'/contest/submit/'+cid+'/'+scope.row.iid"
                   class="link-type"
                 >
                   <span>{{ scope.row.title }}</span>
@@ -116,7 +116,7 @@
             </el-table-column>
             <el-table-column label="解决" align="center" :width="device==='desktop'?'80px':'50px'">
               <template slot-scope="scope">
-                {{ scope.row.ac }}
+                {{ scope.row.accepted }}
               </template>
             </el-table-column>
             <el-table-column label="提交" align="center" :width="device==='desktop'?'80px':'50px'">
@@ -197,7 +197,7 @@ export default {
     },
     getProblems(cid) {
       this.listLoading = true
-      fetchProblems(cid, { password: this.password }).then(response => {
+      fetchProblems(cid, this.password).then(response => {
         this.contest = response.data
         this.cid = parseInt(cid)
         Cookies.set('cid', this.cid, { expires: 1 })

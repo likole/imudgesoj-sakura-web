@@ -107,18 +107,6 @@ export function fetchCategories() {
 }
 
 export function adminGetList(page, pageSize, keywords) {
-  // if (keywords !== undefined && keywords.length > 0) {
-  //   return request({
-  //     url: '/admin/problem.php?keyword=' + keywords,
-  //     method: 'get'
-  //   })
-  // }
-  // if (page === undefined) {
-  //   return request({
-  //     url: '/admin/problem.php',
-  //     method: 'get'
-  //   })
-  // }
   return newRequest({
     url: `/problem/admin?page=${page}&pageSize=${pageSize}&keywords=${keywords}`,
     method: 'get'
