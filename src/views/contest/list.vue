@@ -85,12 +85,12 @@
             <el-table-column label="" align="center" :width="device==='desktop'?'80px':'28px'">
               <template slot-scope="scope">
                 <div v-if="device==='desktop'">
-                  <el-tag v-show="scope.row.status=='Y'" type="success">Y</el-tag>
-                  <el-tag v-show="scope.row.status=='N'" type="danger">N</el-tag>
+                  <el-tag v-show="scope.row.result===2" type="success">Y</el-tag>
+                  <el-tag v-show="scope.row.result===1" type="danger">N</el-tag>
                 </div>
                 <div v-else>
-                  <p v-show="scope.row.status=='Y'" style="color: green">Y</p>
-                  <p v-show="scope.row.status=='N'" style="color: red">N</p>
+                  <p v-show="scope.row.result===2" style="color: green">Y</p>
+                  <p v-show="scope.row.result===1" style="color: red">N</p>
                 </div>
               </template>
             </el-table-column>
@@ -208,8 +208,8 @@ export default {
     },
     computeProgress() {
       if (this.contest != null) {
-        const t1 = new Date(this.contest.start)
-        const t2 = new Date(this.contest.end)
+        const t1 = new Date(this.contest.startTime)
+        const t2 = new Date(this.contest.endTime)
         const now = new Date()
         if (now <= t1) this.progress = 0
         else if (now >= t2) this.progress = 100
