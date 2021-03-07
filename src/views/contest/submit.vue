@@ -31,11 +31,11 @@
           <el-tag
             v-for="(item,index) in problems"
             :key="index"
-            :type="item.status==='Y'?'success':item.status==='N'?'danger':'info'"
-            :style=" 'margin: 5px; '+(item.id_num==pid?'cursor:default;':'cursor:pointer;')"
-            @click="changeProblem(item.id_num)"
+            :type="item.result===2?'success':item.result===1?'danger':'info'"
+            :style=" 'margin: 5px; '+(item.iid===pid?'cursor:default;':'cursor:pointer;')"
+            @click="changeProblem(item.iid)"
           >
-            <span :style="item.id_num==pid?'color: royalblue;':''">{{ item.id }} - {{ item.title }} {{ item.ac }}/{{ item.submit }}</span>
+            <span :style="item.iid===pid?'color: royalblue;':''">{{ item.iid + 1 }} - {{ item.title }} {{ item.accepted }}/{{ item.submit }}</span>
           </el-tag>
         </el-card>
         <el-card style="margin-bottom: 20px">
@@ -117,7 +117,7 @@ export default {
         this.setPageTitle()
         // problem changer
         fetchProblems(this.cid).then(response => {
-          this.problems = response.data.problemset
+          this.problems = response.data.problems
         })
       }).catch(err => {
         console.log(err)
