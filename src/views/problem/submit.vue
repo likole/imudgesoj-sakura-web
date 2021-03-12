@@ -12,8 +12,11 @@
           <p>AC/提交：{{ problem.accepted }}/{{ problem.submit }}</p>
           <el-progress :text-inside="true" :stroke-width="26" :percentage="progress" />
         </el-card>
-        <el-button v-if="!showStatus" type="success" style="width: 100%" @click="showStatus=true">显示问题状态</el-button>
+        <el-button v-if="!showStatus" type="success" style="width: 100%;margin-bottom: 20px" @click="showStatus=true">显示问题状态</el-button>
         <problem-status-component v-else class="hidden-md-and-down" :id-for-update="idForUpdate" :pid="problemId" :is-single="false" style="margin-top: 20px" />
+        <el-card class="hidden-md-and-down">
+          <donate-link />
+        </el-card>
       </el-col>
       <el-col :lg="{span:18,pull:6}" :md="24">
         <el-card style="margin-bottom: 20px">
@@ -51,10 +54,11 @@ import ProblemStatusComponent from '@/components/problem/ProblemStatus'
 import BackToTop from '@/components/BackToTop'
 import { fetchProblem } from '@/api/problem'
 import 'element-ui/lib/theme-chalk/display.css'
+import DonateLink from '@/components/DonateLink/DonateLink'
 
 export default {
   name: 'ProblemSubmit',
-  components: { BackToTop, ProblemStatusComponent, SubmitComponent },
+  components: { BackToTop, ProblemStatusComponent, SubmitComponent, DonateLink },
   filters: {
     numFilter(value) {
       // 截取当前数据到小数点后两位
