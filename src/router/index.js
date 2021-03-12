@@ -392,12 +392,6 @@ export const asyncRoutes = [
         component: () => import('@/views/help/faq'),
         name: 'HelpFaq',
         meta: { title: '常见问答', icon: 'FAQ', noCache: true }
-      },
-      {
-        path: 'donate',
-        component: () => import('@/views/help/donate'),
-        name: 'HelpDonate',
-        meta: { title: '捐助', icon: 'money' }
       }
     ]
   },

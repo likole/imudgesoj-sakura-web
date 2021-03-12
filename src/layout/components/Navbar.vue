@@ -43,6 +43,9 @@
           <!--            <span style="display:block;" @click="logout_oauth2">退出OJ及开放平台</span>-->
           <!--          </el-dropdown-item>-->
           <el-dropdown-item divided>
+            <a href="https://github.com/likole" target="_blank">作者Github</a>
+          </el-dropdown-item>
+          <el-dropdown-item>
             <a href="https://453ed6db.wiz03.com/wapp/pages/view/share/s/15fJrr2ltAER29QNt21PC5Dk1ZrBbz0Xe4Xv2OQeqk27urr-" target="_blank">开发/更新记录</a>
           </el-dropdown-item>
           <router-link to="/about/index">
